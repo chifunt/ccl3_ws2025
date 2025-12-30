@@ -8,8 +8,6 @@
 stages:
 - test
 - secret-detection
-sast:
-  stage: test
 include:
 - template: Security/Secret-Detection.gitlab-ci.yml
 variables:
