@@ -59,7 +59,7 @@ fun LibraryScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            LibraryHeader()
+            LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onSettings) {
                 Icon(

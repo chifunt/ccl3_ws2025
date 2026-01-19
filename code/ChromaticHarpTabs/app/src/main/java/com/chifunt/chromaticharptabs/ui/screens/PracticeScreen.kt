@@ -21,12 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 
@@ -57,11 +57,10 @@ fun PracticeScreen(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = state.lines[state.currentIndex],
-                    fontSize = 28.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                TabNotationInlineDisplay(
+                    lines = listOf(state.lines[state.currentIndex]),
+                    lineSpacing = spacingMedium,
+                    centered = true
                 )
             }
 

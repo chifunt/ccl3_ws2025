@@ -3,6 +3,8 @@ package com.chifunt.chromaticharptabs.ui.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.data.TabRepository
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +14,7 @@ import kotlinx.coroutines.launch
 
 data class PracticeUiState(
     val title: String,
-    val lines: List<String>,
+    val lines: List<List<TabNote>>,
     val currentIndex: Int
 )
 
@@ -26,7 +28,7 @@ class PracticeViewModel(
     private val _uiState = MutableStateFlow(
         PracticeUiState(
             title = "",
-            lines = listOf(""),
+            lines = listOf(emptyList()),
             currentIndex = 0
         )
     )
@@ -35,11 +37,8 @@ class PracticeViewModel(
     init {
         viewModelScope.launch {
             val tab = repository.findTabById(tabId)
-            val parsedLines = tab.content
-                .lines()
-                .map { it.trimEnd() }
-                .filter { it.isNotBlank() }
-                .ifEmpty { listOf("") }
+            val notation = TabNotationJson.fromJson(tab.content)
+            val parsedLines = notation?.lines?.ifEmpty { listOf(emptyList()) } ?: listOf(emptyList())
 
             _uiState.update {
                 it.copy(

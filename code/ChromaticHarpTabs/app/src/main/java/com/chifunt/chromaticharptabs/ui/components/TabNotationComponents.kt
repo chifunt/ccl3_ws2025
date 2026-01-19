@@ -1,0 +1,392 @@
+package com.chifunt.chromaticharptabs.ui.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.data.TabNote
+import kotlin.math.roundToInt
+
+private val NoteTileSize = 120.dp
+private val NoteGlyphSize = 32.dp
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TabNotationEditor(
+    lines: List<List<TabNote>>,
+    onAddNote: (lineIndex: Int) -> Unit,
+    onAddLine: () -> Unit,
+    onDeleteLine: (lineIndex: Int) -> Unit,
+    onDeleteNote: (lineIndex: Int, noteIndex: Int) -> Unit,
+    onEditHole: (lineIndex: Int, noteIndex: Int) -> Unit,
+    onToggleBlow: (lineIndex: Int, noteIndex: Int) -> Unit,
+    onToggleSlide: (lineIndex: Int, noteIndex: Int) -> Unit,
+    onMoveNote: (lineIndex: Int, fromIndex: Int, toIndex: Int) -> Unit,
+    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
+    modifier: Modifier = Modifier
+) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+
+    Column(modifier = modifier) {
+        if (lines.isEmpty()) {
+            AddLineButton(onClick = onAddLine)
+            return@Column
+        }
+
+        lines.forEachIndexed { lineIndex, line ->
+            LineSectionHeader(
+                lineNumber = lineIndex + 1,
+                onDeleteLine = { onDeleteLine(lineIndex) }
+            )
+            Spacer(Modifier.height(spacingSmall))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                verticalAlignment = Alignment.Top
+            ) {
+                line.forEachIndexed { noteIndex, note ->
+                    DraggableNoteTile(
+                        note = note,
+                        noteIndex = noteIndex,
+                        lineSize = line.size,
+                        onEditHole = { onEditHole(lineIndex, noteIndex) },
+                        onToggleBlow = { onToggleBlow(lineIndex, noteIndex) },
+                        onToggleSlide = { onToggleSlide(lineIndex, noteIndex) },
+                        onDeleteNote = { onDeleteNote(lineIndex, noteIndex) },
+                        onMoveNote = { fromIndex, toIndex ->
+                            onMoveNote(lineIndex, fromIndex, toIndex)
+                        }
+                    )
+                }
+                AddNoteTile(onClick = { onAddNote(lineIndex) })
+            }
+            Spacer(Modifier.height(lineSpacing))
+        }
+
+        AddLineButton(onClick = onAddLine)
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TabNotationDisplay(
+    lines: List<List<TabNote>>,
+    modifier: Modifier = Modifier,
+    centered: Boolean = false,
+    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small)
+) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val horizontalArrangement = if (centered) {
+        Arrangement.spacedBy(spacingSmall, Alignment.CenterHorizontally)
+    } else {
+        Arrangement.spacedBy(spacingSmall)
+    }
+
+    Column(modifier = modifier) {
+        lines.forEach { line ->
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = horizontalArrangement,
+                verticalArrangement = Arrangement.spacedBy(spacingSmall)
+            ) {
+                line.forEach { note ->
+                    NoteTile(note = note)
+                }
+            }
+            Spacer(Modifier.height(lineSpacing))
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TabNotationInlineDisplay(
+    lines: List<List<TabNote>>,
+    modifier: Modifier = Modifier,
+    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
+    centered: Boolean = false
+) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val horizontalArrangement = if (centered) {
+        Arrangement.spacedBy(spacingSmall, Alignment.CenterHorizontally)
+    } else {
+        Arrangement.spacedBy(spacingSmall)
+    }
+
+    Column(modifier = modifier) {
+        lines.forEach { line ->
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = horizontalArrangement,
+                verticalArrangement = Arrangement.spacedBy(spacingSmall)
+            ) {
+                line.forEach { note ->
+                    NoteGlyph(
+                        hole = note.hole,
+                        isBlow = note.isBlow,
+                        isSlide = note.isSlide
+                    )
+                }
+            }
+            Spacer(Modifier.height(lineSpacing))
+        }
+    }
+}
+
+@Composable
+private fun DraggableNoteTile(
+    note: TabNote,
+    noteIndex: Int,
+    lineSize: Int,
+    onEditHole: () -> Unit,
+    onToggleBlow: () -> Unit,
+    onToggleSlide: () -> Unit,
+    onDeleteNote: () -> Unit,
+    onMoveNote: (fromIndex: Int, toIndex: Int) -> Unit
+) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
+    var dragOffset by remember { mutableStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
+    val itemWidthPx = with(androidx.compose.ui.platform.LocalDensity.current) {
+        (NoteTileSize + spacingSmall).toPx()
+    }
+
+    OutlinedCard(
+        modifier = Modifier
+            .size(NoteTileSize)
+            .offset { IntOffset(dragOffset.toInt(), 0) }
+            .zIndex(if (isDragging) 1f else 0f)
+            .pointerInput(noteIndex, lineSize) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = { isDragging = true },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        dragOffset += dragAmount.x
+                    },
+                    onDragEnd = {
+                        val deltaIndex = (dragOffset / itemWidthPx).roundToInt()
+                        val targetIndex = (noteIndex + deltaIndex).coerceIn(0, lineSize - 1)
+                        if (lineSize > 1 && targetIndex != noteIndex) {
+                            onMoveNote(noteIndex, targetIndex)
+                        }
+                        dragOffset = 0f
+                        isDragging = false
+                    },
+                    onDragCancel = {
+                        dragOffset = 0f
+                        isDragging = false
+                    }
+                )
+            },
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(borderStroke, MaterialTheme.colorScheme.outline)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(spacingSmall),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    onClick = onDeleteNote,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(28.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.delete_note),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+            NoteGlyph(
+                hole = note.hole,
+                isBlow = note.isBlow,
+                isSlide = note.isSlide,
+                modifier = Modifier.clickable(onClick = onEditHole)
+            )
+            Spacer(Modifier.height(spacingSmall))
+            Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall)) {
+                OutlinedButton(onClick = onToggleBlow) {
+                    Text(
+                        text = if (note.isBlow) stringResource(R.string.blow_label)
+                        else stringResource(R.string.draw_label),
+                        fontSize = 12.sp
+                    )
+                }
+                OutlinedButton(onClick = onToggleSlide) {
+                    Text(
+                        text = if (note.isSlide) stringResource(R.string.slide_on_label)
+                        else stringResource(R.string.slide_off_label),
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NoteTile(note: TabNote) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
+
+    OutlinedCard(
+        modifier = Modifier.size(NoteTileSize),
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(borderStroke, MaterialTheme.colorScheme.outline)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(spacingSmall),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            NoteGlyph(
+                hole = note.hole,
+                isBlow = note.isBlow,
+                isSlide = note.isSlide
+            )
+        }
+    }
+}
+
+@Composable
+private fun NoteGlyph(
+    hole: Int,
+    isBlow: Boolean,
+    isSlide: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
+    val outlineColor = MaterialTheme.colorScheme.onSurface
+
+    Box(
+        modifier = Modifier
+            .size(NoteGlyphSize)
+            .then(modifier)
+            .drawBehind {
+                val strokeWidth = borderStroke.toPx()
+                if (!isBlow) {
+                    drawCircle(
+                        color = outlineColor,
+                        radius = size.minDimension / 2 - strokeWidth,
+                        style = Stroke(width = strokeWidth)
+                    )
+                }
+                if (isSlide) {
+                    drawLine(
+                        color = outlineColor,
+                        start = androidx.compose.ui.geometry.Offset(0f, strokeWidth),
+                        end = androidx.compose.ui.geometry.Offset(size.width, strokeWidth),
+                        strokeWidth = strokeWidth
+                    )
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = hole.toString(),
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+private fun AddNoteTile(onClick: () -> Unit) {
+    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
+
+    OutlinedCard(
+        modifier = Modifier.size(NoteTileSize),
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(borderStroke, MaterialTheme.colorScheme.outline),
+        onClick = onClick
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_note))
+        }
+    }
+}
+
+@Composable
+private fun LineSectionHeader(
+    lineNumber: Int,
+    onDeleteLine: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.line_label, lineNumber),
+            fontWeight = FontWeight.SemiBold
+        )
+        IconButton(onClick = onDeleteLine) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = stringResource(R.string.delete_line)
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddLineButton(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        Icon(Icons.Filled.Add, contentDescription = null)
+        Spacer(Modifier.width(8.dp))
+        Text(text = stringResource(R.string.add_new_line))
+    }
+}
