@@ -1,0 +1,93 @@
+package com.chifunt.chromaticharptabs.ui.screens
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.viewmodel.PracticeViewModel
+import com.chifunt.chromaticharptabs.ui.components.TopBackBar
+
+@Composable
+fun PracticeScreen(
+    modifier: Modifier = Modifier,
+    practiceViewModel: PracticeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    onBack: () -> Unit
+) {
+    val state by practiceViewModel.uiState.collectAsStateWithLifecycle()
+    val spacingMedium = dimensionResource(R.dimen.spacing_medium)
+
+    Scaffold { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(spacingMedium),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TopBackBar(onBack = onBack)
+
+            Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.lines[state.currentIndex],
+                    fontSize = 28.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(spacingMedium),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                FilledIconButton(
+                    onClick = { practiceViewModel.previousLine() },
+                    enabled = state.currentIndex > 0,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(dimensionResource(R.dimen.filter_chip_height))
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                }
+                FilledIconButton(
+                    onClick = { practiceViewModel.nextLine() },
+                    enabled = state.currentIndex < state.lines.lastIndex,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(dimensionResource(R.dimen.filter_chip_height))
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                }
+            }
+        }
+    }
+}

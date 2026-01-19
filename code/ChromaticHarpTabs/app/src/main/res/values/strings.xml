@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">ChromaticHarpTabs</string>
+    <string name="library_title">Library</string>
+    <string name="search_label">Search by title or artist</string>
+    <string name="favorites_only">Favorites only</string>
+    <string name="sort_label">Sort by</string>
+    <string name="add_new_tab">Add new tab</string>
+    <string name="empty_library">No tabs yet. Create your first entry.</string>
+    <string name="favorite_toggle">Toggle favorite</string>
+    <string name="tab_metadata_line">Key: %1$s - %2$s</string>
+    <string name="tab_tags_line">Tags: %1$s</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="detail_metadata_title">Metadata</string>
+    <string name="detail_metadata_key">Key: %1$s</string>
+    <string name="detail_metadata_difficulty">Difficulty: %1$s</string>
+    <string name="detail_metadata_tempo">Tempo: %1$s BPM</string>
+    <string name="tempo_unknown">Unknown</string>
+    <string name="unknown_value">Unknown</string>
+    <string name="detail_metadata_tags">Tags: %1$s</string>
+    <string name="tab_content_label">Tab content</string>
+    <string name="practice_button">Practice</string>
+    <string name="edit_button">Edit</string>
+    <string name="delete_button">Delete</string>
+    <string name="back_to_library">Back to library</string>
+    <string name="back_button">Back</string>
+    <string name="editor_title">Tab editor</string>
+    <string name="title_label">Title</string>
+    <string name="artist_label">Artist</string>
+    <string name="key_label">Key</string>
+    <string name="difficulty_label">Difficulty</string>
+    <string name="sort_option_title">Title</string>
+    <string name="sort_option_artist">Artist</string>
+    <string name="sort_option_newest">Newest</string>
+    <string name="sort_option_oldest">Oldest</string>
+    <string name="error_required_fields">Title and tab content are required.</string>
+    <string name="tempo_label">Tempo (BPM)</string>
+    <string name="tags_label">Tags</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="previous_line">Previous line</string>
+    <string name="next_line">Next line</string>
+    <string name="back_to_tab">Back to tab</string>
+    <string name="key_filter_label">Key</string>
+    <string name="filter_all">All</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="key_c">C</string>
+    <string name="key_c_sharp_d_flat">C# / Db</string>
+    <string name="key_d">D</string>
+    <string name="key_d_sharp_e_flat">D# / Eb</string>
+    <string name="key_e">E</string>
+    <string name="key_f">F</string>
+    <string name="key_f_sharp_g_flat">F# / Gb</string>
+    <string name="key_g">G</string>
+    <string name="key_g_sharp_a_flat">G# / Ab</string>
+    <string name="key_a">A</string>
+    <string name="key_a_sharp_b_flat">A# / Bb</string>
+    <string name="key_b">B</string>
+    <string name="sample_title_autumn_leaves">Autumn Leaves</string>
+    <string name="sample_artist_joseph_kosma">Joseph Kosma</string>
+    <string name="sample_tags_jazz_ballad">jazz, ballad</string>
+    <string name="sample_content_autumn_leaves">1B 2D 3D 3B 2D 1B\n2B 3D 4B 4D 3D 2B\n3B 4D 4B 3D 2D 1B\n2B 3D 2D 1B</string>
+    <string name="sample_title_blue_bossa">Blue Bossa</string>
+    <string name="sample_artist_kenny_dorham">Kenny Dorham</string>
+    <string name="sample_tags_latin_jazz">latin, jazz</string>
+    <string name="sample_content_blue_bossa">2B 3D 3B 2D 1B\n2B 3D 4D 4B 3D\n2D 1B 2B 3D\n4D 4B 3D 2D</string>
+    <string name="sample_title_amazing_grace">Amazing Grace</string>
+    <string name="sample_artist_traditional">Traditional</string>
+    <string name="sample_tags_hymn_slow">hymn, slow</string>
+    <string name="sample_content_amazing_grace">2B 2D 3B 2B 2D 3B\n4B 3D 2B 1B 2B 2D\n3B 4B 3D 2B 1B</string>
+    <string name="sample_title_all_blues">All Blues</string>
+    <string name="sample_artist_miles_davis">Miles Davis</string>
+    <string name="sample_tags_jazz_modal">jazz, modal</string>
+    <string name="sample_content_all_blues">3D 4D 5B 4D 3D\n2D 3B 4D 3D 2D\n3D 4D 3B 2D 1B\n2D 3D 4D 3D</string>
+    <string name="sample_title_misty">Misty</string>
+    <string name="sample_artist_erroll_garner">Erroll Garner</string>
+    <string name="sample_tags_ballad_jazz">ballad, jazz</string>
+    <string name="sample_content_misty">3B 4D 4B 3D 2B\n3B 4D 5D 5B 4D\n3D 2B 1B 2B 3B\n4B 3D 2B</string>
+    <string name="sample_title_songbird">Songbird</string>
+    <string name="sample_artist_christine_mcvie">Christine McVie</string>
+    <string name="sample_tags_pop_mellow">pop, mellow</string>
+    <string name="sample_content_songbird">2B 3D 3B 2D 1B\n2B 3D 4B 3D 2D\n3B 4B 3D 2D 1B\n2B 3D 2D 1B</string>
+
+    <string-array name="key_options">
+        <item>@string/filter_all</item>
+        <item>@string/key_c</item>
+        <item>@string/key_c_sharp_d_flat</item>
+        <item>@string/key_d</item>
+        <item>@string/key_d_sharp_e_flat</item>
+        <item>@string/key_e</item>
+        <item>@string/key_f</item>
+        <item>@string/key_f_sharp_g_flat</item>
+        <item>@string/key_g</item>
+        <item>@string/key_g_sharp_a_flat</item>
+        <item>@string/key_a</item>
+        <item>@string/key_a_sharp_b_flat</item>
+        <item>@string/key_b</item>
+    </string-array>
+
+    <string-array name="difficulty_options">
+        <item>@string/filter_all</item>
+        <item>@string/difficulty_easy</item>
+        <item>@string/difficulty_medium</item>
+        <item>@string/difficulty_hard</item>
+    </string-array>
+</resources>
