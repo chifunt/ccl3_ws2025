@@ -1,6 +1,9 @@
 package com.chifunt.chromaticharptabs.ui.components
 
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -21,9 +24,10 @@ fun SearchField(
         onValueChange = onValueChange,
         label = { Text(stringResource(R.string.search_label)) },
         placeholder = { Text(text = stringResource(R.string.search_label)) },
+        leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = null) },
         textStyle = MaterialTheme.typography.bodyLarge,
         singleLine = true,
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.height(dimensionResource(R.dimen.text_field_height))
+        modifier = modifier.defaultMinSize(minHeight = dimensionResource(R.dimen.text_field_height))
     )
 }
