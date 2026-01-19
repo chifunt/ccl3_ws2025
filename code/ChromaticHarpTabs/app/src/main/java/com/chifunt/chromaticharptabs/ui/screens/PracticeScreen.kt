@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.components.DebouncedFilledIconButton
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
@@ -68,7 +68,7 @@ fun PracticeScreen(
                 horizontalArrangement = Arrangement.spacedBy(spacingMedium),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                FilledIconButton(
+                DebouncedFilledIconButton(
                     onClick = { practiceViewModel.previousLine() },
                     enabled = state.currentIndex > 0,
                     modifier = Modifier
@@ -77,7 +77,7 @@ fun PracticeScreen(
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 }
-                FilledIconButton(
+                DebouncedFilledIconButton(
                     onClick = { practiceViewModel.nextLine() },
                     enabled = state.currentIndex < state.lines.lastIndex,
                     modifier = Modifier

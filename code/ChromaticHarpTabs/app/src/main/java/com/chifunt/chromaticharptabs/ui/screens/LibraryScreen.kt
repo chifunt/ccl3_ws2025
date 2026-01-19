@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,6 +29,7 @@ import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
 import com.chifunt.chromaticharptabs.ui.components.AddTabButton
 import com.chifunt.chromaticharptabs.ui.components.DifficultyFilterRow
 import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
+import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
 import com.chifunt.chromaticharptabs.ui.components.LibraryHeader
 import com.chifunt.chromaticharptabs.ui.components.SearchField
@@ -61,7 +61,7 @@ fun LibraryScreen(
         ) {
             LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
             Spacer(Modifier.weight(1f))
-            IconButton(onClick = onSettings) {
+            DebouncedIconButton(onClick = onSettings) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
                     contentDescription = stringResource(R.string.settings_button)

@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
@@ -237,7 +236,7 @@ private fun DraggableNoteTile(
             verticalArrangement = Arrangement.Center
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                IconButton(
+                DebouncedIconButton(
                     onClick = onDeleteNote,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -373,7 +372,7 @@ private fun LineSectionHeader(
             text = stringResource(R.string.line_label, lineNumber),
             fontWeight = FontWeight.SemiBold
         )
-        IconButton(onClick = onDeleteLine) {
+        DebouncedIconButton(onClick = onDeleteLine) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = stringResource(R.string.delete_line)

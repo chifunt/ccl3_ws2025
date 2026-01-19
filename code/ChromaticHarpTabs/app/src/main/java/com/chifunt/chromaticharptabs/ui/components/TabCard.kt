@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
+import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 
 @Composable
 fun TabCard(
@@ -44,7 +44,7 @@ fun TabCard(
                     Text(tab.title, fontWeight = FontWeight.SemiBold)
                     Text(tab.artist.ifBlank { stringResource(R.string.unknown_artist) })
                 }
-                IconButton(onClick = onToggleFavorite) {
+                DebouncedIconButton(onClick = onToggleFavorite) {
                     Icon(
                         imageVector = if (tab.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                         contentDescription = stringResource(R.string.favorite_toggle)

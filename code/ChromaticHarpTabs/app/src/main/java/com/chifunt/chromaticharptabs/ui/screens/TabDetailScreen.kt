@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -36,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
@@ -62,10 +62,10 @@ fun TabDetailScreen(
             onBack = onBack,
             actions = {
                 Row {
-                    IconButton(onClick = { onEdit(state.tab.id) }) {
+                    DebouncedIconButton(onClick = { onEdit(state.tab.id) }) {
                         Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_button))
                     }
-                    IconButton(onClick = { tabDetailViewModel.removeTab { onBack() } }) {
+                    DebouncedIconButton(onClick = { tabDetailViewModel.removeTab { onBack() } }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.delete_button),
@@ -85,7 +85,7 @@ fun TabDetailScreen(
                 Text(state.tab.title, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
                 Text(state.tab.artist.ifBlank { stringResource(R.string.unknown_artist) })
             }
-            IconButton(onClick = { tabDetailViewModel.toggleFavorite() }) {
+            DebouncedIconButton(onClick = { tabDetailViewModel.toggleFavorite() }) {
                 Icon(
                     imageVector = if (state.tab.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.favorite_toggle)
