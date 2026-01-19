@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +37,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,7 @@ import kotlin.math.roundToInt
 
 private val NoteTileSize = 120.dp
 private val NoteGlyphSize = 32.dp
+private val DashedCornerRadius = 14.dp
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -257,18 +260,29 @@ private fun DraggableNoteTile(
             )
             Spacer(Modifier.height(spacingSmall))
             Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall)) {
-                OutlinedButton(onClick = onToggleBlow) {
+                val toggleModifier = Modifier.size(width = 48.dp, height = 32.dp)
+                OutlinedButton(
+                    onClick = onToggleBlow,
+                    modifier = toggleModifier,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
                     Text(
-                        text = if (note.isBlow) stringResource(R.string.blow_label)
-                        else stringResource(R.string.draw_label),
-                        fontSize = 12.sp
+                        text = if (note.isBlow) "B" else "D",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-                OutlinedButton(onClick = onToggleSlide) {
+                OutlinedButton(
+                    onClick = onToggleSlide,
+                    modifier = toggleModifier,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
                     Text(
-                        text = if (note.isSlide) stringResource(R.string.slide_on_label)
-                        else stringResource(R.string.slide_off_label),
-                        fontSize = 12.sp
+                        text = "<",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
@@ -346,17 +360,11 @@ private fun NoteGlyph(
 
 @Composable
 private fun AddNoteTile(onClick: () -> Unit) {
-    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
-
-    OutlinedCard(
+    DashedOutlineBox(
         modifier = Modifier.size(NoteTileSize),
-        shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(borderStroke, MaterialTheme.colorScheme.outline),
         onClick = onClick
     ) {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_note))
-        }
+        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_note))
     }
 }
 
@@ -385,9 +393,53 @@ private fun LineSectionHeader(
 
 @Composable
 private fun AddLineButton(onClick: () -> Unit) {
-    TextButton(onClick = onClick) {
-        Icon(Icons.Filled.Add, contentDescription = null)
-        Spacer(Modifier.width(8.dp))
-        Text(text = stringResource(R.string.add_new_line))
+    DashedOutlineBox(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(52.dp),
+        onClick = onClick
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text(text = stringResource(R.string.add_new_line))
+        }
+    }
+}
+
+@Composable
+private fun DashedOutlineBox(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
+    val outlineColor = MaterialTheme.colorScheme.outline
+    val cornerRadiusPx = with(androidx.compose.ui.platform.LocalDensity.current) {
+        DashedCornerRadius.toPx()
+    }
+
+    Box(
+        modifier = modifier
+            .drawBehind {
+                val strokeWidth = borderStroke.toPx()
+                val dash = floatArrayOf(strokeWidth * 4f, strokeWidth * 3f)
+                drawRoundRect(
+                    color = outlineColor,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                    style = Stroke(
+                        width = strokeWidth,
+                        pathEffect = PathEffect.dashPathEffect(dash, 0f)
+                    )
+                )
+            }
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
     }
 }
