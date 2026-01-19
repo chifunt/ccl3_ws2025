@@ -321,15 +321,17 @@ private fun NoteGlyph(
                     drawCircle(
                         color = outlineColor,
                         radius = size.minDimension / 2 - strokeWidth,
-                        style = Stroke(width = strokeWidth)
+                        style = Stroke(width = strokeWidth * 2)
                     )
                 }
                 if (isSlide) {
+                    val inset = size.width * 0.15f
+                    val y = strokeWidth * -3.5f
                     drawLine(
                         color = outlineColor,
-                        start = androidx.compose.ui.geometry.Offset(0f, strokeWidth),
-                        end = androidx.compose.ui.geometry.Offset(size.width, strokeWidth),
-                        strokeWidth = strokeWidth
+                        start = androidx.compose.ui.geometry.Offset(inset, y),
+                        end = androidx.compose.ui.geometry.Offset(size.width - inset, y),
+                        strokeWidth = strokeWidth * 2f
                     )
                 }
             },
