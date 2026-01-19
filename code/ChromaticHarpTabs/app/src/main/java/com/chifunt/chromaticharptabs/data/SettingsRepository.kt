@@ -17,13 +17,24 @@ class SettingsRepository(private val context: Context) {
         prefs[DARK_THEME_KEY] ?: true
     }
 
+    val onboardingCompleted: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[ONBOARDING_COMPLETED_KEY] ?: false
+    }
+
     suspend fun setDarkThemeEnabled(enabled: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[DARK_THEME_KEY] = enabled
         }
     }
 
+    suspend fun setOnboardingCompleted(completed: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[ONBOARDING_COMPLETED_KEY] = completed
+        }
+    }
+
     private companion object {
         val DARK_THEME_KEY = booleanPreferencesKey("dark_theme_enabled")
+        val ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("onboarding_completed")
     }
 }

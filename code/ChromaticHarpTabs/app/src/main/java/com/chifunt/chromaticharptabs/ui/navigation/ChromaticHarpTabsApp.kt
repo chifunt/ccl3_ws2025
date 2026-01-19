@@ -8,7 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import com.chifunt.chromaticharptabs.ui.screens.LibraryScreen
+import com.chifunt.chromaticharptabs.ui.screens.OnboardingScreen
 import com.chifunt.chromaticharptabs.ui.screens.PracticeScreen
 import com.chifunt.chromaticharptabs.ui.screens.SettingsScreen
 import com.chifunt.chromaticharptabs.ui.screens.TabDetailScreen
@@ -19,17 +21,19 @@ enum class Routes(val route: String) {
     Detail(ROUTE_DETAIL),
     Editor(ROUTE_EDITOR),
     Practice(ROUTE_PRACTICE),
-    Settings(ROUTE_SETTINGS)
+    Settings(ROUTE_SETTINGS),
+    Onboarding(ROUTE_ONBOARDING)
 }
 
 @Composable
 fun ChromaticHarpTabsApp(
     modifier: Modifier = Modifier,
+    startDestination: String = Routes.Library.route,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.Library.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         composable(Routes.Library.route) {
@@ -72,7 +76,19 @@ fun ChromaticHarpTabsApp(
             PracticeScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.Settings.route) {
-            SettingsScreen(onBack = { navController.popBackStack() })
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onViewOnboarding = { navController.navigate(ROUTE_ONBOARDING) }
+            )
+        }
+        composable(Routes.Onboarding.route) {
+            OnboardingScreen(
+                onFinish = {
+                    navController.navigate(Routes.Library.route, navOptions {
+                        popUpTo(Routes.Onboarding.route) { inclusive = true }
+                    })
+                }
+            )
         }
     }
 }

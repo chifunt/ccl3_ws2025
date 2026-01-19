@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +29,8 @@ import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onViewOnboarding: () -> Unit
 ) {
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
@@ -66,6 +68,15 @@ fun SettingsScreen(
                 checked = darkThemeEnabled,
                 onCheckedChange = settingsViewModel::setDarkThemeEnabled
             )
+        }
+
+        Spacer(Modifier.height(spacingMedium))
+
+        TextButton(
+            onClick = onViewOnboarding,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.settings_view_onboarding))
         }
     }
 }

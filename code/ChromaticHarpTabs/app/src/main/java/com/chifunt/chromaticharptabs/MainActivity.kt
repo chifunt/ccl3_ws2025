@@ -10,9 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
-import com.chifunt.chromaticharptabs.ui.navigation.ChromaticHarpTabsApp
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.navigation.ChromaticHarpTabsApp
+import com.chifunt.chromaticharptabs.ui.navigation.Routes
+import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
@@ -22,10 +23,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             val settingsViewModel: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory)
             val darkTheme = settingsViewModel.darkThemeEnabled.collectAsStateWithLifecycle().value
+            val onboardingCompleted = settingsViewModel.onboardingCompleted.collectAsStateWithLifecycle().value
 
             ChromaticHarpTabsTheme(darkTheme = darkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ChromaticHarpTabsApp(modifier = Modifier.padding(innerPadding))
+                    val startRoute = if (onboardingCompleted) {
+                        Routes.Library.route
+                    } else {
+                        Routes.Onboarding.route
+                    }
+                    ChromaticHarpTabsApp(
+                        modifier = Modifier.padding(innerPadding),
+                        startDestination = startRoute
+                    )
                 }
             }
         }

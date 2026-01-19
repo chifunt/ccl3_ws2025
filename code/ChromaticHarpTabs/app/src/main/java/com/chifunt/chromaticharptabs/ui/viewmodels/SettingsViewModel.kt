@@ -17,9 +17,21 @@ class SettingsViewModel(
         true
     )
 
+    val onboardingCompleted = repository.onboardingCompleted.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        false
+    )
+
     fun setDarkThemeEnabled(enabled: Boolean) {
         viewModelScope.launch {
             repository.setDarkThemeEnabled(enabled)
+        }
+    }
+
+    fun setOnboardingCompleted(completed: Boolean) {
+        viewModelScope.launch {
+            repository.setOnboardingCompleted(completed)
         }
     }
 }
