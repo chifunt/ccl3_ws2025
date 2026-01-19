@@ -2,6 +2,7 @@ package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabListViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
 import com.chifunt.chromaticharptabs.ui.components.AddTabButton
 import com.chifunt.chromaticharptabs.ui.components.DifficultyFilterRow
 import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
@@ -36,7 +41,8 @@ fun LibraryScreen(
     modifier: Modifier = Modifier,
     tabListViewModel: TabListViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onTabClick: (Int) -> Unit,
-    onCreateNew: () -> Unit
+    onCreateNew: () -> Unit,
+    onSettings: () -> Unit
 ) {
     val state by tabListViewModel.uiState.collectAsStateWithLifecycle()
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
@@ -49,7 +55,19 @@ fun LibraryScreen(
             .padding(spacingMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LibraryHeader()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LibraryHeader()
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = onSettings) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = stringResource(R.string.settings_button)
+                )
+            }
+        }
         Spacer(Modifier.height(spacingSmall))
 
         SearchField(

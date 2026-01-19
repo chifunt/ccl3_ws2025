@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chifunt.chromaticharptabs.ui.screens.LibraryScreen
 import com.chifunt.chromaticharptabs.ui.screens.PracticeScreen
+import com.chifunt.chromaticharptabs.ui.screens.SettingsScreen
 import com.chifunt.chromaticharptabs.ui.screens.TabDetailScreen
 import com.chifunt.chromaticharptabs.ui.screens.TabEditorScreen
 
@@ -17,7 +18,8 @@ enum class Routes(val route: String) {
     Library(ROUTE_LIBRARY),
     Detail(ROUTE_DETAIL),
     Editor(ROUTE_EDITOR),
-    Practice(ROUTE_PRACTICE)
+    Practice(ROUTE_PRACTICE),
+    Settings(ROUTE_SETTINGS)
 }
 
 @Composable
@@ -33,7 +35,8 @@ fun ChromaticHarpTabsApp(
         composable(Routes.Library.route) {
             LibraryScreen(
                 onTabClick = { id -> navController.navigate(detailRoute(id)) },
-                onCreateNew = { navController.navigate(editorRoute(null)) }
+                onCreateNew = { navController.navigate(editorRoute(null)) },
+                onSettings = { navController.navigate(ROUTE_SETTINGS) }
             )
         }
         composable(
@@ -67,6 +70,9 @@ fun ChromaticHarpTabsApp(
             listOf(navArgument(NAV_ARG_TAB_ID) { type = NavType.IntType })
         ) {
             PracticeScreen(onBack = { navController.popBackStack() })
+        }
+        composable(Routes.Settings.route) {
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
     }
 }

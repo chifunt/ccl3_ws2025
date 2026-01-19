@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ChromaticHarpTabs</string>
     <string name="library_title">Library</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_description">Settings options will appear here.</string>
+    <string name="settings_button">Open settings</string>
     <string name="search_label">Search by title or artist</string>
     <string name="favorites_only">Favorites only</string>
     <string name="sort_label">Sort by</string>

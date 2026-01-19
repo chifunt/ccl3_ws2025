@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.viewmodel.SortOption
+import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 
 @Composable
 fun SortMenu(

@@ -5,10 +5,10 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.chifunt.chromaticharptabs.ChromaticHarpTabsApplication
-import com.chifunt.chromaticharptabs.ui.viewmodel.PracticeViewModel
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabDetailViewModel
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabEditorViewModel
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabListViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
 
 object AppViewModelProvider {
 

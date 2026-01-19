@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.viewmodel.SortOption
+import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 
 @Composable
 fun FavoriteSortRow(

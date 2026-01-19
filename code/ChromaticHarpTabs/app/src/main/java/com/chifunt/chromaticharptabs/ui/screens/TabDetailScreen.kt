@@ -33,7 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabDetailViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 
 @Composable

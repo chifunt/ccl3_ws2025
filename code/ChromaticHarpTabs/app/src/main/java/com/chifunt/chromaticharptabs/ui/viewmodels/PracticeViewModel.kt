@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.viewmodel
+package com.chifunt.chromaticharptabs.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

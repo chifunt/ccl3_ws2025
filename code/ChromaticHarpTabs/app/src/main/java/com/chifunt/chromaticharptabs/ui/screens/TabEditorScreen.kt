@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.viewmodel.TabEditorViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
 import com.chifunt.chromaticharptabs.ui.components.FilterDropdownButton
 import com.chifunt.chromaticharptabs.ui.components.LabeledTextField
 import com.chifunt.chromaticharptabs.ui.components.difficultyOptions
