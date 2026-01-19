@@ -81,7 +81,7 @@ fun TabDetailScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1f).padding(start = spacingSmall)) {
                 Text(state.tab.title, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
                 Text(state.tab.artist.ifBlank { stringResource(R.string.unknown_artist) })
             }
