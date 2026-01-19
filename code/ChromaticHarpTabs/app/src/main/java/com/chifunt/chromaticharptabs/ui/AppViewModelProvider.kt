@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.chifunt.chromaticharptabs.ChromaticHarpTabsApplication
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
@@ -31,6 +32,11 @@ object AppViewModelProvider {
         initializer {
             val app = this[APPLICATION_KEY] as ChromaticHarpTabsApplication
             PracticeViewModel(this.createSavedStateHandle(), app.tabRepository)
+        }
+
+        initializer {
+            val app = this[APPLICATION_KEY] as ChromaticHarpTabsApplication
+            SettingsViewModel(app.settingsRepository)
         }
     }
 }

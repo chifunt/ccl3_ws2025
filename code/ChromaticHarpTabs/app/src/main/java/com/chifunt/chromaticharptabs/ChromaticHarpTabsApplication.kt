@@ -1,6 +1,7 @@
 package com.chifunt.chromaticharptabs
 
 import android.app.Application
+import com.chifunt.chromaticharptabs.data.SettingsRepository
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.data.TabRepository
 import com.chifunt.chromaticharptabs.db.TabDatabase
@@ -17,6 +18,7 @@ class ChromaticHarpTabsApplication : Application() {
         val dao = TabDatabase.getDatabase(this).tabDao()
         TabRepository(dao)
     }
+    val settingsRepository by lazy { SettingsRepository(this) }
 
     override fun onCreate() {
         super.onCreate()
