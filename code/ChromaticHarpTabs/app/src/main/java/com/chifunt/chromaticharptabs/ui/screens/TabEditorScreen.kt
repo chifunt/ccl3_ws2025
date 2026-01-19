@@ -236,7 +236,7 @@ private fun HolePickerDialog(
                                     text = hole.toString(),
                                     maxLines = 1,
                                     softWrap = false,
-                                    fontSize = 12.sp
+                                    fontSize = 24.sp
                                 )
                             }
                         }
