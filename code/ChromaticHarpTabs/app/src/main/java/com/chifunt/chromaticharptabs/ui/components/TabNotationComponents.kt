@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -37,6 +38,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -261,10 +263,28 @@ private fun DraggableNoteTile(
             Spacer(Modifier.height(spacingSmall))
             Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall)) {
                 val toggleModifier = Modifier.size(width = 48.dp, height = 32.dp)
+                val blowContainer = if (note.isBlow) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant
+                }
+                val blowLabel = if (note.isBlow) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
                 OutlinedButton(
                     onClick = onToggleBlow,
                     modifier = toggleModifier,
-                    contentPadding = PaddingValues(0.dp)
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = blowContainer,
+                        contentColor = blowLabel
+                    ),
+                    border = BorderStroke(
+                        borderStroke,
+                        if (note.isBlow) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                    )
                 ) {
                     Text(
                         text = if (note.isBlow) "B" else "D",
@@ -273,10 +293,28 @@ private fun DraggableNoteTile(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+                val slideContainer = if (note.isSlide) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    Color.Transparent
+                }
+                val slideLabel = if (note.isSlide) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
                 OutlinedButton(
                     onClick = onToggleSlide,
                     modifier = toggleModifier,
-                    contentPadding = PaddingValues(0.dp)
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = slideContainer,
+                        contentColor = slideLabel
+                    ),
+                    border = BorderStroke(
+                        borderStroke,
+                        if (note.isSlide) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
+                    )
                 ) {
                     Text(
                         text = "<",
