@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.text.style.TextOverflow
 import com.chifunt.chromaticharptabs.R
 
@@ -32,15 +34,23 @@ fun FilterDropdownButton(
     selected: String,
     options: List<String>,
     onSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    minHeight: Dp? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     val borderWidth = dimensionResource(R.dimen.border_stroke_width)
 
     Box(modifier = modifier) {
+        val buttonModifier = if (minHeight != null) {
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = minHeight)
+        } else {
+            Modifier.fillMaxWidth()
+        }
         OutlinedButton(
             onClick = { expanded = true },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = buttonModifier,
             shape = MaterialTheme.shapes.small,
             border = BorderStroke(borderWidth, MaterialTheme.colorScheme.outline),
             contentPadding = PaddingValues(

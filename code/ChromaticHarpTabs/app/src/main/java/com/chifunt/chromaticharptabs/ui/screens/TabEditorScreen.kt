@@ -57,6 +57,7 @@ fun TabEditorScreen(
     val state by tabEditorViewModel.uiState.collectAsStateWithLifecycle()
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
+    val textFieldHeight = dimensionResource(R.dimen.text_field_height)
     val allLabel = stringResource(R.string.filter_all)
     val mediumLabel = stringResource(R.string.difficulty_medium)
     var holePickerTarget by remember { mutableStateOf<HolePickerTarget?>(null) }
@@ -107,6 +108,7 @@ fun TabEditorScreen(
             onSelected = { option ->
                 tabEditorViewModel.updateKey(if (option == allLabel) "" else option)
             },
+            minHeight = textFieldHeight,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(spacingSmall))
@@ -116,6 +118,7 @@ fun TabEditorScreen(
             selected = state.difficulty.ifBlank { mediumLabel },
             options = difficultyOptions().drop(1),
             onSelected = tabEditorViewModel::updateDifficulty,
+            minHeight = textFieldHeight,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(spacingSmall))
