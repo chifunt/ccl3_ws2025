@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
+import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @Composable
 fun FavoriteSortRow(
@@ -120,6 +122,48 @@ fun FavoriteSortRow(
             modifier = Modifier
                 .height(filterHeight)
                 .width(180.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FavoriteSortRowPreview() {
+    ChromaticHarpTabsTheme(darkTheme = true) {
+        FavoriteSortRow(
+            difficultyFilter = "Medium",
+            onDifficultySelected = {},
+            tagOptions = listOf("jazz", "ballad", "latin"),
+            selectedTags = setOf("jazz"),
+            onToggleTag = {},
+            onClearTags = {},
+            favoritesOnly = true,
+            onToggleFavorites = {},
+            sortOption = SortOption.Newest,
+            onSortSelected = {},
+            keyFilter = "C",
+            onKeySelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FavoriteSortRowLightPreview() {
+    ChromaticHarpTabsTheme(darkTheme = false) {
+        FavoriteSortRow(
+            difficultyFilter = "Medium",
+            onDifficultySelected = {},
+            tagOptions = listOf("jazz", "ballad", "latin"),
+            selectedTags = emptySet(),
+            onToggleTag = {},
+            onClearTags = {},
+            favoritesOnly = false,
+            onToggleFavorites = {},
+            sortOption = SortOption.Title,
+            onSortSelected = {},
+            keyFilter = "G",
+            onKeySelected = {}
         )
     }
 }

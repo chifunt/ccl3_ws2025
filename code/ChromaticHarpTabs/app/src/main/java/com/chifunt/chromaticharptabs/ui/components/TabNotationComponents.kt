@@ -46,6 +46,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import kotlin.math.roundToInt
 
 private val NoteTileSize = 120.dp
@@ -183,6 +185,40 @@ fun TabNotationInlineDisplay(
             }
             Spacer(Modifier.height(lineSpacing))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabNotationInlineDisplayPreview() {
+    ChromaticHarpTabsTheme(darkTheme = true) {
+        TabNotationInlineDisplay(
+            lines = listOf(
+                listOf(
+                    TabNote(hole = 3, isBlow = true, isSlide = false),
+                    TabNote(hole = 3, isBlow = false, isSlide = false),
+                    TabNote(hole = 4, isBlow = true, isSlide = true)
+                )
+            ),
+            centered = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabNotationInlineDisplayLightPreview() {
+    ChromaticHarpTabsTheme(darkTheme = false) {
+        TabNotationInlineDisplay(
+            lines = listOf(
+                listOf(
+                    TabNote(hole = 4, isBlow = true, isSlide = false),
+                    TabNote(hole = 4, isBlow = false, isSlide = false),
+                    TabNote(hole = 5, isBlow = true, isSlide = true)
+                )
+            ),
+            centered = true
+        )
     }
 }
 

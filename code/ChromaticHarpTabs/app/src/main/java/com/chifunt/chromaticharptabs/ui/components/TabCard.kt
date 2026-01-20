@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
@@ -36,6 +37,7 @@ import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
 import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -134,5 +136,51 @@ fun TabCard(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabCardPreview() {
+    ChromaticHarpTabsTheme(darkTheme = true) {
+        TabCard(
+            tab = Tab(
+                id = 1,
+                title = "Autumn Leaves",
+                artist = "Joseph Kosma",
+                key = "G",
+                difficulty = "Medium",
+                tags = "jazz ballad",
+                content = "",
+                isFavorite = true,
+                createdAt = 0L,
+                updatedAt = 0L
+            ),
+            onOpen = {},
+            onToggleFavorite = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabCardNoTagsPreview() {
+    ChromaticHarpTabsTheme(darkTheme = false) {
+        TabCard(
+            tab = Tab(
+                id = 2,
+                title = "Blue Bossa",
+                artist = "Kenny Dorham",
+                key = "C",
+                difficulty = "Easy",
+                tags = "",
+                content = "",
+                isFavorite = false,
+                createdAt = 0L,
+                updatedAt = 0L
+            ),
+            onOpen = {},
+            onToggleFavorite = {}
+        )
     }
 }
