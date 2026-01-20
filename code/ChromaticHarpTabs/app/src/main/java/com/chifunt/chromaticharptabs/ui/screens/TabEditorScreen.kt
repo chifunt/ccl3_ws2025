@@ -1,6 +1,7 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -85,83 +90,127 @@ fun TabEditorScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        LabeledTextField(
-            value = state.title,
-            labelRes = R.string.title_label,
-            onValueChange = tabEditorViewModel::updateTitle,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        ) {
+            Column(Modifier.padding(spacingMedium)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.Description,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(Modifier.width(spacingSmall))
+                    Text(
+                        text = stringResource(R.string.editor_section_details),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+                Spacer(Modifier.height(spacingSmall))
+                LabeledTextField(
+                    value = state.title,
+                    labelRes = R.string.title_label,
+                    onValueChange = tabEditorViewModel::updateTitle,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingSmall))
 
-        LabeledTextField(
-            value = state.artist,
-            labelRes = R.string.artist_label,
-            onValueChange = tabEditorViewModel::updateArtist,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+                LabeledTextField(
+                    value = state.artist,
+                    labelRes = R.string.artist_label,
+                    onValueChange = tabEditorViewModel::updateArtist,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingSmall))
 
-        FilterDropdownButton(
-            label = stringResource(R.string.key_label),
-            selected = state.key.ifBlank { allLabel },
-            options = keyOptions(),
-            onSelected = { option ->
-                tabEditorViewModel.updateKey(if (option == allLabel) "" else option)
-            },
-            minHeight = textFieldHeight,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+                FilterDropdownButton(
+                    label = stringResource(R.string.key_label),
+                    selected = state.key.ifBlank { allLabel },
+                    options = keyOptions(),
+                    onSelected = { option ->
+                        tabEditorViewModel.updateKey(if (option == allLabel) "" else option)
+                    },
+                    minHeight = textFieldHeight,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingSmall))
 
-        FilterDropdownButton(
-            label = stringResource(R.string.difficulty_label),
-            selected = state.difficulty.ifBlank { mediumLabel },
-            options = difficultyOptions().drop(1),
-            onSelected = tabEditorViewModel::updateDifficulty,
-            minHeight = textFieldHeight,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+                FilterDropdownButton(
+                    label = stringResource(R.string.difficulty_label),
+                    selected = state.difficulty.ifBlank { mediumLabel },
+                    options = difficultyOptions().drop(1),
+                    onSelected = tabEditorViewModel::updateDifficulty,
+                    minHeight = textFieldHeight,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingSmall))
 
-        LabeledTextField(
-            value = state.tempo,
-            labelRes = R.string.tempo_label,
-            onValueChange = { value ->
-                tabEditorViewModel.updateTempo(value.filter { it.isDigit() })
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+                LabeledTextField(
+                    value = state.tempo,
+                    labelRes = R.string.tempo_label,
+                    onValueChange = { value ->
+                        tabEditorViewModel.updateTempo(value.filter { it.isDigit() })
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingSmall))
 
-        LabeledTextField(
-            value = state.tags,
-            labelRes = R.string.tags_label,
-            onValueChange = tabEditorViewModel::updateTags,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(spacingSmall))
+                LabeledTextField(
+                    value = state.tags,
+                    labelRes = R.string.tags_label,
+                    onValueChange = tabEditorViewModel::updateTags,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
 
-        Text(
-            text = stringResource(R.string.tab_content_label),
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(Modifier.height(spacingSmall))
-        TabNotationEditor(
-            lines = state.lines,
-            onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
-            onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
-            onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
-            onDeleteNote = tabEditorViewModel::removeNote,
-            onEditHole = { lineIndex, noteIndex ->
-                holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
-            },
-            onToggleBlow = tabEditorViewModel::toggleBlow,
-            onToggleSlide = tabEditorViewModel::toggleSlide,
-            onMoveNote = tabEditorViewModel::moveNote,
-            lineSpacing = spacingMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Spacer(Modifier.height(spacingMedium))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        ) {
+            Column(Modifier.padding(spacingMedium)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.MusicNote,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                    Spacer(Modifier.width(spacingSmall))
+                    Text(
+                        text = stringResource(R.string.editor_section_content),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
+                Spacer(Modifier.height(spacingSmall))
+                TabNotationEditor(
+                    lines = state.lines,
+                    onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
+                    onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
+                    onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
+                    onDeleteNote = tabEditorViewModel::removeNote,
+                    onEditHole = { lineIndex, noteIndex ->
+                        holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
+                    },
+                    onToggleBlow = tabEditorViewModel::toggleBlow,
+                    onToggleSlide = tabEditorViewModel::toggleSlide,
+                    onMoveNote = tabEditorViewModel::moveNote,
+                    lineSpacing = spacingMedium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
 
         state.errorMessageResId?.let { messageResId ->
             Spacer(Modifier.height(spacingSmall))

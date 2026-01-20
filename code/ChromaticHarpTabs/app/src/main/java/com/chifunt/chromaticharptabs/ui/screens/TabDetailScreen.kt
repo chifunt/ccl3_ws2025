@@ -17,12 +17,21 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +66,7 @@ fun TabDetailScreen(
     val state by tabDetailViewModel.uiState.collectAsStateWithLifecycle()
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val spacingTight = 1.dp
     val showNotationInfo = remember { mutableStateOf(false) }
 
     Column(
@@ -70,7 +81,7 @@ fun TabDetailScreen(
                 Row {
                     DebouncedIconButton(onClick = { showNotationInfo.value = true }) {
                         Icon(
-                            imageVector = Icons.Outlined.HelpOutline,
+                        imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
                             contentDescription = stringResource(R.string.notation_info_button)
                         )
                     }
@@ -141,35 +152,133 @@ fun TabDetailScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        OutlinedCard(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        ) {
             Column(Modifier.padding(spacingMedium)) {
-                Text(stringResource(R.string.detail_metadata_title))
-                Spacer(Modifier.height(dimensionResource(R.dimen.spacing_small)))
-                Text(
-                    stringResource(
-                        R.string.detail_metadata_key,
-                        state.tab.key.ifBlank { stringResource(R.string.unknown_value) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                )
-                Text(stringResource(R.string.detail_metadata_difficulty, state.tab.difficulty))
-                Text(
-                    stringResource(
-                        R.string.detail_metadata_tempo,
-                        state.tab.tempo?.toString() ?: stringResource(R.string.tempo_unknown)
+                    Spacer(Modifier.width(spacingSmall))
+                    Text(
+                        text = stringResource(R.string.detail_metadata_title),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                )
-                if (state.tab.tags.isNotBlank()) {
-                    Text(stringResource(R.string.detail_metadata_tags, state.tab.tags))
+                }
+                Spacer(Modifier.height(spacingSmall))
+                Column(verticalArrangement = Arrangement.spacedBy(spacingTight)) {
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(
+                                    R.string.detail_metadata_key,
+                                    state.tab.key.ifBlank { stringResource(R.string.unknown_value) }
+                                )
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.VpnKey,
+                                contentDescription = null
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurface,
+                            leadingIconContentColor = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(stringResource(R.string.detail_metadata_difficulty, state.tab.difficulty)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Tune,
+                                contentDescription = null
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurface,
+                            leadingIconContentColor = MaterialTheme.colorScheme.secondary
+                        )
+                    )
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(
+                                    R.string.detail_metadata_tempo,
+                                    state.tab.tempo?.toString() ?: stringResource(R.string.tempo_unknown)
+                                )
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Speed,
+                                contentDescription = null
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurface,
+                            leadingIconContentColor = MaterialTheme.colorScheme.tertiary
+                        )
+                    )
+                    if (state.tab.tags.isNotBlank()) {
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(stringResource(R.string.detail_metadata_tags, state.tab.tags)) },
+                            leadingIcon = {
+                                Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Label,
+                                    contentDescription = null
+                                )
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                labelColor = MaterialTheme.colorScheme.onSurface,
+                                leadingIconContentColor = MaterialTheme.colorScheme.tertiary
+                            )
+                        )
+                    }
                 }
             }
         }
 
         Spacer(Modifier.height(spacingMedium))
 
-        OutlinedCard(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        ) {
             Column(Modifier.padding(spacingMedium)) {
-                Text(stringResource(R.string.tab_content_label))
-                Spacer(Modifier.height(dimensionResource(R.dimen.spacing_small)))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.MusicNote,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                    Spacer(Modifier.width(spacingSmall))
+                    Text(
+                        text = stringResource(R.string.tab_content_label),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
+                Spacer(Modifier.height(spacingMedium))
                 val notation = TabNotationJson.fromJson(state.tab.content)
                 if (notation != null && notation.lines.isNotEmpty()) {
                     TabNotationInlineDisplay(

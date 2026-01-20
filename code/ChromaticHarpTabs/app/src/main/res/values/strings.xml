@@ -39,13 +39,15 @@
     <string name="tempo_unknown">Unknown</string>
     <string name="unknown_value">Unknown</string>
     <string name="detail_metadata_tags">Tags: %1$s</string>
-    <string name="tab_content_label">Tab content</string>
+    <string name="tab_content_label">Tab Content</string>
     <string name="practice_button">Practice</string>
     <string name="edit_button">Edit</string>
     <string name="delete_button">Delete</string>
     <string name="back_to_library">Back to library</string>
     <string name="back_button">Back</string>
     <string name="editor_title">Tab editor</string>
+    <string name="editor_section_details">Details</string>
+    <string name="editor_section_content">Notation</string>
     <string name="title_label">Title</string>
     <string name="artist_label">Artist</string>
     <string name="key_label">Key</string>
