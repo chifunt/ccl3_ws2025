@@ -75,6 +75,7 @@ fun TabEditorScreen(
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val textFieldHeight = dimensionResource(R.dimen.text_field_height)
     val allLabel = stringResource(R.string.filter_all)
+    val keyDefault = stringResource(R.string.key_c)
     val mediumLabel = stringResource(R.string.difficulty_medium)
     var holePickerTarget by remember { mutableStateOf<HolePickerTarget?>(null) }
     var lineToDelete by remember { mutableStateOf<Int?>(null) }
@@ -89,9 +90,12 @@ fun TabEditorScreen(
         }
     }
 
-    LaunchedEffect(state.id, state.difficulty) {
+    LaunchedEffect(state.id, state.difficulty, state.key) {
         if (state.id <= 0 && state.difficulty.isBlank()) {
             tabEditorViewModel.updateDifficulty(mediumLabel)
+        }
+        if (state.id <= 0 && state.key.isBlank()) {
+            tabEditorViewModel.updateKey(keyDefault)
         }
     }
     Column(
@@ -165,10 +169,10 @@ fun TabEditorScreen(
 
                 FilterDropdownButton(
                     label = stringResource(R.string.key_label),
-                    selected = state.key.ifBlank { allLabel },
-                    options = keyOptions(),
+                    selected = state.key.ifBlank { keyDefault },
+                    options = keyOptions().drop(1),
                     onSelected = { option ->
-                        tabEditorViewModel.updateKey(if (option == allLabel) "" else option)
+                        tabEditorViewModel.updateKey(option)
                     },
                     minHeight = textFieldHeight,
                     leadingIcon = {

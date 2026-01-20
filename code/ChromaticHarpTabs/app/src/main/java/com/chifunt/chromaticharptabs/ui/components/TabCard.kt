@@ -1,6 +1,9 @@
 package com.chifunt.chromaticharptabs.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,12 +14,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +35,9 @@ import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
+import com.chifunt.chromaticharptabs.ui.components.parseTags
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TabCard(
     tab: Tab,
@@ -107,23 +113,24 @@ fun TabCard(
                     color = difficultyColor
                 )
             }
-            if (tab.tags.isNotBlank()) {
+            val tagList = parseTags(tab.tags)
+            if (tagList.isNotEmpty()) {
                 Spacer(Modifier.height(spacingSmall))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                    verticalArrangement = Arrangement.spacedBy(spacingSmall),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Label,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(Modifier.width(spacingSmall))
-                    Text(
-                        text = stringResource(R.string.tab_tags_line, tab.tags),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    tagList.forEach { tag ->
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(tag) },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        )
+                    }
                 }
             }
         }
