@@ -85,80 +85,26 @@ fun TabDetailScreen(
             .padding(spacingMedium)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBackBar(
+        DetailTopBar(
             onBack = onBack,
-            actions = {
-                Row {
-                    DebouncedIconButton(onClick = { showNotationInfo.value = true }) {
-                        Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                            contentDescription = stringResource(R.string.notation_info_button)
-                        )
-                    }
-                    DebouncedIconButton(onClick = { onEdit(state.tab.id) }) {
-                        Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_button))
-                    }
-                    DebouncedIconButton(onClick = { tabDetailViewModel.removeTab { onBack() } }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete_button),
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            }
+            onShowNotationInfo = { showNotationInfo.value = true },
+            onEdit = { onEdit(state.tab.id) },
+            onDelete = { tabDetailViewModel.removeTab { onBack() } }
         )
-        if (showNotationInfo.value) {
-            AlertDialog(
-                onDismissRequest = { showNotationInfo.value = false },
-                confirmButton = {
-                    Button(onClick = { showNotationInfo.value = false }) {
-                        Text(text = stringResource(R.string.close_button))
-                    }
-                },
-                title = { Text(text = stringResource(R.string.notation_info_title)) },
-                text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
-                        Text(text = stringResource(R.string.notation_info_blow))
-                        TabNotationInlineDisplay(
-                            lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = false)))
-                        )
-                        Spacer(Modifier.height(spacingSmall))
-                        Text(text = stringResource(R.string.notation_info_draw))
-                        TabNotationInlineDisplay(
-                            lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = false)))
-                        )
-                        Spacer(Modifier.height(spacingSmall))
-                        Text(text = stringResource(R.string.notation_info_slide))
-                        TabNotationInlineDisplay(
-                            lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = true)))
-                        )
-                        Spacer(Modifier.height(spacingSmall))
-                        Text(text = stringResource(R.string.notation_info_draw_slide))
-                        TabNotationInlineDisplay(
-                            lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = true)))
-                        )
-                    }
-                }
-            )
-        }
+        NotationInfoDialog(
+            isVisible = showNotationInfo.value,
+            spacingSmall = spacingSmall,
+            onDismiss = { showNotationInfo.value = false }
+        )
         Spacer(Modifier.height(spacingSmall))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.weight(1f).padding(start = spacingSmall)) {
-                Text(state.tab.title, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
-                Text(state.tab.artist.ifBlank { stringResource(R.string.unknown_artist) })
-            }
-            DebouncedIconButton(onClick = { tabDetailViewModel.toggleFavorite() }) {
-                Icon(
-                    imageVector = if (state.tab.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                    contentDescription = stringResource(R.string.favorite_toggle)
-                )
-            }
-        }
+        TitleRow(
+            title = state.tab.title,
+            artist = state.tab.artist,
+            isFavorite = state.tab.isFavorite,
+            spacingSmall = spacingSmall,
+            onToggleFavorite = tabDetailViewModel::toggleFavorite
+        )
 
         Spacer(Modifier.height(spacingMedium))
 
@@ -182,12 +128,123 @@ fun TabDetailScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall), modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { onPractice(state.tab.id) }, modifier = Modifier.weight(1f)) {
-                Icon(Icons.Filled.PlayArrow, contentDescription = null)
-                Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
-                Text(stringResource(R.string.practice_button))
+        PracticeRow(
+            onPractice = { onPractice(state.tab.id) },
+            spacingSmall = spacingSmall
+        )
+    }
+}
+
+@Composable
+private fun DetailTopBar(
+    onBack: () -> Unit,
+    onShowNotationInfo: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    TopBackBar(
+        onBack = onBack,
+        actions = {
+            Row {
+                DebouncedIconButton(onClick = onShowNotationInfo) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                        contentDescription = stringResource(R.string.notation_info_button)
+                    )
+                }
+                DebouncedIconButton(onClick = onEdit) {
+                    Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_button))
+                }
+                DebouncedIconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = stringResource(R.string.delete_button),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
+        }
+    )
+}
+
+@Composable
+private fun NotationInfoDialog(
+    isVisible: Boolean,
+    spacingSmall: Dp,
+    onDismiss: () -> Unit
+) {
+    if (!isVisible) {
+        return
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text(text = stringResource(R.string.close_button))
+            }
+        },
+        title = { Text(text = stringResource(R.string.notation_info_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
+                Text(text = stringResource(R.string.notation_info_blow))
+                TabNotationInlineDisplay(
+                    lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = false)))
+                )
+                Spacer(Modifier.height(spacingSmall))
+                Text(text = stringResource(R.string.notation_info_draw))
+                TabNotationInlineDisplay(
+                    lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = false)))
+                )
+                Spacer(Modifier.height(spacingSmall))
+                Text(text = stringResource(R.string.notation_info_slide))
+                TabNotationInlineDisplay(
+                    lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = true)))
+                )
+                Spacer(Modifier.height(spacingSmall))
+                Text(text = stringResource(R.string.notation_info_draw_slide))
+                TabNotationInlineDisplay(
+                    lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = true)))
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun TitleRow(
+    title: String,
+    artist: String,
+    isFavorite: Boolean,
+    spacingSmall: Dp,
+    onToggleFavorite: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.weight(1f).padding(start = spacingSmall)) {
+            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+            Text(artist.ifBlank { stringResource(R.string.unknown_artist) })
+        }
+        DebouncedIconButton(onClick = onToggleFavorite) {
+            Icon(
+                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = stringResource(R.string.favorite_toggle)
+            )
+        }
+    }
+}
+
+@Composable
+private fun PracticeRow(
+    onPractice: () -> Unit,
+    spacingSmall: Dp
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall), modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = onPractice, modifier = Modifier.weight(1f)) {
+            Icon(Icons.Filled.PlayArrow, contentDescription = null)
+            Spacer(Modifier.width(spacingSmall))
+            Text(stringResource(R.string.practice_button))
         }
     }
 }

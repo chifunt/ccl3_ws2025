@@ -58,7 +58,10 @@ class TabDetailViewModel(
     fun toggleFavorite() {
         viewModelScope.launch {
             val tab = uiState.value.tab
-            repository.setFavorite(tab.id, !tab.isFavorite, System.currentTimeMillis())
+            val now = System.currentTimeMillis()
+            val updatedTab = tab.copy(isFavorite = !tab.isFavorite, updatedAt = now)
+            _uiState.update { it.copy(tab = updatedTab) }
+            repository.setFavorite(tab.id, updatedTab.isFavorite, now)
         }
     }
 }
