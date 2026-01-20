@@ -1,7 +1,7 @@
 package com.chifunt.chromaticharptabs.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,7 +28,7 @@ fun SortMenu(
         },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Outlined.Sort,
+                imageVector = Icons.AutoMirrored.Outlined.Sort,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
