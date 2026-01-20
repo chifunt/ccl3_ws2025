@@ -6,6 +6,11 @@
     <string name="settings_button">Open settings</string>
     <string name="settings_dark_mode">Dark mode</string>
     <string name="settings_dark_mode_detail">Use the dark color theme.</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_detail">Match the app look to your device or choose a style.</string>
+    <string name="theme_system">Auto</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="settings_view_onboarding">View onboarding</string>
     <string name="onboarding_title">Getting started</string>
     <string name="onboarding_skip">Skip</string>

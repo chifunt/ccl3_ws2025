@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,6 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.components.FilterDropdownButton
+import com.chifunt.chromaticharptabs.data.ThemeMode
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 
 @Composable
@@ -34,7 +35,15 @@ fun SettingsScreen(
 ) {
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
-    val darkThemeEnabled = settingsViewModel.darkThemeEnabled.collectAsStateWithLifecycle().value
+    val filterHeight = dimensionResource(R.dimen.filter_chip_height)
+    val themeMode = settingsViewModel.themeMode.collectAsStateWithLifecycle().value
+    val themeOptions = listOf(
+        ThemeMode.SYSTEM to stringResource(R.string.theme_system),
+        ThemeMode.LIGHT to stringResource(R.string.theme_light),
+        ThemeMode.DARK to stringResource(R.string.theme_dark)
+    )
+    val selectedThemeLabel = themeOptions.firstOrNull { it.first == themeMode }?.second
+        ?: stringResource(R.string.theme_system)
 
     Column(
         modifier = modifier
@@ -54,19 +63,25 @@ fun SettingsScreen(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = stringResource(R.string.settings_dark_mode))
                 Text(
-                    text = stringResource(R.string.settings_dark_mode_detail),
+                    text = stringResource(R.string.settings_theme_detail),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Switch(
-                checked = darkThemeEnabled,
-                onCheckedChange = settingsViewModel::setDarkThemeEnabled
+            FilterDropdownButton(
+                label = stringResource(R.string.settings_theme),
+                selected = selectedThemeLabel,
+                options = themeOptions.map { it.second },
+                onSelected = { label ->
+                    val mode = themeOptions.firstOrNull { it.second == label }?.first
+                        ?: ThemeMode.SYSTEM
+                    settingsViewModel.setThemeMode(mode)
+                },
+                modifier = Modifier.height(filterHeight)
             )
         }
 

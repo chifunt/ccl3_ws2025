@@ -3,6 +3,7 @@ package com.chifunt.chromaticharptabs.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.data.SettingsRepository
+import com.chifunt.chromaticharptabs.data.ThemeMode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -11,10 +12,10 @@ class SettingsViewModel(
     private val repository: SettingsRepository
 ) : ViewModel() {
 
-    val darkThemeEnabled = repository.darkThemeEnabled.stateIn(
+    val themeMode = repository.themeMode.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        true
+        ThemeMode.SYSTEM
     )
 
     val onboardingCompleted = repository.onboardingCompleted.stateIn(
@@ -23,9 +24,9 @@ class SettingsViewModel(
         false
     )
 
-    fun setDarkThemeEnabled(enabled: Boolean) {
+    fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch {
-            repository.setDarkThemeEnabled(enabled)
+            repository.setThemeMode(mode)
         }
     }
 
