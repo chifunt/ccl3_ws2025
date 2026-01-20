@@ -1,7 +1,7 @@
 # CCL3_WS2025
 
-GitLab Pages site:
-https://ccl3-ws2025-f73e7b.pages.nwt.fhstp.ac.at
+GitHub Pages site:
+https://chifunt.github.io/ccl3_ws2025/
 
 ## Structure
 
