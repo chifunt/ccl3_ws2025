@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,56 +57,93 @@ fun SettingsScreen(
             .padding(spacingMedium)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBackBar(onBack = onBack)
-        Spacer(Modifier.height(spacingSmall))
-        Text(
-            text = stringResource(R.string.settings_title),
-            fontSize = dimensionResource(R.dimen.headline).value.sp,
-            fontWeight = FontWeight.SemiBold
+        SettingsHeader(
+            onBack = onBack,
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium
         )
-        Spacer(Modifier.height(spacingSmall))
-        Text(text = stringResource(R.string.settings_description))
+
+        ThemeRow(
+            selectedThemeLabel = selectedThemeLabel,
+            themeOptions = themeOptions,
+            filterHeight = filterHeight,
+            spacingSmall = spacingSmall,
+            onThemeSelected = { label ->
+                val mode = themeOptions.firstOrNull { it.second == label }?.first
+                    ?: ThemeMode.SYSTEM
+                settingsViewModel.setThemeMode(mode)
+            }
+        )
+
         Spacer(Modifier.height(spacingMedium))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(spacingSmall)
+        ViewOnboardingButton(onClick = onViewOnboarding)
+    }
+}
+
+@Composable
+private fun SettingsHeader(
+    onBack: () -> Unit,
+    spacingSmall: Dp,
+    spacingMedium: Dp
+) {
+    TopBackBar(onBack = onBack)
+    Spacer(Modifier.height(spacingSmall))
+    Text(
+        text = stringResource(R.string.settings_title),
+        fontSize = dimensionResource(R.dimen.headline).value.sp,
+        fontWeight = FontWeight.SemiBold
+    )
+    Spacer(Modifier.height(spacingSmall))
+    Text(text = stringResource(R.string.settings_description))
+    Spacer(Modifier.height(spacingMedium))
+}
+
+@Composable
+private fun ThemeRow(
+    selectedThemeLabel: String,
+    themeOptions: List<Pair<ThemeMode, String>>,
+    filterHeight: Dp,
+    spacingSmall: Dp,
+    onThemeSelected: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(spacingSmall)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = spacingSmall)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = spacingSmall)
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_theme_detail),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            FilterDropdownButton(
-                label = stringResource(R.string.settings_theme),
-                selected = selectedThemeLabel,
-                options = themeOptions.map { it.second },
-                onSelected = { label ->
-                    val mode = themeOptions.firstOrNull { it.second == label }?.first
-                        ?: ThemeMode.SYSTEM
-                    settingsViewModel.setThemeMode(mode)
-                },
-                modifier = Modifier
-                    .height(filterHeight)
-                    .width(170.dp)
+            Text(
+                text = stringResource(R.string.settings_theme_detail),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth()
             )
         }
+        FilterDropdownButton(
+            label = stringResource(R.string.settings_theme),
+            selected = selectedThemeLabel,
+            options = themeOptions.map { it.second },
+            onSelected = onThemeSelected,
+            modifier = Modifier
+                .height(filterHeight)
+                .width(170.dp)
+        )
+    }
+}
 
-        Spacer(Modifier.height(spacingMedium))
-
-        OutlinedButton(
-            onClick = onViewOnboarding,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(R.string.settings_view_onboarding))
-        }
+@Composable
+private fun ViewOnboardingButton(
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = stringResource(R.string.settings_view_onboarding))
     }
 }
