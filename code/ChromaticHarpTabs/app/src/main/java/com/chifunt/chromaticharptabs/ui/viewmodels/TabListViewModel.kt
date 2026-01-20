@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.data.TabRepository
-import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.data.parseTags
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

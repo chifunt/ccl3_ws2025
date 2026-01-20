@@ -36,7 +36,7 @@ import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
-import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.data.parseTags
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -55,7 +55,7 @@ import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
-import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.data.parseTags
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnText
 import com.chifunt.chromaticharptabs.ui.theme.RosePineText
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel

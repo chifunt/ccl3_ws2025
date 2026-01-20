@@ -9,8 +9,8 @@ import com.chifunt.chromaticharptabs.data.TabNotation
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.data.TabRepository
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.normalizeTagsInput
-import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.data.normalizeTagsInput
+import com.chifunt.chromaticharptabs.data.parseTags
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.data
 
 internal fun normalizeTagsInput(value: String): String {
     return value
