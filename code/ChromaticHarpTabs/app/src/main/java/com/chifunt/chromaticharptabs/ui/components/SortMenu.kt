@@ -1,5 +1,9 @@
 package com.chifunt.chromaticharptabs.ui.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +25,13 @@ fun SortMenu(
         onSelected = { option ->
             val selectedIndex = labels.indexOf(option).coerceAtLeast(0)
             onSelected(options[selectedIndex])
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Sort,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
         },
         modifier = modifier
     )

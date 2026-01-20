@@ -1,5 +1,9 @@
 package com.chifunt.chromaticharptabs.ui.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.VpnKey
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,6 +20,13 @@ fun KeyFilterMenu(
         selected = selected,
         options = keyOptions(),
         onSelected = onSelected,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.VpnKey,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
         modifier = modifier
     )
 }

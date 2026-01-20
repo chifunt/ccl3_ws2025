@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextOverflow
 import com.chifunt.chromaticharptabs.R
 
@@ -35,7 +37,8 @@ fun FilterDropdownButton(
     options: List<String>,
     onSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    minHeight: Dp? = null
+    minHeight: Dp? = null,
+    leadingIcon: (@Composable () -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     val borderWidth = dimensionResource(R.dimen.border_stroke_width)
@@ -61,6 +64,10 @@ fun FilterDropdownButton(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                if (leadingIcon != null) {
+                    leadingIcon()
+                    Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
+                }
                 Text(text = label)
                 Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
                 Text(
@@ -73,7 +80,8 @@ fun FilterDropdownButton(
                 Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }
