@@ -54,22 +54,27 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
     private val sortOption = MutableStateFlow(SortOption.Newest)
     private val favoritesOnly = MutableStateFlow(false)
 
-    @Suppress("UNCHECKED_CAST")
-    private val filters = combine(
+    private val baseFilters = combine(
         searchQuery,
         keyFilter,
-        difficultyFilter,
+        difficultyFilter
+    ) { query, key, difficulty ->
+        Triple(query, key, difficulty)
+    }
+
+    private val filters = combine(
+        baseFilters,
         sortOption,
         favoritesOnly,
         tagFilter
-    ) { values ->
+    ) { base, sort, favorites, tags ->
         TabListFilters(
-            query = values[0] as String,
-            keyFilter = values[1] as String?,
-            difficulty = values[2] as String?,
-            sortOption = values[3] as SortOption,
-            favoritesOnly = values[4] as Boolean,
-            tagFilter = values[5] as Set<String>
+            query = base.first,
+            keyFilter = base.second,
+            difficulty = base.third,
+            sortOption = sort,
+            favoritesOnly = favorites,
+            tagFilter = tags
         )
     }
 
