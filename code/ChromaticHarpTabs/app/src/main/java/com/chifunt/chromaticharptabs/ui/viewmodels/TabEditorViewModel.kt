@@ -118,19 +118,19 @@ class TabEditorViewModel(
     }
 
     fun updateTitle(value: String) {
-        _uiState.update { it.copy(title = value, errorMessageResId = null) }
+        clearError { it.copy(title = value) }
     }
 
     fun updateArtist(value: String) {
-        _uiState.update { it.copy(artist = value, errorMessageResId = null) }
+        clearError { it.copy(artist = value) }
     }
 
     fun updateKey(value: String) {
-        _uiState.update { it.copy(key = value, errorMessageResId = null) }
+        clearError { it.copy(key = value) }
     }
 
     fun updateDifficulty(value: String) {
-        _uiState.update { it.copy(difficulty = value, errorMessageResId = null) }
+        clearError { it.copy(difficulty = value) }
     }
 
 
@@ -138,9 +138,9 @@ class TabEditorViewModel(
         val normalized = normalizeTagsInput(value)
         val endsWithSpace = value.endsWith(" ") || value.endsWith(",")
         val tokens = normalized.split(" ").filter { it.isNotBlank() }
-        _uiState.update { state ->
+        clearError { state ->
             val current = state.tags
-            return@update if (tokens.isEmpty()) {
+            return@clearError if (tokens.isEmpty()) {
                 state.copy(tagsInput = if (endsWithSpace) "" else normalized, errorMessageResId = null)
             } else if (endsWithSpace) {
                 val combined = (current + tokens).distinct()
@@ -154,134 +154,132 @@ class TabEditorViewModel(
     }
 
     fun removeTag(tag: String) {
-        _uiState.update { state ->
-            state.copy(tags = state.tags.filterNot { it == tag }, errorMessageResId = null)
+        clearError { state ->
+            state.copy(tags = state.tags.filterNot { it == tag })
         }
     }
 
     fun addNote(lineIndex: Int, hole: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList().apply {
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList().apply {
                 add(TabNote(hole = hole, isBlow = true, isSlide = false))
             }
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
     fun addLineWithNote(hole: Int) {
-        _uiState.update { state ->
-            val updatedLines = state.lines.toMutableList().apply {
+        updateLines { lines ->
+            lines.toMutableList().apply {
                 add(listOf(TabNote(hole = hole, isBlow = true, isSlide = false)))
             }
-            state.copy(lines = updatedLines, errorMessageResId = null)
         }
     }
 
     fun updateHole(lineIndex: Int, noteIndex: Int, hole: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            if (noteIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (noteIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList()
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList()
             val note = updatedLine[noteIndex]
             updatedLine[noteIndex] = note.copy(hole = hole)
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
     fun removeNote(lineIndex: Int, noteIndex: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            if (noteIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (noteIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList().apply {
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList().apply {
                 removeAt(noteIndex)
             }
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
     fun removeLine(lineIndex: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList().apply {
+            lines.toMutableList().apply {
                 removeAt(lineIndex)
             }
-            state.copy(lines = updatedLines, errorMessageResId = null)
         }
     }
 
     fun moveNote(lineIndex: Int, fromIndex: Int, toIndex: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            if (fromIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (fromIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
-            if (toIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (toIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
             if (fromIndex == toIndex) {
-                return@update state
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList()
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList()
             val note = updatedLine.removeAt(fromIndex)
             updatedLine.add(toIndex, note)
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
     fun toggleBlow(lineIndex: Int, noteIndex: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            if (noteIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (noteIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList()
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList()
             val note = updatedLine[noteIndex]
             updatedLine[noteIndex] = note.copy(isBlow = !note.isBlow)
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
     fun toggleSlide(lineIndex: Int, noteIndex: Int) {
-        _uiState.update { state ->
-            if (lineIndex !in state.lines.indices) {
-                return@update state
+        updateLines { lines ->
+            if (lineIndex !in lines.indices) {
+                return@updateLines null
             }
-            if (noteIndex !in state.lines[lineIndex].indices) {
-                return@update state
+            if (noteIndex !in lines[lineIndex].indices) {
+                return@updateLines null
             }
-            val updatedLines = state.lines.toMutableList()
-            val updatedLine = state.lines[lineIndex].toMutableList()
+            val updatedLines = lines.toMutableList()
+            val updatedLine = lines[lineIndex].toMutableList()
             val note = updatedLine[noteIndex]
             updatedLine[noteIndex] = note.copy(isSlide = !note.isSlide)
             updatedLines[lineIndex] = updatedLine
-            state.copy(lines = updatedLines, errorMessageResId = null)
+            updatedLines
         }
     }
 
@@ -322,6 +320,23 @@ class TabEditorViewModel(
             }
 
             onSaved(savedId)
+        }
+    }
+
+    private inline fun clearError(
+        crossinline transform: (TabEditorUiState) -> TabEditorUiState
+    ) {
+        _uiState.update { state ->
+            transform(state).copy(errorMessageResId = null)
+        }
+    }
+
+    private inline fun updateLines(
+        crossinline transform: (List<List<TabNote>>) -> List<List<TabNote>>?
+    ) {
+        _uiState.update { state ->
+            val updated = transform(state.lines) ?: return@update state
+            state.copy(lines = updated, errorMessageResId = null)
         }
     }
 }
