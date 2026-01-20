@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
 import com.chifunt.chromaticharptabs.ui.components.AddTabButton
 import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
@@ -54,19 +56,10 @@ fun LibraryScreen(
             .padding(spacingMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
-            Spacer(Modifier.weight(1f))
-            DebouncedIconButton(onClick = onSettings) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = stringResource(R.string.settings_button)
-                )
-            }
-        }
+        LibraryHeaderRow(
+            spacingSmall = spacingSmall,
+            onSettings = onSettings
+        )
         Spacer(Modifier.height(spacingSmall))
 
         SearchField(
@@ -77,12 +70,11 @@ fun LibraryScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        FavoriteSortRow(
-            difficultyFilter = state.difficulty ?: allLabel,
-            onDifficultySelected = { option ->
-                tabListViewModel.updateDifficulty(if (option == allLabel) null else option)
-            },
-            tagOptions = state.availableTags,
+        FiltersRow(
+            allLabel = allLabel,
+            difficulty = state.difficulty,
+            onDifficultySelected = tabListViewModel::updateDifficulty,
+            availableTags = state.availableTags,
             selectedTags = state.tagFilter,
             onToggleTag = tabListViewModel::toggleTagFilter,
             onClearTags = tabListViewModel::clearTagFilter,
@@ -90,10 +82,8 @@ fun LibraryScreen(
             onToggleFavorites = tabListViewModel::toggleFavoritesOnly,
             sortOption = state.sortOption,
             onSortSelected = tabListViewModel::updateSortOption,
-            keyFilter = state.keyFilter ?: allLabel,
-            onKeySelected = { option ->
-                tabListViewModel.updateKeyFilter(if (option == allLabel) null else option)
-            }
+            keyFilter = state.keyFilter,
+            onKeySelected = tabListViewModel::updateKeyFilter
         )
 
         Spacer(Modifier.height(spacingSmall))
@@ -102,17 +92,88 @@ fun LibraryScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        if (state.tabs.isEmpty()) {
-            LibraryEmptyState()
-        } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
-                items(state.tabs) { tab ->
-                    TabCard(
-                        tab = tab,
-                        onOpen = { onTabClick(tab.id) },
-                        onToggleFavorite = { tabListViewModel.toggleFavorite(tab) }
-                    )
-                }
+        TabList(
+            tabs = state.tabs,
+            onOpen = onTabClick,
+            onToggleFavorite = tabListViewModel::toggleFavorite,
+            spacingSmall = spacingSmall
+        )
+    }
+}
+
+@Composable
+private fun LibraryHeaderRow(
+    spacingSmall: Dp,
+    onSettings: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
+        Spacer(Modifier.weight(1f))
+        DebouncedIconButton(onClick = onSettings) {
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = stringResource(R.string.settings_button)
+            )
+        }
+    }
+}
+
+@Composable
+private fun FiltersRow(
+    allLabel: String,
+    difficulty: String?,
+    onDifficultySelected: (String?) -> Unit,
+    availableTags: List<String>,
+    selectedTags: Set<String>,
+    onToggleTag: (String) -> Unit,
+    onClearTags: () -> Unit,
+    favoritesOnly: Boolean,
+    onToggleFavorites: () -> Unit,
+    sortOption: SortOption,
+    onSortSelected: (SortOption) -> Unit,
+    keyFilter: String?,
+    onKeySelected: (String?) -> Unit
+) {
+    FavoriteSortRow(
+        difficultyFilter = difficulty ?: allLabel,
+        onDifficultySelected = { option ->
+            onDifficultySelected(if (option == allLabel) null else option)
+        },
+        tagOptions = availableTags,
+        selectedTags = selectedTags,
+        onToggleTag = onToggleTag,
+        onClearTags = onClearTags,
+        favoritesOnly = favoritesOnly,
+        onToggleFavorites = onToggleFavorites,
+        sortOption = sortOption,
+        onSortSelected = onSortSelected,
+        keyFilter = keyFilter ?: allLabel,
+        onKeySelected = { option ->
+            onKeySelected(if (option == allLabel) null else option)
+        }
+    )
+}
+
+@Composable
+private fun TabList(
+    tabs: List<Tab>,
+    onOpen: (Int) -> Unit,
+    onToggleFavorite: (Tab) -> Unit,
+    spacingSmall: Dp
+) {
+    if (tabs.isEmpty()) {
+        LibraryEmptyState()
+    } else {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
+            items(tabs) { tab ->
+                TabCard(
+                    tab = tab,
+                    onOpen = { onOpen(tab.id) },
+                    onToggleFavorite = { onToggleFavorite(tab) }
+                )
             }
         }
     }
