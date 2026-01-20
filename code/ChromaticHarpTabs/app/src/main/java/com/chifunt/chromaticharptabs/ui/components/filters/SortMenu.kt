@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.ui.components.filters
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort

@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.ui.components.cards
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

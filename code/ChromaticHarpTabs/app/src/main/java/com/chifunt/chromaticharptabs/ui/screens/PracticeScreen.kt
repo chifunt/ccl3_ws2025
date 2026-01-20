@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedFilledIconButton
-import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 

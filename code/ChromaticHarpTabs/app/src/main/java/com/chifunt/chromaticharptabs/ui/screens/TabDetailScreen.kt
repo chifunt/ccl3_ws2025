@@ -54,9 +54,9 @@ import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
-import com.chifunt.chromaticharptabs.ui.components.MetadataPill
+import com.chifunt.chromaticharptabs.ui.components.cards.MetadataPill
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
-import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.data.parseTags
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnText
 import com.chifunt.chromaticharptabs.ui.theme.RosePineText

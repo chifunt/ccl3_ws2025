@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.ui.components.notation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import kotlin.math.roundToInt
 

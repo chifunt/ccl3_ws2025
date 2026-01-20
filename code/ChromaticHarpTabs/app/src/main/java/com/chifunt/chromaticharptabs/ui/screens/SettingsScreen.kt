@@ -27,7 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.components.FilterDropdownButton
+import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 import com.chifunt.chromaticharptabs.data.ThemeMode
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 

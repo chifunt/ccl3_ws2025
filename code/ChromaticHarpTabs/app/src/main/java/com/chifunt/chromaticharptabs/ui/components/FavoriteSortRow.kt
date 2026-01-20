@@ -27,6 +27,10 @@ import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
+import com.chifunt.chromaticharptabs.ui.components.filters.DifficultyFilterMenu
+import com.chifunt.chromaticharptabs.ui.components.filters.KeyFilterMenu
+import com.chifunt.chromaticharptabs.ui.components.filters.SortMenu
+import com.chifunt.chromaticharptabs.ui.components.filters.TagFilterMenu
 
 @Composable
 fun FavoriteSortRow(

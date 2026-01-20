@@ -32,7 +32,7 @@ import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
 import com.chifunt.chromaticharptabs.ui.components.LibraryHeader
 import com.chifunt.chromaticharptabs.ui.components.SearchField
-import com.chifunt.chromaticharptabs.ui.components.TabCard
+import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @Composable
