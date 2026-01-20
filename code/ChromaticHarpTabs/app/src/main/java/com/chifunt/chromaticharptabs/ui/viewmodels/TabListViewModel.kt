@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.data.TabRepository
+import com.chifunt.chromaticharptabs.ui.components.parseTags
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +30,9 @@ data class TabListUiState(
     val keyFilter: String?,
     val difficulty: String?,
     val sortOption: SortOption,
-    val favoritesOnly: Boolean
+    val favoritesOnly: Boolean,
+    val tagFilter: Set<String>,
+    val availableTags: List<String>
 )
 
 private data class TabListFilters(
@@ -37,7 +40,8 @@ private data class TabListFilters(
     val keyFilter: String?,
     val difficulty: String?,
     val sortOption: SortOption,
-    val favoritesOnly: Boolean
+    val favoritesOnly: Boolean,
+    val tagFilter: Set<String>
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,17 +50,27 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
     private val searchQuery = MutableStateFlow("")
     private val keyFilter = MutableStateFlow<String?>(null)
     private val difficultyFilter = MutableStateFlow<String?>(null)
+    private val tagFilter = MutableStateFlow<Set<String>>(emptySet())
     private val sortOption = MutableStateFlow(SortOption.Newest)
     private val favoritesOnly = MutableStateFlow(false)
 
+    @Suppress("UNCHECKED_CAST")
     private val filters = combine(
         searchQuery,
         keyFilter,
         difficultyFilter,
         sortOption,
-        favoritesOnly
-    ) { query, key, difficulty, sort, favorites ->
-        TabListFilters(query, key, difficulty, sort, favorites)
+        favoritesOnly,
+        tagFilter
+    ) { values ->
+        TabListFilters(
+            query = values[0] as String,
+            keyFilter = values[1] as String?,
+            difficulty = values[2] as String?,
+            sortOption = values[3] as SortOption,
+            favoritesOnly = values[4] as Boolean,
+            tagFilter = values[5] as Set<String>
+        )
     }
 
     val uiState = filters
@@ -68,13 +82,26 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
                 favoritesOnly = filter.favoritesOnly,
                 sortOption = filter.sortOption
             ).map { tabs ->
+                val availableTags = tabs
+                    .flatMap { parseTags(it.tags) }
+                    .distinct()
+                    .sorted()
+                val filteredTabs = if (filter.tagFilter.isEmpty()) {
+                    tabs
+                } else {
+                    tabs.filter { tab ->
+                        parseTags(tab.tags).any { it in filter.tagFilter }
+                    }
+                }
                 TabListUiState(
-                    tabs = tabs,
+                    tabs = filteredTabs,
                     searchQuery = filter.query,
                     keyFilter = filter.keyFilter,
                     difficulty = filter.difficulty,
                     sortOption = filter.sortOption,
-                    favoritesOnly = filter.favoritesOnly
+                    favoritesOnly = filter.favoritesOnly,
+                    tagFilter = filter.tagFilter,
+                    availableTags = availableTags
                 )
             }
         }
@@ -87,7 +114,9 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
                 keyFilter = null,
                 difficulty = null,
                 sortOption = SortOption.Newest,
-                favoritesOnly = false
+                favoritesOnly = false,
+                tagFilter = emptySet(),
+                availableTags = emptyList()
             )
         )
 
@@ -101,6 +130,16 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
 
     fun updateDifficulty(value: String?) {
         difficultyFilter.value = value
+    }
+
+    fun toggleTagFilter(tag: String) {
+        tagFilter.update { current ->
+            if (tag in current) current - tag else current + tag
+        }
+    }
+
+    fun clearTagFilter() {
+        tagFilter.value = emptySet()
     }
 
     fun updateSortOption(value: SortOption) {

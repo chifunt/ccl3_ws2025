@@ -30,6 +30,10 @@ import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 fun FavoriteSortRow(
     difficultyFilter: String,
     onDifficultySelected: (String) -> Unit,
+    tagOptions: List<String>,
+    selectedTags: Set<String>,
+    onToggleTag: (String) -> Unit,
+    onClearTags: () -> Unit,
     favoritesOnly: Boolean,
     onToggleFavorites: () -> Unit,
     sortOption: SortOption,
@@ -106,6 +110,16 @@ fun FavoriteSortRow(
             modifier = Modifier
                 .height(filterHeight)
                 .width(160.dp)
+        )
+
+        TagFilterMenu(
+            options = tagOptions,
+            selected = selectedTags,
+            onToggleTag = onToggleTag,
+            onClear = onClearTags,
+            modifier = Modifier
+                .height(filterHeight)
+                .width(180.dp)
         )
     }
 }

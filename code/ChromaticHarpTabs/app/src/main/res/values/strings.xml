@@ -39,6 +39,7 @@
     <string name="tempo_unknown">Unknown</string>
     <string name="unknown_value">Unknown</string>
     <string name="detail_metadata_tags">Tags: %1$s</string>
+    <string name="detail_metadata_tags_label">Tags</string>
     <string name="tab_content_label">Tab Content</string>
     <string name="practice_button">Practice</string>
     <string name="edit_button">Edit</string>
@@ -72,6 +73,9 @@
     <string name="hole_picker_title">Select hole</string>
     <string name="tempo_label">Tempo (BPM)</string>
     <string name="tags_label">Tags</string>
+    <string name="tag_filter_selected">%1$d selected</string>
+    <string name="tag_filter_clear">Clear tag filters</string>
+    <string name="tag_filter_empty">No tags yet</string>
     <string name="save_button">Save</string>
     <string name="cancel_button">Cancel</string>
     <string name="close_button">Close</string>

@@ -2,6 +2,8 @@ package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,8 +55,10 @@ import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.parseTags
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TabDetailScreen(
     modifier: Modifier = Modifier,
@@ -236,22 +240,38 @@ fun TabDetailScreen(
                             )
                         )
                     }
-                    if (state.tab.tags.isNotBlank()) {
-                        AssistChip(
-                            onClick = {},
-                            label = { Text(stringResource(R.string.detail_metadata_tags, state.tab.tags)) },
-                            leadingIcon = {
-                                Icon(
+                    val tagList = parseTags(state.tab.tags)
+                    if (tagList.isNotEmpty()) {
+                        Spacer(Modifier.height(spacingTight))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.Label,
-                                    contentDescription = null
-                                )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                labelColor = MaterialTheme.colorScheme.onSurface,
-                                leadingIconContentColor = MaterialTheme.colorScheme.tertiary
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.tertiary
                             )
-                        )
+                            Spacer(Modifier.width(spacingSmall))
+                            Text(
+                                text = stringResource(R.string.detail_metadata_tags_label),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(Modifier.height(spacingTight))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                            verticalArrangement = Arrangement.spacedBy(spacingSmall)
+                        ) {
+                            tagList.forEach { tag ->
+                                AssistChip(
+                                    onClick = {},
+                                    label = { Text(tag) },
+                                    colors = AssistChipDefaults.assistChipColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        leadingIconContentColor = MaterialTheme.colorScheme.tertiary
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             }

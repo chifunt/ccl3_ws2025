@@ -1,8 +1,11 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Person
@@ -29,6 +33,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,6 +64,7 @@ import com.chifunt.chromaticharptabs.ui.components.difficultyOptions
 import com.chifunt.chromaticharptabs.ui.components.keyOptions
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TabEditorScreen(
     modifier: Modifier = Modifier,
@@ -203,9 +210,9 @@ fun TabEditorScreen(
                 Spacer(Modifier.height(spacingSmall))
 
                 LabeledTextField(
-                    value = state.tags,
+                    value = state.tagsInput,
                     labelRes = R.string.tags_label,
-                    onValueChange = tabEditorViewModel::updateTags,
+                    onValueChange = tabEditorViewModel::updateTagsInput,
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = {
                         Icon(
@@ -215,6 +222,38 @@ fun TabEditorScreen(
                         )
                     }
                 )
+                if (state.tags.isNotEmpty()) {
+                    Spacer(Modifier.height(spacingSmall))
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                        verticalArrangement = Arrangement.spacedBy(spacingSmall),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        state.tags.forEach { tag ->
+                            AssistChip(
+                                onClick = {},
+                                label = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(tag)
+                                        Spacer(Modifier.width(6.dp))
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error,
+                                            modifier = Modifier
+                                                .size(14.dp)
+                                                .clickable { tabEditorViewModel.removeTag(tag) }
+                                        )
+                                    }
+                                },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                            )
+                        }
+                    }
+                }
             }
         }
 

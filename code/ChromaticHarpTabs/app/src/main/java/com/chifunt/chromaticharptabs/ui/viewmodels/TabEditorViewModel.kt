@@ -9,6 +9,8 @@ import com.chifunt.chromaticharptabs.data.TabNotation
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.data.TabRepository
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.components.normalizeTagsInput
+import com.chifunt.chromaticharptabs.ui.components.parseTags
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +27,8 @@ private fun blankEditorState(): TabEditorUiState {
         key = "",
         difficulty = "",
         tempo = "",
-        tags = "",
+        tags = emptyList(),
+        tagsInput = "",
         lines = emptyList(),
         isFavorite = false,
         createdAt = 0L,
@@ -41,7 +44,8 @@ data class TabEditorUiState(
     val key: String,
     val difficulty: String,
     val tempo: String,
-    val tags: String,
+    val tags: List<String>,
+    val tagsInput: String,
     val lines: List<List<TabNote>>,
     val isFavorite: Boolean,
     val createdAt: Long,
@@ -71,7 +75,8 @@ class TabEditorViewModel(
                         key = tab.key,
                         difficulty = tab.difficulty,
                         tempo = tab.tempo?.toString() ?: "",
-                        tags = tab.tags,
+                        tags = parseTags(tab.tags),
+                        tagsInput = "",
                         lines = notation?.lines.orEmpty(),
                         isFavorite = tab.isFavorite,
                         createdAt = tab.createdAt,
@@ -102,8 +107,29 @@ class TabEditorViewModel(
         _uiState.update { it.copy(tempo = value, errorMessageResId = null) }
     }
 
-    fun updateTags(value: String) {
-        _uiState.update { it.copy(tags = value, errorMessageResId = null) }
+    fun updateTagsInput(value: String) {
+        val normalized = normalizeTagsInput(value)
+        val endsWithSpace = value.endsWith(" ") || value.endsWith(",")
+        val tokens = normalized.split(" ").filter { it.isNotBlank() }
+        _uiState.update { state ->
+            val current = state.tags
+            return@update if (tokens.isEmpty()) {
+                state.copy(tagsInput = if (endsWithSpace) "" else normalized, errorMessageResId = null)
+            } else if (endsWithSpace) {
+                val combined = (current + tokens).distinct()
+                state.copy(tags = combined, tagsInput = "", errorMessageResId = null)
+            } else {
+                val toAdd = tokens.dropLast(1)
+                val combined = (current + toAdd).distinct()
+                state.copy(tags = combined, tagsInput = tokens.last(), errorMessageResId = null)
+            }
+        }
+    }
+
+    fun removeTag(tag: String) {
+        _uiState.update { state ->
+            state.copy(tags = state.tags.filterNot { it == tag }, errorMessageResId = null)
+        }
     }
 
     fun addNote(lineIndex: Int, hole: Int) {
@@ -247,6 +273,7 @@ class TabEditorViewModel(
 
             val now = System.currentTimeMillis()
             val tempoValue = state.tempo.toIntOrNull()
+            val tagList = (state.tags + parseTags(state.tagsInput)).distinct()
 
             val tab = Tab(
                 id = if (state.id == NEW_TAB_ID) 0 else state.id,
@@ -255,7 +282,7 @@ class TabEditorViewModel(
                 key = state.key.trim(),
                 difficulty = state.difficulty,
                 tempo = tempoValue,
-                tags = state.tags.trim(),
+                tags = tagList.joinToString(" "),
                 content = TabNotationJson.toJson(TabNotation(state.lines)),
                 isFavorite = state.isFavorite,
                 createdAt = if (state.id == NEW_TAB_ID) now else state.createdAt,

@@ -82,6 +82,10 @@ fun LibraryScreen(
             onDifficultySelected = { option ->
                 tabListViewModel.updateDifficulty(if (option == allLabel) null else option)
             },
+            tagOptions = state.availableTags,
+            selectedTags = state.tagFilter,
+            onToggleTag = tabListViewModel::toggleTagFilter,
+            onClearTags = tabListViewModel::clearTagFilter,
             favoritesOnly = state.favoritesOnly,
             onToggleFavorites = tabListViewModel::toggleFavoritesOnly,
             sortOption = state.sortOption,
