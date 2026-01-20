@@ -48,12 +48,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
 import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 import com.chifunt.chromaticharptabs.ui.components.LabeledTextField
@@ -104,194 +107,45 @@ fun TabEditorScreen(
             .padding(spacingMedium)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBackBar(onBack = handleBack)
-        Spacer(Modifier.height(spacingSmall))
+        EditorHeader(
+            onBack = handleBack,
+            title = stringResource(R.string.editor_title),
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium
+        )
 
-        Text(
-            text = stringResource(R.string.editor_title),
-            fontSize = dimensionResource(R.dimen.headline).value.sp,
-            fontWeight = FontWeight.SemiBold
+        DetailsCard(
+            state = state,
+            onTitleChange = tabEditorViewModel::updateTitle,
+            onArtistChange = tabEditorViewModel::updateArtist,
+            onKeyChange = tabEditorViewModel::updateKey,
+            onDifficultyChange = tabEditorViewModel::updateDifficulty,
+            onTagsInputChange = tabEditorViewModel::updateTagsInput,
+            onRemoveTag = tabEditorViewModel::removeTag,
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium,
+            textFieldHeight = textFieldHeight,
+            keyDefault = keyDefault,
+            mediumLabel = mediumLabel
         )
 
         Spacer(Modifier.height(spacingMedium))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(Modifier.padding(spacingMedium)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Outlined.Description,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.width(spacingSmall))
-                    Text(
-                        text = stringResource(R.string.editor_section_details),
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Spacer(Modifier.height(spacingSmall))
-                LabeledTextField(
-                    value = state.title,
-                    labelRes = R.string.title_label,
-                    onValueChange = tabEditorViewModel::updateTitle,
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.TextFields,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                )
-                Spacer(Modifier.height(spacingSmall))
-
-                LabeledTextField(
-                    value = state.artist,
-                    labelRes = R.string.artist_label,
-                    onValueChange = tabEditorViewModel::updateArtist,
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Person,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                )
-                Spacer(Modifier.height(spacingSmall))
-
-                FilterDropdownButton(
-                    label = stringResource(R.string.key_label),
-                    selected = state.key.ifBlank { keyDefault },
-                    options = keyOptions().drop(1),
-                    onSelected = { option ->
-                        tabEditorViewModel.updateKey(option)
-                    },
-                    minHeight = textFieldHeight,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.VpnKey,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(spacingSmall))
-
-                FilterDropdownButton(
-                    label = stringResource(R.string.difficulty_label),
-                    selected = state.difficulty.ifBlank { mediumLabel },
-                    options = difficultyOptions().drop(1),
-                    onSelected = tabEditorViewModel::updateDifficulty,
-                    minHeight = textFieldHeight,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Tune,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(spacingSmall))
-
-                LabeledTextField(
-                    value = state.tagsInput,
-                    labelRes = R.string.tags_label,
-                    onValueChange = tabEditorViewModel::updateTagsInput,
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Label,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                )
-                if (state.tags.isNotEmpty()) {
-                    Spacer(Modifier.height(spacingSmall))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(spacingSmall),
-                        verticalArrangement = Arrangement.spacedBy(spacingSmall),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        state.tags.forEach { tag ->
-                            AssistChip(
-                                onClick = {},
-                                label = {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(tag)
-                                        Spacer(Modifier.width(6.dp))
-                                        Icon(
-                                            imageVector = Icons.Filled.Close,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error,
-                                            modifier = Modifier
-                                                .size(14.dp)
-                                                .clickable { tabEditorViewModel.removeTag(tag) }
-                                        )
-                                    }
-                                },
-                                colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                    labelColor = MaterialTheme.colorScheme.onTertiaryContainer
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(spacingMedium))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(Modifier.padding(spacingMedium)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Outlined.MusicNote,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.width(spacingSmall))
-                    Text(
-                        text = stringResource(R.string.editor_section_content),
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Spacer(Modifier.height(spacingSmall))
-                TabNotationEditor(
-                    lines = state.lines,
-                    onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
-                    onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
-                    onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
-                    onDeleteNote = tabEditorViewModel::removeNote,
-                    onEditHole = { lineIndex, noteIndex ->
-                        holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
-                    },
-                    onToggleBlow = tabEditorViewModel::toggleBlow,
-                    onToggleSlide = tabEditorViewModel::toggleSlide,
-                    onMoveNote = tabEditorViewModel::moveNote,
-                    lineSpacing = spacingMedium,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
+        ContentCard(
+            lines = state.lines,
+            onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
+            onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
+            onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
+            onDeleteNote = tabEditorViewModel::removeNote,
+            onEditHole = { lineIndex, noteIndex ->
+                holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
+            },
+            onToggleBlow = tabEditorViewModel::toggleBlow,
+            onToggleSlide = tabEditorViewModel::toggleSlide,
+            onMoveNote = tabEditorViewModel::moveNote,
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium
+        )
 
         state.errorMessageResId?.let { messageResId ->
             Spacer(Modifier.height(spacingSmall))
@@ -300,16 +154,11 @@ fun TabEditorScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall), modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { tabEditorViewModel.saveTab(onSaved) }, modifier = Modifier.weight(1f)) {
-                Icon(imageVector = Icons.Filled.Save, contentDescription = null)
-                Spacer(Modifier.width(spacingSmall))
-                Text(stringResource(R.string.save_button))
-            }
-            TextButton(onClick = onCancel, modifier = Modifier.weight(1f)) {
-                Text(stringResource(R.string.cancel_button))
-            }
-        }
+        ActionRow(
+            onSave = { tabEditorViewModel.saveTab(onSaved) },
+            onCancel = onCancel,
+            spacingSmall = spacingSmall
+        )
     }
 
     holePickerTarget?.let { target ->
@@ -382,6 +231,244 @@ fun TabEditorScreen(
 }
 
 private data class HolePickerTarget(val lineIndex: Int?, val noteIndex: Int? = null)
+
+@Composable
+private fun EditorHeader(
+    onBack: () -> Unit,
+    title: String,
+    spacingSmall: Dp,
+    spacingMedium: Dp
+) {
+    TopBackBar(onBack = onBack)
+    Spacer(Modifier.height(spacingSmall))
+    Text(
+        text = title,
+        fontSize = dimensionResource(R.dimen.headline).value.sp,
+        fontWeight = FontWeight.SemiBold
+    )
+    Spacer(Modifier.height(spacingMedium))
+}
+
+@Composable
+private fun DetailsCard(
+    state: TabEditorUiState,
+    onTitleChange: (String) -> Unit,
+    onArtistChange: (String) -> Unit,
+    onKeyChange: (String) -> Unit,
+    onDifficultyChange: (String) -> Unit,
+    onTagsInputChange: (String) -> Unit,
+    onRemoveTag: (String) -> Unit,
+    spacingSmall: Dp,
+    spacingMedium: Dp,
+    textFieldHeight: Dp,
+    keyDefault: String,
+    mediumLabel: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(Modifier.padding(spacingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.Description,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.width(spacingSmall))
+                Text(
+                    text = stringResource(R.string.editor_section_details),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.height(spacingSmall))
+            LabeledTextField(
+                value = state.title,
+                labelRes = R.string.title_label,
+                onValueChange = onTitleChange,
+                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.TextFields,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            )
+            Spacer(Modifier.height(spacingSmall))
+
+            LabeledTextField(
+                value = state.artist,
+                labelRes = R.string.artist_label,
+                onValueChange = onArtistChange,
+                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Person,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            )
+            Spacer(Modifier.height(spacingSmall))
+
+            FilterDropdownButton(
+                label = stringResource(R.string.key_label),
+                selected = state.key.ifBlank { keyDefault },
+                options = keyOptions().drop(1),
+                onSelected = onKeyChange,
+                minHeight = textFieldHeight,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.VpnKey,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(spacingSmall))
+
+            FilterDropdownButton(
+                label = stringResource(R.string.difficulty_label),
+                selected = state.difficulty.ifBlank { mediumLabel },
+                options = difficultyOptions().drop(1),
+                onSelected = onDifficultyChange,
+                minHeight = textFieldHeight,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Tune,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(spacingSmall))
+
+            LabeledTextField(
+                value = state.tagsInput,
+                labelRes = R.string.tags_label,
+                onValueChange = onTagsInputChange,
+                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Label,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+            )
+            if (state.tags.isNotEmpty()) {
+                Spacer(Modifier.height(spacingSmall))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                    verticalArrangement = Arrangement.spacedBy(spacingSmall),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    state.tags.forEach { tag ->
+                        AssistChip(
+                            onClick = {},
+                            label = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(tag)
+                                    Spacer(Modifier.width(6.dp))
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier
+                                            .size(14.dp)
+                                            .clickable { onRemoveTag(tag) }
+                                    )
+                                }
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContentCard(
+    lines: List<List<TabNote>>,
+    onAddNote: (Int) -> Unit,
+    onAddLine: () -> Unit,
+    onDeleteLine: (Int) -> Unit,
+    onDeleteNote: (Int, Int) -> Unit,
+    onEditHole: (Int, Int) -> Unit,
+    onToggleBlow: (Int, Int) -> Unit,
+    onToggleSlide: (Int, Int) -> Unit,
+    onMoveNote: (Int, Int, Int) -> Unit,
+    spacingSmall: Dp,
+    spacingMedium: Dp
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(Modifier.padding(spacingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.MusicNote,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.width(spacingSmall))
+                Text(
+                    text = stringResource(R.string.editor_section_content),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.height(spacingSmall))
+            TabNotationEditor(
+                lines = lines,
+                onAddNote = onAddNote,
+                onAddLine = onAddLine,
+                onDeleteLine = onDeleteLine,
+                onDeleteNote = onDeleteNote,
+                onEditHole = onEditHole,
+                onToggleBlow = onToggleBlow,
+                onToggleSlide = onToggleSlide,
+                onMoveNote = onMoveNote,
+                lineSpacing = spacingMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionRow(
+    onSave: () -> Unit,
+    onCancel: () -> Unit,
+    spacingSmall: Dp
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall), modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = onSave, modifier = Modifier.weight(1f)) {
+            Icon(imageVector = Icons.Filled.Save, contentDescription = null)
+            Spacer(Modifier.width(spacingSmall))
+            Text(stringResource(R.string.save_button))
+        }
+        TextButton(onClick = onCancel, modifier = Modifier.weight(1f)) {
+            Text(stringResource(R.string.cancel_button))
+        }
+    }
+}
 
 @Composable
 private fun HolePickerDialog(
