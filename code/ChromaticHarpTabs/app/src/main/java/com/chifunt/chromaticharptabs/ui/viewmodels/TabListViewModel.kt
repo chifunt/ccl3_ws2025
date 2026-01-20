@@ -126,15 +126,15 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
         )
 
     fun updateSearchQuery(value: String) {
-        searchQuery.value = value
+        updateFilter(searchQuery, value)
     }
 
     fun updateKeyFilter(value: String?) {
-        keyFilter.value = value
+        updateFilter(keyFilter, value)
     }
 
     fun updateDifficulty(value: String?) {
-        difficultyFilter.value = value
+        updateFilter(difficultyFilter, value)
     }
 
     fun toggleTagFilter(tag: String) {
@@ -144,11 +144,11 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
     }
 
     fun clearTagFilter() {
-        tagFilter.value = emptySet()
+        updateFilter(tagFilter, emptySet())
     }
 
     fun updateSortOption(value: SortOption) {
-        sortOption.value = value
+        updateFilter(sortOption, value)
     }
 
     fun toggleFavoritesOnly() {
@@ -159,5 +159,9 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
         viewModelScope.launch {
             repository.setFavorite(tab.id, !tab.isFavorite, System.currentTimeMillis())
         }
+    }
+
+    private fun <T> updateFilter(filter: MutableStateFlow<T>, value: T) {
+        filter.value = value
     }
 }
