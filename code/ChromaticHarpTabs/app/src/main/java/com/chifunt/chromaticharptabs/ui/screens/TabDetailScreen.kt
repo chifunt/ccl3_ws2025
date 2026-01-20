@@ -32,7 +32,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,10 +39,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +54,7 @@ import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.MetadataPill
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.data.parseTags
@@ -160,117 +162,23 @@ fun TabDetailScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
-        ) {
-            Column(Modifier.padding(spacingMedium)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Spacer(Modifier.width(spacingSmall))
-                    Text(
-                        text = stringResource(R.string.detail_metadata_title),
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-                Spacer(Modifier.height(spacingMedium))
-                Column(verticalArrangement = Arrangement.spacedBy(spacingTight)) {
-                    MetadataPill(
-                        text = stringResource(
-                            R.string.detail_metadata_key,
-                            state.tab.key.ifBlank { stringResource(R.string.unknown_value) }
-                        ),
-                        icon = Icons.Outlined.VpnKey,
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        iconTint = MaterialTheme.colorScheme.primary
-                    )
-                    MetadataPill(
-                        text = stringResource(R.string.detail_metadata_difficulty, state.tab.difficulty),
-                        icon = Icons.Outlined.Tune,
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        iconTint = MaterialTheme.colorScheme.secondary
-                    )
-                    val tagList = parseTags(state.tab.tags)
-                    if (tagList.isNotEmpty()) {
-                        Spacer(Modifier.height(spacingTight))
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Label,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.tertiary
-                            )
-                            Spacer(Modifier.width(spacingSmall))
-                            Text(
-                                text = stringResource(R.string.detail_metadata_tags_label),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Spacer(Modifier.height(spacingTight))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(spacingSmall),
-                            verticalArrangement = Arrangement.spacedBy(spacingSmall)
-                        ) {
-                            tagList.forEach { tag ->
-                                MetadataPill(
-                                    text = tag,
-                                    icon = null,
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    iconTint = MaterialTheme.colorScheme.tertiary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        MetadataSection(
+            key = state.tab.key,
+            difficulty = state.tab.difficulty,
+            tags = state.tab.tags,
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium,
+            spacingTight = spacingTight
+        )
 
         Spacer(Modifier.height(spacingMedium))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(Modifier.padding(spacingMedium)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Outlined.MusicNote,
-                        contentDescription = null,
-                        tint = contentTextColor
-                    )
-                    Spacer(Modifier.width(spacingSmall))
-                    Text(
-                        text = stringResource(R.string.tab_content_label),
-                        fontWeight = FontWeight.SemiBold,
-                        color = contentTextColor
-                    )
-                }
-                Spacer(Modifier.height(spacingMedium))
-                val notation = TabNotationJson.fromJson(state.tab.content)
-                if (notation != null && notation.lines.isNotEmpty()) {
-                    TabNotationInlineDisplay(
-                        lines = notation.lines,
-                        lineSpacing = spacingMedium,
-                        glyphColor = contentTextColor
-                    )
-                } else {
-                    Text(state.tab.content, color = contentTextColor)
-                }
-            }
-        }
+        NotationSection(
+            content = state.tab.content,
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium,
+            contentTextColor = contentTextColor
+        )
 
         Spacer(Modifier.height(spacingMedium))
 
@@ -285,32 +193,129 @@ fun TabDetailScreen(
 }
 
 @Composable
-private fun MetadataPill(
-    text: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector?,
-    containerColor: androidx.compose.ui.graphics.Color,
-    contentColor: androidx.compose.ui.graphics.Color,
-    iconTint: androidx.compose.ui.graphics.Color
+private fun MetadataSection(
+    key: String,
+    difficulty: String,
+    tags: String,
+    spacingSmall: Dp,
+    spacingMedium: Dp,
+    spacingTight: Dp
 ) {
-    Surface(
-        color = containerColor,
-        contentColor = contentColor,
-        shape = MaterialTheme.shapes.small
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-        ) {
-            if (icon != null) {
+        Column(Modifier.padding(spacingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = icon,
+                    imageVector = Icons.Outlined.Info,
                     contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(16.dp)
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-                Spacer(Modifier.width(6.dp))
+                Spacer(Modifier.width(spacingSmall))
+                Text(
+                    text = stringResource(R.string.detail_metadata_title),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             }
-            Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Spacer(Modifier.height(spacingMedium))
+            Column(verticalArrangement = Arrangement.spacedBy(spacingTight)) {
+                MetadataPill(
+                    text = stringResource(
+                        R.string.detail_metadata_key,
+                        key.ifBlank { stringResource(R.string.unknown_value) }
+                    ),
+                    icon = Icons.Outlined.VpnKey,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    iconTint = MaterialTheme.colorScheme.primary
+                )
+                MetadataPill(
+                    text = stringResource(R.string.detail_metadata_difficulty, difficulty),
+                    icon = Icons.Outlined.Tune,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    iconTint = MaterialTheme.colorScheme.secondary
+                )
+                val tagList = parseTags(tags)
+                if (tagList.isNotEmpty()) {
+                    Spacer(Modifier.height(spacingTight))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Label,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                        Spacer(Modifier.width(spacingSmall))
+                        Text(
+                            text = stringResource(R.string.detail_metadata_tags_label),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Spacer(Modifier.height(spacingTight))
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                        verticalArrangement = Arrangement.spacedBy(spacingSmall)
+                    ) {
+                        tagList.forEach { tag ->
+                            MetadataPill(
+                                text = tag,
+                                icon = null,
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                iconTint = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NotationSection(
+    content: String,
+    spacingSmall: Dp,
+    spacingMedium: Dp,
+    contentTextColor: Color
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(Modifier.padding(spacingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.MusicNote,
+                    contentDescription = null,
+                    tint = contentTextColor
+                )
+                Spacer(Modifier.width(spacingSmall))
+                Text(
+                    text = stringResource(R.string.tab_content_label),
+                    fontWeight = FontWeight.SemiBold,
+                    color = contentTextColor
+                )
+            }
+            Spacer(Modifier.height(spacingMedium))
+            val notation = TabNotationJson.fromJson(content)
+            if (notation != null && notation.lines.isNotEmpty()) {
+                TabNotationInlineDisplay(
+                    lines = notation.lines,
+                    lineSpacing = spacingMedium,
+                    glyphColor = contentTextColor
+                )
+            } else {
+                Text(content, color = contentTextColor)
+            }
         }
     }
 }
