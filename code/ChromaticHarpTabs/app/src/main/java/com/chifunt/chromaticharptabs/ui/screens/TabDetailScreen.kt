@@ -23,7 +23,6 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.MusicNote
-import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.AlertDialog
@@ -221,30 +220,6 @@ fun TabDetailScreen(
                             leadingIconContentColor = MaterialTheme.colorScheme.secondary
                         )
                     )
-                    state.tab.tempo?.let { tempo ->
-                        AssistChip(
-                            onClick = {},
-                            label = {
-                                Text(
-                                    text = stringResource(
-                                        R.string.detail_metadata_tempo,
-                                        tempo.toString()
-                                    )
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Speed,
-                                    contentDescription = null
-                                )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                labelColor = MaterialTheme.colorScheme.onSurface,
-                                leadingIconContentColor = MaterialTheme.colorScheme.tertiary
-                            )
-                        )
-                    }
                     val tagList = parseTags(state.tab.tags)
                     if (tagList.isNotEmpty()) {
                         Spacer(Modifier.height(spacingTight))

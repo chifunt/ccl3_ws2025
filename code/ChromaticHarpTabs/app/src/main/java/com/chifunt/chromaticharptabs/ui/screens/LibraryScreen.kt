@@ -129,7 +129,6 @@ private fun TabCardPreview() {
                 artist = stringResource(R.string.sample_artist_joseph_kosma),
                 key = stringResource(R.string.key_g),
                 difficulty = stringResource(R.string.difficulty_medium),
-                tempo = 110,
                 tags = stringResource(R.string.sample_tags_jazz_ballad),
                 content = stringResource(R.string.sample_content_autumn_leaves),
                 isFavorite = true,

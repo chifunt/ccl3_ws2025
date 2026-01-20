@@ -6,7 +6,6 @@ data class Tab(
     val artist: String,
     val key: String,
     val difficulty: String,
-    val tempo: Int?,
     val tags: String,
     val content: String,
     val isFavorite: Boolean,

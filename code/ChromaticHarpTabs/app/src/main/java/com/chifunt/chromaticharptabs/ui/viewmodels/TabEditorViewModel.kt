@@ -29,7 +29,6 @@ private fun blankEditorState(): TabEditorUiState {
         artist = "",
         key = "",
         difficulty = "",
-        tempo = "",
         tags = emptyList(),
         tagsInput = "",
         lines = emptyList(),
@@ -45,7 +44,6 @@ private data class TabEditorSnapshot(
     val artist: String,
     val key: String,
     val difficulty: String,
-    val tempo: String,
     val tags: List<String>,
     val tagsInput: String,
     val lines: List<List<TabNote>>
@@ -57,7 +55,6 @@ private fun TabEditorUiState.toSnapshot(): TabEditorSnapshot {
         artist = artist,
         key = key,
         difficulty = difficulty,
-        tempo = tempo,
         tags = tags,
         tagsInput = tagsInput,
         lines = lines
@@ -70,7 +67,6 @@ data class TabEditorUiState(
     val artist: String,
     val key: String,
     val difficulty: String,
-    val tempo: String,
     val tags: List<String>,
     val tagsInput: String,
     val lines: List<List<TabNote>>,
@@ -106,7 +102,6 @@ class TabEditorViewModel(
                         artist = tab.artist,
                         key = tab.key,
                         difficulty = tab.difficulty,
-                        tempo = tab.tempo?.toString() ?: "",
                         tags = parseTags(tab.tags),
                         tagsInput = "",
                         lines = notation?.lines.orEmpty(),
@@ -138,9 +133,6 @@ class TabEditorViewModel(
         _uiState.update { it.copy(difficulty = value, errorMessageResId = null) }
     }
 
-    fun updateTempo(value: String) {
-        _uiState.update { it.copy(tempo = value, errorMessageResId = null) }
-    }
 
     fun updateTagsInput(value: String) {
         val normalized = normalizeTagsInput(value)
@@ -307,7 +299,6 @@ class TabEditorViewModel(
             }
 
             val now = System.currentTimeMillis()
-            val tempoValue = state.tempo.toIntOrNull()
             val tagList = (state.tags + parseTags(state.tagsInput)).distinct()
 
             val tab = Tab(
@@ -316,7 +307,6 @@ class TabEditorViewModel(
                 artist = state.artist.trim(),
                 key = state.key.trim(),
                 difficulty = state.difficulty,
-                tempo = tempoValue,
                 tags = tagList.joinToString(" "),
                 content = TabNotationJson.toJson(TabNotation(state.lines)),
                 isFavorite = state.isFavorite,

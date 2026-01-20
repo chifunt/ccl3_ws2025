@@ -13,7 +13,6 @@ data class TabEntity(
     @ColumnInfo("key_name")
     val key: String,
     val difficulty: String,
-    val tempo: Int?,
     val tags: String,
     val content: String,
     @ColumnInfo("is_favorite")

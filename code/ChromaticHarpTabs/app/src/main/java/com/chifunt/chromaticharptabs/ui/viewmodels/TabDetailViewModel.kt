@@ -19,7 +19,6 @@ private fun emptyTab(): Tab {
         artist = "",
         key = "",
         difficulty = "",
-        tempo = null,
         tags = "",
         content = "",
         isFavorite = false,

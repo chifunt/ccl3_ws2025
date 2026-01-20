@@ -35,8 +35,6 @@
     <string name="detail_metadata_title">Metadata</string>
     <string name="detail_metadata_key">Key: %1$s</string>
     <string name="detail_metadata_difficulty">Difficulty: %1$s</string>
-    <string name="detail_metadata_tempo">Tempo: %1$s BPM</string>
-    <string name="tempo_unknown">Unknown</string>
     <string name="unknown_value">Unknown</string>
     <string name="detail_metadata_tags">Tags: %1$s</string>
     <string name="detail_metadata_tags_label">Tags</string>
@@ -71,7 +69,6 @@
     <string name="slide_on_label">Slide</string>
     <string name="slide_off_label">No slide</string>
     <string name="hole_picker_title">Select hole</string>
-    <string name="tempo_label">Tempo (BPM)</string>
     <string name="tags_label">Tags</string>
     <string name="tag_filter_selected">%1$d selected</string>
     <string name="tag_filter_clear">Clear tag filters</string>
