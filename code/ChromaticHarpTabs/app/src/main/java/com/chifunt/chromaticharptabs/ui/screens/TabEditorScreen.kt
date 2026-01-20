@@ -118,7 +118,7 @@ fun TabEditorScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             Column(Modifier.padding(spacingMedium)) {
@@ -126,13 +126,13 @@ fun TabEditorScreen(
                     Icon(
                         imageVector = Icons.Outlined.Description,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.width(spacingSmall))
                     Text(
                         text = stringResource(R.string.editor_section_details),
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Spacer(Modifier.height(spacingSmall))
@@ -258,8 +258,8 @@ fun TabEditorScreen(
                                     }
                                 },
                                 colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    labelColor = MaterialTheme.colorScheme.onTertiaryContainer
                                 )
                             )
                         }
@@ -274,7 +274,7 @@ fun TabEditorScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             Column(Modifier.padding(spacingMedium)) {
@@ -282,13 +282,13 @@ fun TabEditorScreen(
                     Icon(
                         imageVector = Icons.Outlined.MusicNote,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.width(spacingSmall))
                     Text(
                         text = stringResource(R.string.editor_section_content),
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Spacer(Modifier.height(spacingSmall))

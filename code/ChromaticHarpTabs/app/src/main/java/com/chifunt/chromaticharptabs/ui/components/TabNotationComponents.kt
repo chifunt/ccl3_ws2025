@@ -155,7 +155,8 @@ fun TabNotationInlineDisplay(
     lines: List<List<TabNote>>,
     modifier: Modifier = Modifier,
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
-    centered: Boolean = false
+    centered: Boolean = false,
+    glyphColor: androidx.compose.ui.graphics.Color? = null
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val horizontalArrangement = if (centered) {
@@ -175,7 +176,8 @@ fun TabNotationInlineDisplay(
                     NoteGlyph(
                         hole = note.hole,
                         isBlow = note.isBlow,
-                        isSlide = note.isSlide
+                        isSlide = note.isSlide,
+                        color = glyphColor
                     )
                 }
             }
@@ -358,10 +360,11 @@ private fun NoteGlyph(
     hole: Int,
     isBlow: Boolean,
     isSlide: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: androidx.compose.ui.graphics.Color? = null
 ) {
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
-    val outlineColor = MaterialTheme.colorScheme.onSurface
+    val outlineColor = color ?: MaterialTheme.colorScheme.onSurface
 
     Box(
         modifier = Modifier
@@ -391,7 +394,8 @@ private fun NoteGlyph(
     ) {
         Text(
             text = hole.toString(),
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = outlineColor
         )
     }
 }

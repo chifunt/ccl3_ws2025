@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +57,8 @@ import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.components.parseTags
+import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnText
+import com.chifunt.chromaticharptabs.ui.theme.RosePineText
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -72,6 +75,8 @@ fun TabDetailScreen(
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingTight = 1.dp
     val showNotationInfo = remember { mutableStateOf(false) }
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val contentTextColor = if (isDark) RosePineText else RosePineDawnText
 
     Column(
         modifier = modifier
@@ -265,8 +270,8 @@ fun TabDetailScreen(
                                     onClick = {},
                                     label = { Text(tag) },
                                     colors = AssistChipDefaults.assistChipColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                        labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
                                         leadingIconContentColor = MaterialTheme.colorScheme.tertiary
                                     )
                                 )
@@ -283,7 +288,7 @@ fun TabDetailScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             Column(Modifier.padding(spacingMedium)) {
@@ -291,13 +296,13 @@ fun TabDetailScreen(
                     Icon(
                         imageVector = Icons.Outlined.MusicNote,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                        tint = contentTextColor
                     )
                     Spacer(Modifier.width(spacingSmall))
                     Text(
                         text = stringResource(R.string.tab_content_label),
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                        color = contentTextColor
                     )
                 }
                 Spacer(Modifier.height(spacingMedium))
@@ -305,10 +310,11 @@ fun TabDetailScreen(
                 if (notation != null && notation.lines.isNotEmpty()) {
                     TabNotationInlineDisplay(
                         lines = notation.lines,
-                        lineSpacing = spacingMedium
+                        lineSpacing = spacingMedium,
+                        glyphColor = contentTextColor
                     )
                 } else {
-                    Text(state.tab.content)
+                    Text(state.tab.content, color = contentTextColor)
                 }
             }
         }

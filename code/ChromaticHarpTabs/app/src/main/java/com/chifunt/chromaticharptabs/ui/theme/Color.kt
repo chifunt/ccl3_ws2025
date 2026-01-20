@@ -2,20 +2,43 @@ package com.chifunt.chromaticharptabs.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Navy900 = Color(0xFF0B1B2B)
-val Navy800 = Color(0xFF12263D)
-val Navy700 = Color(0xFF19324E)
-val Navy600 = Color(0xFF21405F)
+// Rosé Pine (dark)
+val RosePineBase = Color(0xFF191724)
+val RosePineSurface = Color(0xFF1F1D2E)
+val RosePineOverlay = Color(0xFF26233A)
+val RosePineMuted = Color(0xFF6E6A86)
+val RosePineSubtle = Color(0xFF908CAA)
+val RosePineText = Color(0xFFE0DEF4)
+val RosePineLove = Color(0xFFEB6F92)
+val RosePineGold = Color(0xFFF6C177)
+val RosePineRose = Color(0xFFEBBCBA)
+val RosePinePine = Color(0xFF31748F)
+val RosePineFoam = Color(0xFF9CCFD8)
+val RosePineIris = Color(0xFFC4A7E7)
+val RosePineHighlightLow = Color(0xFF21202E)
+val RosePineHighlightMed = Color(0xFF403D52)
+val RosePineHighlightHigh = Color(0xFF524F67)
 
-val Silver100 = Color(0xFFE7ECF2)
-val Silver200 = Color(0xFFD0D7E0)
-val Silver300 = Color(0xFFB3BDC8)
+// Rosé Pine Dawn (light)
+val RosePineDawnBase = Color(0xFFFAF4ED)
+val RosePineDawnSurface = Color(0xFFFFFAF3)
+val RosePineDawnOverlay = Color(0xFFF2E9E1)
+val RosePineDawnMuted = Color(0xFF9893A5)
+val RosePineDawnSubtle = Color(0xFF797593)
+val RosePineDawnText = Color(0xFF575279)
+val RosePineDawnLove = Color(0xFFB4637A)
+val RosePineDawnGold = Color(0xFFEA9D34)
+val RosePineDawnRose = Color(0xFFD7827E)
+val RosePineDawnPine = Color(0xFF286983)
+val RosePineDawnFoam = Color(0xFF56949F)
+val RosePineDawnIris = Color(0xFF907AA9)
+val RosePineDawnHighlightLow = Color(0xFFF4EDE8)
+val RosePineDawnHighlightMed = Color(0xFFDFDAD9)
+val RosePineDawnHighlightHigh = Color(0xFFCECACD)
 
-val Mist100 = Color(0xFF9FB3C8)
-val Mist200 = Color(0xFF7D93AA)
-
-val DifficultyEasy = Color(0xFF3FB984)
-val DifficultyMedium = Color(0xFFF0B429)
-val DifficultyHard = Color(0xFFE15554)
-val ErrorRed = Color(0xFFE15554)
-val ErrorContainerDark = Color(0xFF4B1C1C)
+val DifficultyEasy = RosePineFoam
+val DifficultyMedium = RosePineGold
+val DifficultyHard = RosePineLove
+val ErrorRedDark = RosePineLove
+val ErrorRedLight = RosePineDawnLove
+val ErrorContainerDark = Color(0xFF3A1D2A)

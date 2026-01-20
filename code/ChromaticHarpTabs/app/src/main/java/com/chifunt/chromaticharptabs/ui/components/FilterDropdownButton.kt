@@ -68,7 +68,10 @@ fun FilterDropdownButton(
                     leadingIcon()
                     Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
                 }
-                Text(text = label)
+                Text(
+                    text = label,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
                 Text(
                     text = selected,
