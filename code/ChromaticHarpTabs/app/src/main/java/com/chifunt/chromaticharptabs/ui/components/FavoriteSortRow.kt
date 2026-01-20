@@ -54,7 +54,7 @@ fun FavoriteSortRow(
             onClick = onToggleFavorites,
             modifier = Modifier
                 .height(filterHeight)
-                .width(56.dp),
+                .width(48.dp),
             shape = MaterialTheme.shapes.small,
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.outlinedButtonColors(
