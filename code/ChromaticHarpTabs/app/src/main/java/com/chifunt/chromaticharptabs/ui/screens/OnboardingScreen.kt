@@ -1,6 +1,7 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,16 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -41,6 +41,7 @@ private data class OnboardingStep(
     val visual: @Composable () -> Unit
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
@@ -49,8 +50,6 @@ fun OnboardingScreen(
 ) {
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
-    var stepIndex by remember { mutableStateOf(0) }
-
     val steps = remember {
         listOf(
             OnboardingStep(
@@ -99,7 +98,8 @@ fun OnboardingScreen(
         )
     }
 
-    val step = steps[stepIndex]
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { steps.size })
+    val stepIndex = pagerState.currentPage
 
     Column(
         modifier = modifier
@@ -107,7 +107,7 @@ fun OnboardingScreen(
             .padding(spacingMedium),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -128,21 +128,33 @@ fun OnboardingScreen(
 
             Spacer(Modifier.height(spacingMedium))
 
-            Text(
-                text = stringResource(step.titleRes),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(Modifier.height(spacingSmall))
-            Text(text = stringResource(step.bodyRes))
-            Spacer(Modifier.height(spacingMedium))
-            Box(
+            HorizontalPager(
+                state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                step.visual()
+                    .weight(1f)
+            ) { page ->
+                val step = steps[page]
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = stringResource(step.titleRes),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(spacingSmall))
+                    Text(text = stringResource(step.bodyRes))
+                    Spacer(Modifier.height(spacingMedium))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        step.visual()
+                    }
+                }
             }
         }
 
@@ -168,37 +180,15 @@ fun OnboardingScreen(
 
             Spacer(Modifier.height(spacingSmall))
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacingSmall),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                OutlinedButton(
-                    onClick = { stepIndex = (stepIndex - 1).coerceAtLeast(0) },
-                    enabled = stepIndex > 0,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(text = stringResource(R.string.onboarding_back))
-                }
+            if (stepIndex == steps.lastIndex) {
                 Button(
                     onClick = {
-                        if (stepIndex < steps.lastIndex) {
-                            stepIndex += 1
-                        } else {
-                            settingsViewModel.setOnboardingCompleted(true)
-                            onFinish()
-                        }
+                        settingsViewModel.setOnboardingCompleted(true)
+                        onFinish()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(
-                            if (stepIndex < steps.lastIndex) {
-                                R.string.onboarding_next
-                            } else {
-                                R.string.onboarding_finish
-                            }
-                        )
-                    )
+                    Text(text = stringResource(R.string.onboarding_finish))
                 }
             }
         }
