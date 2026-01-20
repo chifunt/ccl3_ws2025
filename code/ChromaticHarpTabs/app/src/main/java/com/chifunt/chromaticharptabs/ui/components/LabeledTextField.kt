@@ -19,7 +19,8 @@ fun LabeledTextField(
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     maxLines: Int = 1,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    leadingIcon: (@Composable () -> Unit)? = null
 ) {
     val heightModifier = if (singleLine) {
         Modifier.defaultMinSize(minHeight = dimensionResource(R.dimen.text_field_height))
@@ -32,6 +33,7 @@ fun LabeledTextField(
         onValueChange = onValueChange,
         label = { Text(stringResource(labelRes)) },
         shape = MaterialTheme.shapes.small,
+        leadingIcon = leadingIcon,
         singleLine = singleLine,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions,

@@ -14,8 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.TextFields
+import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -116,7 +122,14 @@ fun TabEditorScreen(
                     value = state.title,
                     labelRes = R.string.title_label,
                     onValueChange = tabEditorViewModel::updateTitle,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.TextFields,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 )
                 Spacer(Modifier.height(spacingSmall))
 
@@ -124,7 +137,14 @@ fun TabEditorScreen(
                     value = state.artist,
                     labelRes = R.string.artist_label,
                     onValueChange = tabEditorViewModel::updateArtist,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 )
                 Spacer(Modifier.height(spacingSmall))
 
@@ -136,6 +156,13 @@ fun TabEditorScreen(
                         tabEditorViewModel.updateKey(if (option == allLabel) "" else option)
                     },
                     minHeight = textFieldHeight,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.VpnKey,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(spacingSmall))
@@ -146,6 +173,13 @@ fun TabEditorScreen(
                     options = difficultyOptions().drop(1),
                     onSelected = tabEditorViewModel::updateDifficulty,
                     minHeight = textFieldHeight,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Tune,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(spacingSmall))
@@ -157,7 +191,14 @@ fun TabEditorScreen(
                         tabEditorViewModel.updateTempo(value.filter { it.isDigit() })
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Speed,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 )
                 Spacer(Modifier.height(spacingSmall))
 
@@ -165,7 +206,14 @@ fun TabEditorScreen(
                     value = state.tags,
                     labelRes = R.string.tags_label,
                     onValueChange = tabEditorViewModel::updateTags,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Label,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 )
             }
         }
