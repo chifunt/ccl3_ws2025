@@ -27,7 +27,6 @@ import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
 import com.chifunt.chromaticharptabs.ui.components.AddTabButton
-import com.chifunt.chromaticharptabs.ui.components.DifficultyFilterRow
 import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
@@ -78,16 +77,11 @@ fun LibraryScreen(
 
         Spacer(Modifier.height(spacingMedium))
 
-        DifficultyFilterRow(
-            selectedDifficulty = state.difficulty ?: allLabel,
+        FavoriteSortRow(
+            difficultyFilter = state.difficulty ?: allLabel,
             onDifficultySelected = { option ->
                 tabListViewModel.updateDifficulty(if (option == allLabel) null else option)
-            }
-        )
-
-        Spacer(Modifier.height(spacingSmall))
-
-        FavoriteSortRow(
+            },
             favoritesOnly = state.favoritesOnly,
             onToggleFavorites = tabListViewModel::toggleFavoritesOnly,
             sortOption = state.sortOption,
