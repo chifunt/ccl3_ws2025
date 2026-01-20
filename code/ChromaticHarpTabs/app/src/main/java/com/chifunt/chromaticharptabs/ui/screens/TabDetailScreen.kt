@@ -310,7 +310,7 @@ private fun MetadataSection(
                         Spacer(Modifier.width(spacingSmall))
                         Text(
                             text = stringResource(R.string.detail_metadata_tags_label),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                     Spacer(Modifier.height(spacingTight))
