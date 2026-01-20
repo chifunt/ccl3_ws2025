@@ -93,13 +93,8 @@ fun TabEditorScreen(
         }
     }
 
-    LaunchedEffect(state.id, state.difficulty, state.key) {
-        if (state.id <= 0 && state.difficulty.isBlank()) {
-            tabEditorViewModel.updateDifficulty(mediumLabel)
-        }
-        if (state.id <= 0 && state.key.isBlank()) {
-            tabEditorViewModel.updateKey(keyDefault)
-        }
+    LaunchedEffect(state.id, keyDefault, mediumLabel) {
+        tabEditorViewModel.applyDefaults(keyDefault, mediumLabel)
     }
     Column(
         modifier = modifier

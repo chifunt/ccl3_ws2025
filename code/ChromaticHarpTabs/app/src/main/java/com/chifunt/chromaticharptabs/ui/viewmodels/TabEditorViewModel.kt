@@ -133,6 +133,35 @@ class TabEditorViewModel(
         clearError { it.copy(difficulty = value) }
     }
 
+    fun applyDefaults(defaultKey: String, defaultDifficulty: String) {
+        var applied = false
+        _uiState.update { state ->
+            if (state.id != NEW_TAB_ID) {
+                return@update state
+            }
+            val hasUserEdits = state.title.isNotBlank() ||
+                state.artist.isNotBlank() ||
+                state.tags.isNotEmpty() ||
+                state.tagsInput.isNotBlank() ||
+                state.lines.isNotEmpty()
+            if (hasUserEdits) {
+                return@update state
+            }
+            var nextState = state
+            if (nextState.key.isBlank()) {
+                nextState = nextState.copy(key = defaultKey)
+            }
+            if (nextState.difficulty.isBlank()) {
+                nextState = nextState.copy(difficulty = defaultDifficulty)
+            }
+            applied = applied || nextState != state
+            nextState
+        }
+        if (applied) {
+            baseline.value = _uiState.value.toSnapshot()
+        }
+    }
+
 
     fun updateTagsInput(value: String) {
         val normalized = normalizeTagsInput(value)
