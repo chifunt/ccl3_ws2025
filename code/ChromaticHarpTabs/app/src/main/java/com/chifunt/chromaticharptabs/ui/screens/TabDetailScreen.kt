@@ -212,28 +212,30 @@ fun TabDetailScreen(
                             leadingIconContentColor = MaterialTheme.colorScheme.secondary
                         )
                     )
-                    AssistChip(
-                        onClick = {},
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    R.string.detail_metadata_tempo,
-                                    state.tab.tempo?.toString() ?: stringResource(R.string.tempo_unknown)
+                    state.tab.tempo?.let { tempo ->
+                        AssistChip(
+                            onClick = {},
+                            label = {
+                                Text(
+                                    text = stringResource(
+                                        R.string.detail_metadata_tempo,
+                                        tempo.toString()
+                                    )
                                 )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Speed,
+                                    contentDescription = null
+                                )
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                labelColor = MaterialTheme.colorScheme.onSurface,
+                                leadingIconContentColor = MaterialTheme.colorScheme.tertiary
                             )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.Speed,
-                                contentDescription = null
-                            )
-                        },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            labelColor = MaterialTheme.colorScheme.onSurface,
-                            leadingIconContentColor = MaterialTheme.colorScheme.tertiary
                         )
-                    )
+                    }
                     if (state.tab.tags.isNotBlank()) {
                         AssistChip(
                             onClick = {},
