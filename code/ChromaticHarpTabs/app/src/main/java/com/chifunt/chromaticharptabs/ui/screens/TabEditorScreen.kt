@@ -1,5 +1,6 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -80,6 +81,16 @@ fun TabEditorScreen(
     val mediumLabel = stringResource(R.string.difficulty_medium)
     var holePickerTarget by remember { mutableStateOf<HolePickerTarget?>(null) }
     var lineToDelete by remember { mutableStateOf<Int?>(null) }
+    var showDiscardDialog by remember { mutableStateOf(false) }
+    val isDirty by tabEditorViewModel.isDirty.collectAsStateWithLifecycle()
+
+    val handleBack = {
+        if (isDirty) {
+            showDiscardDialog = true
+        } else {
+            onCancel()
+        }
+    }
 
     LaunchedEffect(state.id, state.difficulty) {
         if (state.id <= 0 && state.difficulty.isBlank()) {
@@ -92,7 +103,7 @@ fun TabEditorScreen(
             .padding(spacingMedium)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBackBar(onBack = onCancel)
+        TopBackBar(onBack = handleBack)
         Spacer(Modifier.height(spacingSmall))
 
         Text(
@@ -354,6 +365,37 @@ fun TabEditorScreen(
             }
         )
     }
+
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { Text(text = stringResource(R.string.discard_changes_title)) },
+            text = { Text(text = stringResource(R.string.discard_changes_message)) },
+            confirmButton = {
+                Button(onClick = {
+                    showDiscardDialog = false
+                    tabEditorViewModel.saveTab(onSaved)
+                }) {
+                    Text(text = stringResource(R.string.save_button))
+                }
+            },
+            dismissButton = {
+                Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall)) {
+                    TextButton(onClick = { showDiscardDialog = false }) {
+                        Text(text = stringResource(R.string.cancel_button))
+                    }
+                    TextButton(onClick = {
+                        showDiscardDialog = false
+                        onCancel()
+                    }) {
+                        Text(text = stringResource(R.string.discard_button))
+                    }
+                }
+            }
+        )
+    }
+
+    BackHandler(onBack = handleBack)
 }
 
 private data class HolePickerTarget(val lineIndex: Int?, val noteIndex: Int? = null)

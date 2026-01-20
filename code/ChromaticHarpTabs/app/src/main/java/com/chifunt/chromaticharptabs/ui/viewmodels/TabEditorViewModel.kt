@@ -14,6 +14,9 @@ import com.chifunt.chromaticharptabs.ui.components.parseTags
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -34,6 +37,30 @@ private fun blankEditorState(): TabEditorUiState {
         createdAt = 0L,
         updatedAt = 0L,
         errorMessageResId = null
+    )
+}
+
+private data class TabEditorSnapshot(
+    val title: String,
+    val artist: String,
+    val key: String,
+    val difficulty: String,
+    val tempo: String,
+    val tags: List<String>,
+    val tagsInput: String,
+    val lines: List<List<TabNote>>
+)
+
+private fun TabEditorUiState.toSnapshot(): TabEditorSnapshot {
+    return TabEditorSnapshot(
+        title = title,
+        artist = artist,
+        key = key,
+        difficulty = difficulty,
+        tempo = tempo,
+        tags = tags,
+        tagsInput = tagsInput,
+        lines = lines
     )
 }
 
@@ -61,6 +88,11 @@ class TabEditorViewModel(
     private val tabId: Int = savedStateHandle[NAV_ARG_TAB_ID] ?: NEW_TAB_ID
     private val _uiState = MutableStateFlow(blankEditorState())
     val uiState = _uiState.asStateFlow()
+    private val baseline = MutableStateFlow(blankEditorState().toSnapshot())
+
+    val isDirty = combine(uiState, baseline) { state, base ->
+        state.toSnapshot() != base
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         if (tabId != NEW_TAB_ID) {
@@ -83,7 +115,10 @@ class TabEditorViewModel(
                         updatedAt = tab.updatedAt
                     )
                 }
+                baseline.value = _uiState.value.toSnapshot()
             }
+        } else {
+            baseline.value = _uiState.value.toSnapshot()
         }
     }
 
