@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,13 +27,12 @@ import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,7 +72,7 @@ fun TabDetailScreen(
     val state by tabDetailViewModel.uiState.collectAsStateWithLifecycle()
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
-    val spacingTight = 1.dp
+    val spacingTight = 8.dp
     val showNotationInfo = remember { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val contentTextColor = if (isDark) RosePineText else RosePineDawnText
@@ -181,44 +181,24 @@ fun TabDetailScreen(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
-                Spacer(Modifier.height(spacingSmall))
+                Spacer(Modifier.height(spacingMedium))
                 Column(verticalArrangement = Arrangement.spacedBy(spacingTight)) {
-                    AssistChip(
-                        onClick = {},
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    R.string.detail_metadata_key,
-                                    state.tab.key.ifBlank { stringResource(R.string.unknown_value) }
-                                )
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.VpnKey,
-                                contentDescription = null
-                            )
-                        },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            labelColor = MaterialTheme.colorScheme.onSurface,
-                            leadingIconContentColor = MaterialTheme.colorScheme.primary
-                        )
+                    MetadataPill(
+                        text = stringResource(
+                            R.string.detail_metadata_key,
+                            state.tab.key.ifBlank { stringResource(R.string.unknown_value) }
+                        ),
+                        icon = Icons.Outlined.VpnKey,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        iconTint = MaterialTheme.colorScheme.primary
                     )
-                    AssistChip(
-                        onClick = {},
-                        label = { Text(stringResource(R.string.detail_metadata_difficulty, state.tab.difficulty)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.Tune,
-                                contentDescription = null
-                            )
-                        },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            labelColor = MaterialTheme.colorScheme.onSurface,
-                            leadingIconContentColor = MaterialTheme.colorScheme.secondary
-                        )
+                    MetadataPill(
+                        text = stringResource(R.string.detail_metadata_difficulty, state.tab.difficulty),
+                        icon = Icons.Outlined.Tune,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        iconTint = MaterialTheme.colorScheme.secondary
                     )
                     val tagList = parseTags(state.tab.tags)
                     if (tagList.isNotEmpty()) {
@@ -241,14 +221,12 @@ fun TabDetailScreen(
                             verticalArrangement = Arrangement.spacedBy(spacingSmall)
                         ) {
                             tagList.forEach { tag ->
-                                AssistChip(
-                                    onClick = {},
-                                    label = { Text(tag) },
-                                    colors = AssistChipDefaults.assistChipColors(
-                                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                        labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                        leadingIconContentColor = MaterialTheme.colorScheme.tertiary
-                                    )
+                                MetadataPill(
+                                    text = tag,
+                                    icon = null,
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    iconTint = MaterialTheme.colorScheme.tertiary
                                 )
                             }
                         }
@@ -302,6 +280,37 @@ fun TabDetailScreen(
                 Spacer(Modifier.width(dimensionResource(R.dimen.spacing_small)))
                 Text(stringResource(R.string.practice_button))
             }
+        }
+    }
+}
+
+@Composable
+private fun MetadataPill(
+    text: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector?,
+    containerColor: androidx.compose.ui.graphics.Color,
+    contentColor: androidx.compose.ui.graphics.Color,
+    iconTint: androidx.compose.ui.graphics.Color
+) {
+    Surface(
+        color = containerColor,
+        contentColor = contentColor,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+            }
+            Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
 }
