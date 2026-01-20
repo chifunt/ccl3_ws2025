@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,8 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -33,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
@@ -51,6 +56,7 @@ fun TabDetailScreen(
     val state by tabDetailViewModel.uiState.collectAsStateWithLifecycle()
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val showNotationInfo = remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -62,6 +68,12 @@ fun TabDetailScreen(
             onBack = onBack,
             actions = {
                 Row {
+                    DebouncedIconButton(onClick = { showNotationInfo.value = true }) {
+                        Icon(
+                            imageVector = Icons.Outlined.HelpOutline,
+                            contentDescription = stringResource(R.string.notation_info_button)
+                        )
+                    }
                     DebouncedIconButton(onClick = { onEdit(state.tab.id) }) {
                         Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_button))
                     }
@@ -75,6 +87,40 @@ fun TabDetailScreen(
                 }
             }
         )
+        if (showNotationInfo.value) {
+            AlertDialog(
+                onDismissRequest = { showNotationInfo.value = false },
+                confirmButton = {
+                    Button(onClick = { showNotationInfo.value = false }) {
+                        Text(text = stringResource(R.string.close_button))
+                    }
+                },
+                title = { Text(text = stringResource(R.string.notation_info_title)) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
+                        Text(text = stringResource(R.string.notation_info_blow))
+                        TabNotationInlineDisplay(
+                            lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = false)))
+                        )
+                        Spacer(Modifier.height(spacingSmall))
+                        Text(text = stringResource(R.string.notation_info_draw))
+                        TabNotationInlineDisplay(
+                            lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = false)))
+                        )
+                        Spacer(Modifier.height(spacingSmall))
+                        Text(text = stringResource(R.string.notation_info_slide))
+                        TabNotationInlineDisplay(
+                            lines = listOf(listOf(TabNote(hole = 4, isBlow = true, isSlide = true)))
+                        )
+                        Spacer(Modifier.height(spacingSmall))
+                        Text(text = stringResource(R.string.notation_info_draw_slide))
+                        TabNotationInlineDisplay(
+                            lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = true)))
+                        )
+                    }
+                }
+            )
+        }
         Spacer(Modifier.height(spacingSmall))
 
         Row(
