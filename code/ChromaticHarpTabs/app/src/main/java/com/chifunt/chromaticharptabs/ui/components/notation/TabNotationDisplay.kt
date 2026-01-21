@@ -19,37 +19,6 @@ import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TabNotationDisplay(
-    lines: List<List<TabNote>>,
-    modifier: Modifier = Modifier,
-    centered: Boolean = false,
-    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small)
-) {
-    val spacingSmall = dimensionResource(R.dimen.spacing_small)
-    val horizontalArrangement = if (centered) {
-        Arrangement.spacedBy(spacingSmall, Alignment.CenterHorizontally)
-    } else {
-        Arrangement.spacedBy(spacingSmall)
-    }
-
-    Column(modifier = modifier) {
-        lines.forEach { line ->
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = horizontalArrangement,
-                verticalArrangement = Arrangement.spacedBy(spacingSmall)
-            ) {
-                line.forEach { note ->
-                    NoteTile(note = note)
-                }
-            }
-            Spacer(Modifier.height(lineSpacing))
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
 fun TabNotationInlineDisplay(
     lines: List<List<TabNote>>,
     modifier: Modifier = Modifier,
