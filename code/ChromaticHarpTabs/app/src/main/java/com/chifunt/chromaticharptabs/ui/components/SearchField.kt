@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +27,8 @@ import com.chifunt.chromaticharptabs.R
 fun SearchField(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClear: () -> Unit = { onValueChange("") }
 ) {
     val height = dimensionResource(R.dimen.filter_chip_height)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
@@ -69,6 +71,15 @@ fun SearchField(
                     innerTextField()
                 }
             )
+            if (value.isNotEmpty()) {
+                DebouncedIconButton(onClick = onClear) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.clear_search),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
             Spacer(Modifier.width(spacingMedium))
         }
     }

@@ -24,6 +24,7 @@
     <string name="onboarding_title_edit">Edit with confidence</string>
     <string name="onboarding_body_edit">Tap a note to change holes, long-press to reorder, and use the B/D and &lt; toggles.</string>
     <string name="search_label">Search by title or artist</string>
+    <string name="clear_search">Clear search</string>
     <string name="favorites_only">Favorites only</string>
     <string name="sort_label">Sort</string>
     <string name="add_new_tab">Add new tab</string>
