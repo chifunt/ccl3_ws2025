@@ -31,6 +31,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,8 +65,8 @@ fun TabNotationEditor(
     onToggleBlow: (lineIndex: Int, noteIndex: Int) -> Unit,
     onToggleSlide: (lineIndex: Int, noteIndex: Int) -> Unit,
     onMoveNote: (lineIndex: Int, fromIndex: Int, toIndex: Int) -> Unit,
-    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lineSpacing: Dp = dimensionResource(R.dimen.spacing_small)
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
 
@@ -149,7 +150,7 @@ private fun DraggableNoteTile(
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
-    var dragOffset by remember { mutableStateOf(0f) }
+    var dragOffset by remember { mutableFloatStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
     val itemWidthPx = with(androidx.compose.ui.platform.LocalDensity.current) {
         (NoteTileSize + spacingSmall).toPx()
