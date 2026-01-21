@@ -1,35 +1,24 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 import com.chifunt.chromaticharptabs.data.ThemeMode
+import com.chifunt.chromaticharptabs.ui.components.settings.SettingsHeader
+import com.chifunt.chromaticharptabs.ui.components.settings.ThemeRow
+import com.chifunt.chromaticharptabs.ui.components.settings.ViewOnboardingButton
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 
 @Composable
@@ -78,72 +67,5 @@ fun SettingsScreen(
         Spacer(Modifier.height(spacingMedium))
 
         ViewOnboardingButton(onClick = onViewOnboarding)
-    }
-}
-
-@Composable
-private fun SettingsHeader(
-    onBack: () -> Unit,
-    spacingSmall: Dp,
-    spacingMedium: Dp
-) {
-    TopBackBar(onBack = onBack)
-    Spacer(Modifier.height(spacingSmall))
-    Text(
-        text = stringResource(R.string.settings_title),
-        fontSize = dimensionResource(R.dimen.headline).value.sp,
-        fontWeight = FontWeight.SemiBold
-    )
-    Spacer(Modifier.height(spacingSmall))
-    Text(text = stringResource(R.string.settings_description))
-    Spacer(Modifier.height(spacingMedium))
-}
-
-@Composable
-private fun ThemeRow(
-    selectedThemeLabel: String,
-    themeOptions: List<Pair<ThemeMode, String>>,
-    filterHeight: Dp,
-    spacingSmall: Dp,
-    onThemeSelected: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(spacingSmall)
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = spacingSmall)
-        ) {
-            Text(
-                text = stringResource(R.string.settings_theme_detail),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        FilterDropdownButton(
-            label = stringResource(R.string.settings_theme),
-            selected = selectedThemeLabel,
-            options = themeOptions.map { it.second },
-            onSelected = onThemeSelected,
-            modifier = Modifier
-                .height(filterHeight)
-                .width(170.dp)
-        )
-    }
-}
-
-@Composable
-private fun ViewOnboardingButton(
-    onClick: () -> Unit
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(text = stringResource(R.string.settings_view_onboarding))
     }
 }

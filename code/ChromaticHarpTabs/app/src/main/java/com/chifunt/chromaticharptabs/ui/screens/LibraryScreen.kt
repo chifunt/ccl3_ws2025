@@ -1,20 +1,15 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,25 +17,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
-import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
-import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
-import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
-import com.chifunt.chromaticharptabs.ui.components.LibraryHeader
 import com.chifunt.chromaticharptabs.ui.components.SearchField
-import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
-import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
+import com.chifunt.chromaticharptabs.ui.components.library.FiltersRow
+import com.chifunt.chromaticharptabs.ui.components.library.LibraryHeaderRow
+import com.chifunt.chromaticharptabs.ui.components.library.TabList
 
 @Composable
 fun LibraryScreen(
@@ -127,113 +115,5 @@ fun LibraryScreen(
                 contentDescription = stringResource(R.string.add_new_tab)
             )
         }
-    }
-}
-
-@Composable
-private fun LibraryHeaderRow(
-    spacingSmall: Dp,
-    onSettings: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
-        Spacer(Modifier.weight(1f))
-        DebouncedIconButton(onClick = onSettings) {
-            Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = stringResource(R.string.settings_button)
-            )
-        }
-    }
-}
-
-@Composable
-private fun FiltersRow(
-    allLabel: String,
-    difficulty: String?,
-    onDifficultySelected: (String?) -> Unit,
-    availableTags: List<String>,
-    selectedTags: Set<String>,
-    onToggleTag: (String) -> Unit,
-    onClearTags: () -> Unit,
-    onClearAll: () -> Unit,
-    favoritesOnly: Boolean,
-    onToggleFavorites: () -> Unit,
-    sortOption: SortOption,
-    onSortSelected: (SortOption) -> Unit,
-    keyFilter: String?,
-    onKeySelected: (String?) -> Unit
-) {
-    FavoriteSortRow(
-        difficultyFilter = difficulty ?: allLabel,
-        onDifficultySelected = { option ->
-            onDifficultySelected(if (option == allLabel) null else option)
-        },
-        tagOptions = availableTags,
-        selectedTags = selectedTags,
-        onToggleTag = onToggleTag,
-        onClearTags = onClearTags,
-        onClearAll = onClearAll,
-        favoritesOnly = favoritesOnly,
-        onToggleFavorites = onToggleFavorites,
-        sortOption = sortOption,
-        onSortSelected = onSortSelected,
-        keyFilter = keyFilter ?: allLabel,
-        onKeySelected = { option ->
-            onKeySelected(if (option == allLabel) null else option)
-        }
-    )
-}
-
-@Composable
-private fun TabList(
-    tabs: List<Tab>,
-    onOpen: (Int) -> Unit,
-    onToggleFavorite: (Tab) -> Unit,
-    spacingSmall: Dp,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    emptyMessage: String
-) {
-    if (tabs.isEmpty()) {
-        LibraryEmptyState(message = emptyMessage)
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(spacingSmall),
-            contentPadding = contentPadding
-        ) {
-            items(tabs) { tab ->
-                TabCard(
-                    tab = tab,
-                    onOpen = { onOpen(tab.id) },
-                    onToggleFavorite = { onToggleFavorite(tab) }
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TabCardPreview() {
-    ChromaticHarpTabsTheme {
-        TabCard(
-            tab = Tab(
-                id = 1,
-                title = "Autumn Leaves",
-                artist = "Joseph Kosma",
-                key = "C",
-                difficulty = "Medium",
-                tags = "",
-                content = "",
-                isFavorite = true,
-                createdAt = 0L,
-                updatedAt = 0L
-            ),
-            onOpen = {},
-            onToggleFavorite = {}
-        )
     }
 }
