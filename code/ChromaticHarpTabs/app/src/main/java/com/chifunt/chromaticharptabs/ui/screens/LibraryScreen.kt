@@ -1,23 +1,29 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +34,6 @@ import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
-import com.chifunt.chromaticharptabs.ui.components.AddTabButton
 import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
@@ -50,54 +55,69 @@ fun LibraryScreen(
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val allLabel = stringResource(R.string.filter_all)
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(spacingMedium),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(spacingMedium)
     ) {
-        LibraryHeaderRow(
-            spacingSmall = spacingSmall,
-            onSettings = onSettings
-        )
-        Spacer(Modifier.height(spacingSmall))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LibraryHeaderRow(
+                spacingSmall = spacingSmall,
+                onSettings = onSettings
+            )
+            Spacer(Modifier.height(spacingSmall))
 
-        SearchField(
-            value = state.searchQuery,
-            onValueChange = tabListViewModel::updateSearchQuery,
-            modifier = Modifier.fillMaxWidth()
-        )
+            SearchField(
+                value = state.searchQuery,
+                onValueChange = tabListViewModel::updateSearchQuery,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(Modifier.height(spacingSmall))
+            Spacer(Modifier.height(spacingSmall))
 
-        FiltersRow(
-            allLabel = allLabel,
-            difficulty = state.difficulty,
-            onDifficultySelected = tabListViewModel::updateDifficulty,
-            availableTags = state.availableTags,
-            selectedTags = state.tagFilter,
-            onToggleTag = tabListViewModel::toggleTagFilter,
-            onClearTags = tabListViewModel::clearTagFilter,
-            favoritesOnly = state.favoritesOnly,
-            onToggleFavorites = tabListViewModel::toggleFavoritesOnly,
-            sortOption = state.sortOption,
-            onSortSelected = tabListViewModel::updateSortOption,
-            keyFilter = state.keyFilter,
-            onKeySelected = tabListViewModel::updateKeyFilter
-        )
+            FiltersRow(
+                allLabel = allLabel,
+                difficulty = state.difficulty,
+                onDifficultySelected = tabListViewModel::updateDifficulty,
+                availableTags = state.availableTags,
+                selectedTags = state.tagFilter,
+                onToggleTag = tabListViewModel::toggleTagFilter,
+                onClearTags = tabListViewModel::clearTagFilter,
+                favoritesOnly = state.favoritesOnly,
+                onToggleFavorites = tabListViewModel::toggleFavoritesOnly,
+                sortOption = state.sortOption,
+                onSortSelected = tabListViewModel::updateSortOption,
+                keyFilter = state.keyFilter,
+                onKeySelected = tabListViewModel::updateKeyFilter
+            )
 
-        Spacer(Modifier.height(spacingSmall))
+            Spacer(Modifier.height(spacingMedium))
 
-        AddTabButton(onClick = onCreateNew, modifier = Modifier.fillMaxWidth())
+            TabList(
+                tabs = state.tabs,
+                onOpen = onTabClick,
+                onToggleFavorite = tabListViewModel::toggleFavorite,
+                spacingSmall = spacingSmall,
+                contentPadding = PaddingValues(bottom = 80.dp)
+            )
+        }
 
-        Spacer(Modifier.height(spacingMedium))
-
-        TabList(
-            tabs = state.tabs,
-            onOpen = onTabClick,
-            onToggleFavorite = tabListViewModel::toggleFavorite,
-            spacingSmall = spacingSmall
-        )
+        FloatingActionButton(
+            onClick = onCreateNew,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(spacingSmall),
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = stringResource(R.string.add_new_tab)
+            )
+        }
     }
 }
 
@@ -162,12 +182,16 @@ private fun TabList(
     tabs: List<Tab>,
     onOpen: (Int) -> Unit,
     onToggleFavorite: (Tab) -> Unit,
-    spacingSmall: Dp
+    spacingSmall: Dp,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     if (tabs.isEmpty()) {
         LibraryEmptyState()
     } else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(spacingSmall)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(spacingSmall),
+            contentPadding = contentPadding
+        ) {
             items(tabs) { tab ->
                 TabCard(
                     tab = tab,
