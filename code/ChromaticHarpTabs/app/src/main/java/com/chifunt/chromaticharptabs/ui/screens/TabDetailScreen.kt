@@ -1,9 +1,12 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,18 +37,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
@@ -83,23 +90,20 @@ fun TabDetailScreen(
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val contentTextColor = if (isDark) RosePineText else RosePineDawnText
     val tonePlayer = remember { SineTonePlayer() }
+    val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    var topBarHeightPx by remember { mutableIntStateOf(0) }
+    val topBarHeight = with(density) { topBarHeightPx.toDp() }
+    val isScrolled = scrollState.value > with(density) { spacingSmall.toPx() }
+    val topBarColor = if (isScrolled) MaterialTheme.colorScheme.surface else Color.Transparent
 
     DisposableEffect(Unit) {
         onDispose { tonePlayer.release() }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(spacingMedium)
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        DetailTopBar(
-            onBack = onBack,
-            onShowNotationInfo = { showNotationInfo.value = true },
-            onEdit = { onEdit(state.tab.id) },
-            onDelete = { showDeleteConfirm.value = true }
-        )
         NotationInfoDialog(
             isVisible = showNotationInfo.value,
             spacingSmall = spacingSmall,
@@ -113,46 +117,77 @@ fun TabDetailScreen(
                 tabDetailViewModel.removeTab { onBack() }
             }
         )
-        Spacer(Modifier.height(spacingSmall))
 
-        TitleRow(
-            title = state.tab.title,
-            artist = state.tab.artist,
-            isFavorite = state.tab.isFavorite,
-            spacingSmall = spacingSmall,
-            onToggleFavorite = tabDetailViewModel::toggleFavorite
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    PaddingValues(
+                        start = spacingMedium,
+                        end = spacingMedium,
+                        bottom = spacingMedium
+                    )
+                )
+                .padding(top = topBarHeight)
+                .verticalScroll(scrollState)
+        ) {
+            TitleRow(
+                title = state.tab.title,
+                artist = state.tab.artist,
+                isFavorite = state.tab.isFavorite,
+                spacingSmall = spacingSmall,
+                onToggleFavorite = tabDetailViewModel::toggleFavorite
+            )
 
-        Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(spacingMedium))
 
-        MetadataSection(
-            key = state.tab.key,
-            difficulty = state.tab.difficulty,
-            tags = state.tab.tags,
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium,
-            spacingTight = spacingTight
-        )
+            MetadataSection(
+                key = state.tab.key,
+                difficulty = state.tab.difficulty,
+                tags = state.tab.tags,
+                spacingSmall = spacingSmall,
+                spacingMedium = spacingMedium,
+                spacingTight = spacingTight
+            )
 
-        Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(spacingMedium))
 
-        NotationSection(
-            content = state.tab.content,
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium,
-            contentTextColor = contentTextColor,
-            onNotePress = { note ->
-                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-            },
-            onNoteRelease = { tonePlayer.stop() }
-        )
+            NotationSection(
+                content = state.tab.content,
+                spacingSmall = spacingSmall,
+                spacingMedium = spacingMedium,
+                contentTextColor = contentTextColor,
+                onNotePress = { note ->
+                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                },
+                onNoteRelease = { tonePlayer.stop() }
+            )
 
-        Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(spacingMedium))
 
-        PracticeRow(
-            onPractice = { onPractice(state.tab.id) },
-            spacingSmall = spacingSmall
-        )
+            PracticeRow(
+                onPractice = { onPractice(state.tab.id) },
+                spacingSmall = spacingSmall
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    topBarHeightPx = coordinates.size.height
+                }
+                .background(topBarColor)
+                .padding(horizontal = spacingMedium, vertical = spacingSmall)
+                .align(Alignment.TopCenter)
+        ) {
+            DetailTopBar(
+                onBack = onBack,
+                onShowNotationInfo = { showNotationInfo.value = true },
+                onEdit = { onEdit(state.tab.id) },
+                onDelete = { showDeleteConfirm.value = true }
+            )
+        }
     }
 }
 
