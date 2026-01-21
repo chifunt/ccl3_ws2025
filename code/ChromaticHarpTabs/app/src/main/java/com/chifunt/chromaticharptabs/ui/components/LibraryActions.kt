@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -19,7 +20,12 @@ fun AddTabButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Button(onClick = onClick, modifier = modifier, shape = MaterialTheme.shapes.medium) {
+    val filterHeight = dimensionResource(R.dimen.filter_chip_height)
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(filterHeight),
+        shape = MaterialTheme.shapes.small
+    ) {
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = null

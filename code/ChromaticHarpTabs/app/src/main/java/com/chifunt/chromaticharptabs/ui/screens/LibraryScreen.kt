@@ -68,7 +68,7 @@ fun LibraryScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(spacingMedium))
+        Spacer(Modifier.height(spacingSmall))
 
         FiltersRow(
             allLabel = allLabel,
