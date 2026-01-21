@@ -7,13 +7,18 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -38,30 +43,67 @@ fun TabNotationInlineDisplay(
     } else {
         Arrangement.spacedBy(spacingSmall)
     }
+    val noteBounds = remember { mutableStateMapOf<Pair<Int, Int>, NoteHit>() }
+    val activeKey = remember { mutableStateOf<Pair<Int, Int>?>(null) }
+    val rootCoordinates = remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-    Column(modifier = modifier) {
-        lines.forEach { line ->
+    Column(
+        modifier = modifier
+            .onGloballyPositioned { rootCoordinates.value = it }
+            .then(
+                if (onNotePress != null) {
+                    Modifier.pointerInput(noteBounds, onNotePress) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent()
+                                val change = event.changes.firstOrNull() ?: continue
+                                val coords = rootCoordinates.value
+                                val position = if (coords != null) {
+                                    coords.localToRoot(change.position)
+                                } else {
+                                    change.position
+                                }
+                                val hit = noteBounds.values.firstOrNull { it.bounds.contains(position) }
+                                if (!change.pressed) {
+                                    activeKey.value?.let { key ->
+                                        noteBounds[key]?.note?.let { onNoteRelease?.invoke(it) }
+                                    }
+                                    activeKey.value = null
+                                    continue
+                                }
+                                val nextKey = hit?.key
+                                if (nextKey != activeKey.value) {
+                                    activeKey.value?.let { key ->
+                                        noteBounds[key]?.note?.let { onNoteRelease?.invoke(it) }
+                                    }
+                                    activeKey.value = nextKey
+                                    hit?.note?.let { onNotePress(it) }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Modifier
+                }
+            )
+    ) {
+        lines.forEachIndexed { lineIndex, line ->
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = horizontalArrangement,
                 verticalArrangement = Arrangement.spacedBy(spacingSmall)
             ) {
-                line.forEach { note ->
-                    val pressed = remember(note) { mutableStateOf(false) }
-                    val noteModifier = if (onNotePress != null) {
-                        Modifier.pointerInput(note) {
-                            detectTapGestures(
-                                onPress = {
-                                    pressed.value = true
-                                    onNotePress(note)
-                                    tryAwaitRelease()
-                                    pressed.value = false
-                                    onNoteRelease?.invoke(note)
-                                }
-                            )
-                        }
-                    } else {
-                        Modifier
+                line.forEachIndexed { noteIndex, note ->
+                    val key = lineIndex to noteIndex
+                    DisposableEffect(key) {
+                        onDispose { noteBounds.remove(key) }
+                    }
+                    val noteModifier = Modifier.onGloballyPositioned { coords ->
+                        noteBounds[key] = NoteHit(
+                            key = key,
+                            note = note,
+                            bounds = coords.boundsInRoot()
+                        )
                     }
                     NoteGlyph(
                         hole = note.hole,
@@ -69,7 +111,7 @@ fun TabNotationInlineDisplay(
                         isSlide = note.isSlide,
                         color = glyphColor,
                         modifier = noteModifier,
-                        pressed = pressed.value
+                        pressed = activeKey.value == key
                     )
                 }
             }
@@ -77,6 +119,12 @@ fun TabNotationInlineDisplay(
         }
     }
 }
+
+private data class NoteHit(
+    val key: Pair<Int, Int>,
+    val note: TabNote,
+    val bounds: Rect
+)
 
 @Preview(showBackground = true)
 @Composable
