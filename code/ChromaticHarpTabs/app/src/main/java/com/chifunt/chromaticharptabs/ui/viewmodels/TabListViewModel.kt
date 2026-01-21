@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -78,38 +77,39 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
         )
     }
 
-    val uiState = filters
-        .flatMapLatest { filter ->
-            repository.getTabs(
-                query = filter.query,
-                keyFilter = filter.keyFilter,
-                difficulty = filter.difficulty,
-                favoritesOnly = filter.favoritesOnly,
-                sortOption = filter.sortOption
-            ).map { tabs ->
-                val availableTags = tabs
-                    .flatMap { parseTags(it.tags) }
-                    .distinct()
-                    .sorted()
-                val filteredTabs = if (filter.tagFilter.isEmpty()) {
-                    tabs
-                } else {
-                    tabs.filter { tab ->
-                        parseTags(tab.tags).any { it in filter.tagFilter }
-                    }
-                }
-                TabListUiState(
-                    tabs = filteredTabs,
-                    searchQuery = filter.query,
-                    keyFilter = filter.keyFilter,
-                    difficulty = filter.difficulty,
-                    sortOption = filter.sortOption,
-                    favoritesOnly = filter.favoritesOnly,
-                    tagFilter = filter.tagFilter,
-                    availableTags = availableTags
-                )
+    private val tabs = filters.flatMapLatest { filter ->
+        repository.getTabs(
+            query = filter.query,
+            keyFilter = filter.keyFilter,
+            difficulty = filter.difficulty,
+            favoritesOnly = filter.favoritesOnly,
+            sortOption = filter.sortOption
+        )
+    }
+
+    val uiState = combine(filters, tabs) { filter, tabs ->
+        val availableTags = tabs
+            .flatMap { parseTags(it.tags) }
+            .distinct()
+            .sorted()
+        val filteredTabs = if (filter.tagFilter.isEmpty()) {
+            tabs
+        } else {
+            tabs.filter { tab ->
+                parseTags(tab.tags).any { it in filter.tagFilter }
             }
         }
+        TabListUiState(
+            tabs = filteredTabs,
+            searchQuery = filter.query,
+            keyFilter = filter.keyFilter,
+            difficulty = filter.difficulty,
+            sortOption = filter.sortOption,
+            favoritesOnly = filter.favoritesOnly,
+            tagFilter = filter.tagFilter,
+            availableTags = availableTags
+        )
+    }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
