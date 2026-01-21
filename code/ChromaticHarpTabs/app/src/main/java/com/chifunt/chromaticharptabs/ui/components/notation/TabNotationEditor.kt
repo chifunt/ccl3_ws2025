@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNote
-import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalLayoutApi::class)

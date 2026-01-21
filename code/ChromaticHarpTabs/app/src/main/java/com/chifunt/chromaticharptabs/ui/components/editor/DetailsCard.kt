@@ -31,11 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.LabeledTextField
-import com.chifunt.chromaticharptabs.ui.components.TagChip
-import com.chifunt.chromaticharptabs.ui.components.difficultyOptions
+import com.chifunt.chromaticharptabs.ui.components.common.LabeledTextField
+import com.chifunt.chromaticharptabs.ui.components.common.TagChip
+import com.chifunt.chromaticharptabs.ui.components.filters.difficultyOptions
 import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
-import com.chifunt.chromaticharptabs.ui.components.keyOptions
+import com.chifunt.chromaticharptabs.ui.components.filters.keyOptions
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 
 @Composable

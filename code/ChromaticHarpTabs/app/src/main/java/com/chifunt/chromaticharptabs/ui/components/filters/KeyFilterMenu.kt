@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.keyOptions
 
 @Composable
 fun KeyFilterMenu(

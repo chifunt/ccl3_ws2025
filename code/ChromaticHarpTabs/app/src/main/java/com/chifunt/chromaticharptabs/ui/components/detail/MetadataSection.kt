@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.parseTags
-import com.chifunt.chromaticharptabs.ui.components.TagChip
+import com.chifunt.chromaticharptabs.ui.components.common.TagChip
 import com.chifunt.chromaticharptabs.ui.components.cards.MetadataPill
 
 @Composable

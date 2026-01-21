@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
 
 @Composable
 fun LibraryHeaderRow(

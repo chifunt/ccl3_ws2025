@@ -32,10 +32,10 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
-import com.chifunt.chromaticharptabs.ui.components.DebouncedFilledIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.DebouncedFilledIconButton
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
-import com.chifunt.chromaticharptabs.ui.components.TopBackBar
+import com.chifunt.chromaticharptabs.ui.components.common.TopBackBar
 
 @Composable
 fun PracticeScreen(
