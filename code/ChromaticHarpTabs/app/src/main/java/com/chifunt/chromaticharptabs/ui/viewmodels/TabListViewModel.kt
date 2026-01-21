@@ -147,6 +147,15 @@ class TabListViewModel(private val repository: TabRepository) : ViewModel() {
         updateFilter(tagFilter, emptySet())
     }
 
+    fun clearAllFilters() {
+        updateFilter(searchQuery, "")
+        updateFilter(keyFilter, null)
+        updateFilter(difficultyFilter, null)
+        updateFilter(tagFilter, emptySet())
+        updateFilter(favoritesOnly, false)
+        updateFilter(sortOption, SortOption.Newest)
+    }
+
     fun updateSortOption(value: SortOption) {
         updateFilter(sortOption, value)
     }

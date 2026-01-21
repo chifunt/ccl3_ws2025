@@ -5,17 +5,20 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +43,7 @@ fun FavoriteSortRow(
     selectedTags: Set<String>,
     onToggleTag: (String) -> Unit,
     onClearTags: () -> Unit,
+    onClearAll: () -> Unit,
     favoritesOnly: Boolean,
     onToggleFavorites: () -> Unit,
     sortOption: SortOption,
@@ -127,6 +131,29 @@ fun FavoriteSortRow(
                 .height(filterHeight)
                 .width(180.dp)
         )
+
+        OutlinedButton(
+            onClick = onClearAll,
+            modifier = Modifier
+                .height(filterHeight)
+                .width(140.dp),
+            shape = MaterialTheme.shapes.small,
+            contentPadding = PaddingValues(horizontal = spacingSmall),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            border = BorderStroke(
+                width = borderWidth,
+                color = MaterialTheme.colorScheme.outline
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Filled.FilterAltOff,
+                contentDescription = stringResource(R.string.clear_filters)
+            )
+            Spacer(Modifier.width(spacingSmall))
+            Text(text = stringResource(R.string.clear_filters))
+        }
     }
 }
 
@@ -141,6 +168,7 @@ private fun FavoriteSortRowPreview() {
             selectedTags = setOf("jazz"),
             onToggleTag = {},
             onClearTags = {},
+            onClearAll = {},
             favoritesOnly = true,
             onToggleFavorites = {},
             sortOption = SortOption.Newest,
@@ -162,6 +190,7 @@ private fun FavoriteSortRowLightPreview() {
             selectedTags = emptySet(),
             onToggleTag = {},
             onClearTags = {},
+            onClearAll = {},
             favoritesOnly = false,
             onToggleFavorites = {},
             sortOption = SortOption.Title,

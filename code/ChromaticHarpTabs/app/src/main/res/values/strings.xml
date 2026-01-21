@@ -26,6 +26,7 @@
     <string name="search_label">Search by title or artist</string>
     <string name="clear_search">Clear search</string>
     <string name="favorites_only">Favorites only</string>
+    <string name="clear_filters">Clear filters</string>
     <string name="sort_label">Sort</string>
     <string name="add_new_tab">Add new tab</string>
     <string name="empty_library">No tabs yet. Create your first entry.</string>
