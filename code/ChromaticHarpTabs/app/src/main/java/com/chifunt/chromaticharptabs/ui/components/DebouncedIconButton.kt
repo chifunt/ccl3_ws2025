@@ -5,7 +5,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -18,7 +18,7 @@ fun DebouncedIconButton(
     debounceMs: Long = 600L,
     content: @Composable () -> Unit
 ) {
-    var lastClickTime by remember { mutableStateOf(0L) }
+    var lastClickTime by remember { mutableLongStateOf(0L) }
 
     IconButton(
         onClick = {
@@ -43,7 +43,7 @@ fun DebouncedFilledIconButton(
     debounceMs: Long = 600L,
     content: @Composable () -> Unit
 ) {
-    var lastClickTime by remember { mutableStateOf(0L) }
+    var lastClickTime by remember { mutableLongStateOf(0L) }
 
     FilledIconButton(
         onClick = {
