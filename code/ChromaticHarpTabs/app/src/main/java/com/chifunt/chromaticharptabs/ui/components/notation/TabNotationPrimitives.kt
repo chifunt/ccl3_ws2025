@@ -1,15 +1,10 @@
 package com.chifunt.chromaticharptabs.ui.components.notation
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,36 +17,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.TabNote
 
 internal val NoteTileSize = 120.dp
 internal val NoteGlyphSize = 32.dp
 private val DashedCornerRadius = 14.dp
-
-@Composable
-internal fun NoteTile(note: TabNote) {
-    val spacingSmall = dimensionResource(R.dimen.spacing_small)
-    val borderStroke = dimensionResource(R.dimen.border_stroke_width)
-
-    OutlinedCard(
-        modifier = Modifier.size(NoteTileSize),
-        shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(borderStroke, MaterialTheme.colorScheme.outline)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(spacingSmall),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NoteGlyph(
-                hole = note.hole,
-                isBlow = note.isBlow,
-                isSlide = note.isSlide
-            )
-        }
-    }
-}
 
 @Composable
 internal fun NoteGlyph(
