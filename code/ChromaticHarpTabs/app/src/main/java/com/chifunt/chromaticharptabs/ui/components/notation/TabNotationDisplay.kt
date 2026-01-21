@@ -58,11 +58,7 @@ fun TabNotationInlineDisplay(
                                 val event = awaitPointerEvent()
                                 val change = event.changes.firstOrNull() ?: continue
                                 val coords = rootCoordinates.value
-                                val position = if (coords != null) {
-                                    coords.localToRoot(change.position)
-                                } else {
-                                    change.position
-                                }
+                                val position = coords?.localToRoot(change.position) ?: change.position
                                 val hit = noteBounds.values.firstOrNull { it.bounds.contains(position) }
                                 if (!change.pressed) {
                                     activeKey.value?.let { key ->
