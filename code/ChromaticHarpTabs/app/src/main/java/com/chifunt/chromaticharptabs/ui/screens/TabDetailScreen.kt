@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -78,6 +79,7 @@ fun TabDetailScreen(
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingTight = 8.dp
     val showNotationInfo = remember { mutableStateOf(false) }
+    val showDeleteConfirm = remember { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val contentTextColor = if (isDark) RosePineText else RosePineDawnText
     val tonePlayer = remember { SineTonePlayer() }
@@ -96,12 +98,20 @@ fun TabDetailScreen(
             onBack = onBack,
             onShowNotationInfo = { showNotationInfo.value = true },
             onEdit = { onEdit(state.tab.id) },
-            onDelete = { tabDetailViewModel.removeTab { onBack() } }
+            onDelete = { showDeleteConfirm.value = true }
         )
         NotationInfoDialog(
             isVisible = showNotationInfo.value,
             spacingSmall = spacingSmall,
             onDismiss = { showNotationInfo.value = false }
+        )
+        DeleteConfirmDialog(
+            isVisible = showDeleteConfirm.value,
+            onDismiss = { showDeleteConfirm.value = false },
+            onConfirm = {
+                showDeleteConfirm.value = false
+                tabDetailViewModel.removeTab { onBack() }
+            }
         )
         Spacer(Modifier.height(spacingSmall))
 
@@ -216,6 +226,38 @@ private fun NotationInfoDialog(
                 TabNotationInlineDisplay(
                     lines = listOf(listOf(TabNote(hole = 4, isBlow = false, isSlide = true)))
                 )
+            }
+        }
+    )
+}
+
+@Composable
+private fun DeleteConfirmDialog(
+    isVisible: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    if (!isVisible) {
+        return
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.delete_tab_title)) },
+        text = { Text(text = stringResource(R.string.delete_tab_message)) },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
+            ) {
+                Text(text = stringResource(R.string.delete_button))
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel_button))
             }
         }
     )
