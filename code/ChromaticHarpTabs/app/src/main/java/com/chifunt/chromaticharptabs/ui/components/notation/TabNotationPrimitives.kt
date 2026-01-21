@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -58,15 +59,21 @@ internal fun NoteGlyph(
     isBlow: Boolean,
     isSlide: Boolean,
     modifier: Modifier = Modifier,
-    color: Color? = null
+    color: Color? = null,
+    pressed: Boolean = false
 ) {
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
     val outlineColor = color ?: MaterialTheme.colorScheme.onSurface
+    val pressedColor = outlineColor.copy(alpha = 0.15f)
 
     Box(
         modifier = Modifier
             .size(NoteGlyphSize)
             .then(modifier)
+            .background(
+                color = if (pressed) pressedColor else Color.Transparent,
+                shape = MaterialTheme.shapes.small
+            )
             .drawBehind {
                 val strokeWidth = borderStroke.toPx()
                 if (!isBlow) {

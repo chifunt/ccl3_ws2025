@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
@@ -45,12 +47,15 @@ fun TabNotationInlineDisplay(
                 verticalArrangement = Arrangement.spacedBy(spacingSmall)
             ) {
                 line.forEach { note ->
+                    val pressed = remember(note) { mutableStateOf(false) }
                     val noteModifier = if (onNotePress != null) {
                         Modifier.pointerInput(note) {
                             detectTapGestures(
                                 onPress = {
+                                    pressed.value = true
                                     onNotePress(note)
                                     tryAwaitRelease()
+                                    pressed.value = false
                                     onNoteRelease?.invoke(note)
                                 }
                             )
@@ -63,7 +68,8 @@ fun TabNotationInlineDisplay(
                         isBlow = note.isBlow,
                         isSlide = note.isSlide,
                         color = glyphColor,
-                        modifier = noteModifier
+                        modifier = noteModifier,
+                        pressed = pressed.value
                     )
                 }
             }
