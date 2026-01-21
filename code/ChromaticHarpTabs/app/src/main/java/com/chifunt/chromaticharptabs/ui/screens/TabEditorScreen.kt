@@ -74,7 +74,6 @@ fun TabEditorScreen(
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val textFieldHeight = dimensionResource(R.dimen.text_field_height)
-    val allLabel = stringResource(R.string.filter_all)
     val keyDefault = stringResource(R.string.key_c)
     val mediumLabel = stringResource(R.string.difficulty_medium)
     var holePickerTarget by remember { mutableStateOf<HolePickerTarget?>(null) }
