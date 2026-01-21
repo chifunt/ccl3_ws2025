@@ -1,7 +1,9 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,7 +32,6 @@ import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -40,10 +42,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +56,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
@@ -58,6 +64,7 @@ import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
+import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.TagChip
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
@@ -87,6 +94,12 @@ fun TabEditorScreen(
     var showDiscardDialog by remember { mutableStateOf(false) }
     val isDirty by tabEditorViewModel.isDirty.collectAsStateWithLifecycle()
     val tonePlayer = remember { SineTonePlayer() }
+    val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    var topBarHeightPx by remember { mutableIntStateOf(0) }
+    val topBarHeight = with(density) { topBarHeightPx.toDp() }
+    val isScrolled = scrollState.value > with(density) { spacingSmall.toPx() }
+    val topBarColor = if (isScrolled) MaterialTheme.colorScheme.surface else Color.Transparent
 
     DisposableEffect(Unit) {
         onDispose { tonePlayer.release() }
@@ -103,69 +116,94 @@ fun TabEditorScreen(
     LaunchedEffect(state.id, keyDefault, mediumLabel) {
         tabEditorViewModel.applyDefaults(keyDefault, mediumLabel)
     }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(spacingMedium)
-            .verticalScroll(rememberScrollState())
-    ) {
-        EditorHeader(
-            onBack = handleBack,
-            title = stringResource(R.string.editor_title),
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium
-        )
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    PaddingValues(
+                        start = spacingMedium,
+                        end = spacingMedium,
+                        bottom = spacingMedium
+                    )
+                )
+                .padding(top = topBarHeight + spacingSmall)
+                .verticalScroll(scrollState)
+        ) {
+            Text(
+                text = stringResource(R.string.editor_title),
+                fontSize = dimensionResource(R.dimen.headline).value.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(Modifier.height(spacingMedium))
 
-        DetailsCard(
-            state = state,
-            onTitleChange = tabEditorViewModel::updateTitle,
-            onArtistChange = tabEditorViewModel::updateArtist,
-            onKeyChange = tabEditorViewModel::updateKey,
-            onDifficultyChange = tabEditorViewModel::updateDifficulty,
-            onTagsInputChange = tabEditorViewModel::updateTagsInput,
-            onCommitTag = tabEditorViewModel::commitTagsInput,
-            onRemoveTag = tabEditorViewModel::removeTag,
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium,
-            textFieldHeight = textFieldHeight,
-            keyDefault = keyDefault,
-            mediumLabel = mediumLabel
-        )
+            DetailsCard(
+                state = state,
+                onTitleChange = tabEditorViewModel::updateTitle,
+                onArtistChange = tabEditorViewModel::updateArtist,
+                onKeyChange = tabEditorViewModel::updateKey,
+                onDifficultyChange = tabEditorViewModel::updateDifficulty,
+                onTagsInputChange = tabEditorViewModel::updateTagsInput,
+                onCommitTag = tabEditorViewModel::commitTagsInput,
+                onRemoveTag = tabEditorViewModel::removeTag,
+                spacingSmall = spacingSmall,
+                spacingMedium = spacingMedium,
+                textFieldHeight = textFieldHeight,
+                keyDefault = keyDefault,
+                mediumLabel = mediumLabel
+            )
 
-        Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(spacingMedium))
 
-        ContentCard(
-            lines = state.lines,
-            onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
-            onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
-            onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
-            onDeleteNote = tabEditorViewModel::removeNote,
-            onEditHole = { lineIndex, noteIndex ->
-                holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
-            },
-            onToggleBlow = tabEditorViewModel::toggleBlow,
-            onToggleSlide = tabEditorViewModel::toggleSlide,
-            onMoveNote = tabEditorViewModel::moveNote,
-            onPreviewNote = { note ->
-                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-            },
-            onPreviewStop = { tonePlayer.stop() },
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium
-        )
+            ContentCard(
+                lines = state.lines,
+                onAddNote = { lineIndex -> holePickerTarget = HolePickerTarget(lineIndex = lineIndex) },
+                onAddLine = { holePickerTarget = HolePickerTarget(lineIndex = null) },
+                onDeleteLine = { lineIndex -> lineToDelete = lineIndex },
+                onDeleteNote = tabEditorViewModel::removeNote,
+                onEditHole = { lineIndex, noteIndex ->
+                    holePickerTarget = HolePickerTarget(lineIndex = lineIndex, noteIndex = noteIndex)
+                },
+                onToggleBlow = tabEditorViewModel::toggleBlow,
+                onToggleSlide = tabEditorViewModel::toggleSlide,
+                onMoveNote = tabEditorViewModel::moveNote,
+                onPreviewNote = { note ->
+                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                },
+                onPreviewStop = { tonePlayer.stop() },
+                spacingSmall = spacingSmall,
+                spacingMedium = spacingMedium
+            )
 
-        state.errorMessageResId?.let { messageResId ->
-            Spacer(Modifier.height(spacingSmall))
-            Text(text = stringResource(messageResId), color = MaterialTheme.colorScheme.error)
+            state.errorMessageResId?.let { messageResId ->
+                Spacer(Modifier.height(spacingSmall))
+                Text(text = stringResource(messageResId), color = MaterialTheme.colorScheme.error)
+            }
         }
 
-        Spacer(Modifier.height(spacingMedium))
-
-        ActionRow(
-            onSave = { tabEditorViewModel.saveTab(onSaved) },
-            onCancel = handleBack,
-            spacingSmall = spacingSmall
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    topBarHeightPx = coordinates.size.height
+                }
+                .background(topBarColor)
+                .padding(horizontal = spacingMedium, vertical = spacingSmall)
+                .align(Alignment.TopCenter)
+        ) {
+            TopBackBar(
+                onBack = handleBack,
+                actions = {
+                    DebouncedIconButton(onClick = { tabEditorViewModel.saveTab(onSaved) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Save,
+                            contentDescription = stringResource(R.string.save_button),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            )
+        }
     }
 
     holePickerTarget?.let { target ->
@@ -238,23 +276,6 @@ fun TabEditorScreen(
 }
 
 private data class HolePickerTarget(val lineIndex: Int?, val noteIndex: Int? = null)
-
-@Composable
-private fun EditorHeader(
-    onBack: () -> Unit,
-    title: String,
-    spacingSmall: Dp,
-    spacingMedium: Dp
-) {
-    TopBackBar(onBack = onBack)
-    Spacer(Modifier.height(spacingSmall))
-    Text(
-        text = title,
-        fontSize = dimensionResource(R.dimen.headline).value.sp,
-        fontWeight = FontWeight.SemiBold
-    )
-    Spacer(Modifier.height(spacingMedium))
-}
 
 @Composable
 private fun DetailsCard(
@@ -445,24 +466,6 @@ private fun ContentCard(
                 lineSpacing = spacingMedium,
                 modifier = Modifier.fillMaxWidth()
             )
-        }
-    }
-}
-
-@Composable
-private fun ActionRow(
-    onSave: () -> Unit,
-    onCancel: () -> Unit,
-    spacingSmall: Dp
-) {
-    Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall), modifier = Modifier.fillMaxWidth()) {
-        Button(onClick = onSave, modifier = Modifier.weight(1f)) {
-            Icon(imageVector = Icons.Filled.Save, contentDescription = null)
-            Spacer(Modifier.width(spacingSmall))
-            Text(stringResource(R.string.save_button))
-        }
-        TextButton(onClick = onCancel, modifier = Modifier.weight(1f)) {
-            Text(stringResource(R.string.cancel_button))
         }
     }
 }
