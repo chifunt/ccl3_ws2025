@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,19 +29,12 @@ fun LibraryHeader(modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.primaryContainer
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.LibraryMusic,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier
-                    .padding(spacingSmall)
-                    .size(18.dp)
-            )
-        }
+        Icon(
+            imageVector = Icons.Outlined.LibraryMusic,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp)
+        )
         Spacer(Modifier.width(spacingSmall))
         Text(
             text = stringResource(R.string.library_title),
