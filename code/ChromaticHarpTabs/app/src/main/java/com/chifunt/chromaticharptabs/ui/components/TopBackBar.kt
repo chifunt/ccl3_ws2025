@@ -13,9 +13,9 @@ import com.chifunt.chromaticharptabs.R
 
 @Composable
 fun TopBackBar(
+    modifier: Modifier = Modifier,
     onBack: () -> Unit,
-    actions: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    actions: @Composable (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
