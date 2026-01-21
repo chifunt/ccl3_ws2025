@@ -97,6 +97,7 @@ fun PracticeScreen(
                 DebouncedFilledIconButton(
                     onClick = { practiceViewModel.previousLine() },
                     enabled = state.currentIndex > 0,
+                    debounceMs = 0L,
                     modifier = Modifier
                         .weight(1f)
                         .height(dimensionResource(R.dimen.filter_chip_height))
@@ -106,6 +107,7 @@ fun PracticeScreen(
                 DebouncedFilledIconButton(
                     onClick = { practiceViewModel.nextLine() },
                     enabled = state.currentIndex < state.lines.lastIndex,
+                    debounceMs = 0L,
                     modifier = Modifier
                         .weight(1f)
                         .height(dimensionResource(R.dimen.filter_chip_height))
