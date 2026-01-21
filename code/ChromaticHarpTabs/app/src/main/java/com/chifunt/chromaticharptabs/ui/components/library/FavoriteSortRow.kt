@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.ui.components.library
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll

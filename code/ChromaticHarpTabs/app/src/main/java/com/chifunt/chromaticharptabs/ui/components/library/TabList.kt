@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.data.Tab
-import com.chifunt.chromaticharptabs.ui.components.LibraryEmptyState
 import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
 
 @Composable

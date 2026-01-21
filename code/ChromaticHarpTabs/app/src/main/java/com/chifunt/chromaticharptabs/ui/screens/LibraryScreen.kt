@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
-import com.chifunt.chromaticharptabs.ui.components.SearchField
+import com.chifunt.chromaticharptabs.ui.components.library.SearchField
 import com.chifunt.chromaticharptabs.ui.components.library.FiltersRow
 import com.chifunt.chromaticharptabs.ui.components.library.LibraryHeaderRow
 import com.chifunt.chromaticharptabs.ui.components.library.TabList

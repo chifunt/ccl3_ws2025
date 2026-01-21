@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.ui.components
+package com.chifunt.chromaticharptabs.ui.components.library
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

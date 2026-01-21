@@ -1,7 +1,6 @@
 package com.chifunt.chromaticharptabs.ui.components.library
 
 import androidx.compose.runtime.Composable
-import com.chifunt.chromaticharptabs.ui.components.FavoriteSortRow
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 
 @Composable

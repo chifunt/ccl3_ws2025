@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.ui.components.FavoriteToggleButton
+import com.chifunt.chromaticharptabs.ui.components.common.FavoriteToggleButton
 
 @Composable
 fun TitleRow(
