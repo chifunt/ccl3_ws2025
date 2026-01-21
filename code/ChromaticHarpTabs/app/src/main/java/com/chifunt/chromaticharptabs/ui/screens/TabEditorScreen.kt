@@ -38,7 +38,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,12 +46,12 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
-import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
 import com.chifunt.chromaticharptabs.ui.components.editor.ContentCard
 import com.chifunt.chromaticharptabs.ui.components.editor.DetailsCard
 import com.chifunt.chromaticharptabs.ui.components.editor.HolePickerDialog
-import com.chifunt.chromaticharptabs.ui.components.TopBackBar
+import com.chifunt.chromaticharptabs.ui.components.common.TopBackBar
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
