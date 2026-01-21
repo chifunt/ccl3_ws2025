@@ -151,7 +151,7 @@ fun TabEditorScreen(
 
         ActionRow(
             onSave = { tabEditorViewModel.saveTab(onSaved) },
-            onCancel = onCancel,
+            onCancel = handleBack,
             spacingSmall = spacingSmall
         )
     }
