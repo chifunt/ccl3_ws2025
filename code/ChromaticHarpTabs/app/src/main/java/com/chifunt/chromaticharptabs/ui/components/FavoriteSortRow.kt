@@ -115,7 +115,7 @@ fun FavoriteSortRow(
             onSelected = onDifficultySelected,
             modifier = Modifier
                 .height(filterHeight)
-                .width(160.dp)
+                .width(180.dp)
         )
 
         TagFilterMenu(
