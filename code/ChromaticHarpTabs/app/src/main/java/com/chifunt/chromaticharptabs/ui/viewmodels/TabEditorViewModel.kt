@@ -164,8 +164,8 @@ class TabEditorViewModel(
 
 
     fun updateTagsInput(value: String) {
-        val normalized = normalizeTagsInput(value)
-        val endsWithSpace = value.endsWith(" ") || value.endsWith(",")
+        val normalized = normalizeTagsInput(value.replace("\n", " ").replace("\r", " "))
+        val endsWithSpace = value.endsWith(" ") || value.endsWith(",") || value.endsWith("\n")
         val tokens = normalized.split(" ").filter { it.isNotBlank() }
         clearError { state ->
             val current = state.tags
@@ -180,6 +180,14 @@ class TabEditorViewModel(
                 state.copy(tags = combined, tagsInput = tokens.last(), errorMessageResId = null)
             }
         }
+    }
+
+    fun commitTagsInput() {
+        val input = uiState.value.tagsInput
+        if (input.isBlank()) {
+            return
+        }
+        updateTagsInput("$input ")
     }
 
     fun removeTag(tag: String) {

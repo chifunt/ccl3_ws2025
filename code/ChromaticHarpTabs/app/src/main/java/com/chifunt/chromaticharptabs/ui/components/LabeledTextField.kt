@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import com.chifunt.chromaticharptabs.R
 
@@ -20,6 +21,7 @@ fun LabeledTextField(
     singleLine: Boolean = true,
     maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: (@Composable () -> Unit)? = null
 ) {
     val heightModifier = if (singleLine) {
@@ -37,6 +39,7 @@ fun LabeledTextField(
         singleLine = singleLine,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         modifier = modifier.then(heightModifier)
     )
 }
