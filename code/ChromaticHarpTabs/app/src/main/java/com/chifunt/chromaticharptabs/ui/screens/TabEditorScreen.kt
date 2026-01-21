@@ -1,7 +1,6 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.ui.Alignment
@@ -19,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Person
@@ -33,8 +31,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -56,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.components.TagChip
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
 import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
@@ -366,26 +363,9 @@ private fun DetailsCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     state.tags.forEach { tag ->
-                        AssistChip(
-                            onClick = {},
-                            label = {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(tag)
-                                    Spacer(Modifier.width(6.dp))
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier
-                                            .size(14.dp)
-                                            .clickable { onRemoveTag(tag) }
-                                    )
-                                }
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                labelColor = MaterialTheme.colorScheme.onTertiaryContainer
-                            )
+                        TagChip(
+                            text = tag,
+                            onRemove = { onRemoveTag(tag) }
                         )
                     }
                 }

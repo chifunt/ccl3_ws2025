@@ -17,8 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Label
@@ -54,6 +52,8 @@ import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.FavoriteToggleButton
+import com.chifunt.chromaticharptabs.ui.components.TagChip
 import com.chifunt.chromaticharptabs.ui.components.cards.MetadataPill
 import com.chifunt.chromaticharptabs.ui.components.TopBackBar
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
@@ -226,12 +226,11 @@ private fun TitleRow(
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
             Text(artist.ifBlank { stringResource(R.string.unknown_artist) })
         }
-        DebouncedIconButton(onClick = onToggleFavorite) {
-            Icon(
-                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                contentDescription = stringResource(R.string.favorite_toggle)
-            )
-        }
+        FavoriteToggleButton(
+            isFavorite = isFavorite,
+            onToggle = onToggleFavorite,
+            contentDescriptionRes = R.string.favorite_toggle
+        )
     }
 }
 
@@ -319,13 +318,7 @@ private fun MetadataSection(
                         verticalArrangement = Arrangement.spacedBy(spacingSmall)
                     ) {
                         tagList.forEach { tag ->
-                            MetadataPill(
-                                text = tag,
-                                icon = null,
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                iconTint = MaterialTheme.colorScheme.tertiary
-                            )
+                            TagChip(text = tag)
                         }
                     }
                 }

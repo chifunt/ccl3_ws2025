@@ -24,7 +24,9 @@ fun MetadataPill(
     icon: ImageVector?,
     containerColor: Color,
     contentColor: Color,
-    iconTint: Color
+    iconTint: Color,
+    modifier: Modifier = Modifier,
+    trailingContent: (@Composable () -> Unit)? = null
 ) {
     Surface(
         color = containerColor,
@@ -33,7 +35,7 @@ fun MetadataPill(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+            modifier = modifier.padding(horizontal = 10.dp, vertical = 4.dp)
         ) {
             if (icon != null) {
                 Icon(
@@ -45,6 +47,9 @@ fun MetadataPill(
                 Spacer(Modifier.width(6.dp))
             }
             Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            if (trailingContent != null) {
+                trailingContent()
+            }
         }
     }
 }

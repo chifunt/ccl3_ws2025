@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.Tab
-import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.FavoriteToggleButton
+import com.chifunt.chromaticharptabs.ui.components.TagChip
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
@@ -72,17 +69,11 @@ fun TabCard(
                     Text(tab.title, fontWeight = FontWeight.SemiBold)
                     Text(tab.artist.ifBlank { stringResource(R.string.unknown_artist) })
                 }
-                DebouncedIconButton(onClick = onToggleFavorite) {
-                    Icon(
-                        imageVector = if (tab.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        contentDescription = stringResource(R.string.favorite_toggle),
-                        tint = if (tab.isFavorite) {
-                            MaterialTheme.colorScheme.secondary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    )
-                }
+                FavoriteToggleButton(
+                    isFavorite = tab.isFavorite,
+                    onToggle = onToggleFavorite,
+                    contentDescriptionRes = R.string.favorite_toggle
+                )
             }
             Spacer(Modifier.height(spacingSmall))
             Row(
@@ -124,14 +115,7 @@ fun TabCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     tagList.forEach { tag ->
-                        AssistChip(
-                            onClick = {},
-                            label = { Text(tag) },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                labelColor = MaterialTheme.colorScheme.onTertiaryContainer
-                            )
-                        )
+                        TagChip(text = tag)
                     }
                 }
             }
