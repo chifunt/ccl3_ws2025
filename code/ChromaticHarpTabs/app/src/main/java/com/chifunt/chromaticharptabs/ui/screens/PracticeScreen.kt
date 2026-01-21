@@ -50,69 +50,75 @@ fun PracticeScreen(
         onDispose { tonePlayer.release() }
     }
 
-    Scaffold { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(spacingMedium),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TopBackBar(onBack = onBack)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(spacingMedium),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TopBackBar(onBack = onBack)
 
-            Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-
-            Box(
+        Scaffold { innerPadding ->
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TabNotationInlineDisplay(
-                    lines = listOf(state.lines[state.currentIndex]),
-                    lineSpacing = spacingMedium,
-                    centered = true,
-                    onNotePress = { note ->
-                        HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                    },
-                    onNoteRelease = { tonePlayer.stop() }
-                )
-            }
+                Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
 
-            Text(
-                text = stringResource(
-                    R.string.practice_line_counter,
-                    state.currentIndex + 1,
-                    state.lines.size
-                ),
-                fontWeight = FontWeight.Medium
-            )
-
-            Spacer(Modifier.height(spacingMedium))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacingMedium),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                DebouncedFilledIconButton(
-                    onClick = { practiceViewModel.previousLine() },
-                    enabled = state.currentIndex > 0,
-                    debounceMs = 0L,
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .height(dimensionResource(R.dimen.filter_chip_height))
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    TabNotationInlineDisplay(
+                        lines = listOf(state.lines[state.currentIndex]),
+                        lineSpacing = spacingMedium,
+                        centered = true,
+                        onNotePress = { note ->
+                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                        },
+                        onNoteRelease = { tonePlayer.stop() }
+                    )
                 }
-                DebouncedFilledIconButton(
-                    onClick = { practiceViewModel.nextLine() },
-                    enabled = state.currentIndex < state.lines.lastIndex,
-                    debounceMs = 0L,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(dimensionResource(R.dimen.filter_chip_height))
+
+                Text(
+                    text = stringResource(
+                        R.string.practice_line_counter,
+                        state.currentIndex + 1,
+                        state.lines.size
+                    ),
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(Modifier.height(spacingMedium))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(spacingMedium),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                    DebouncedFilledIconButton(
+                        onClick = { practiceViewModel.previousLine() },
+                        enabled = state.currentIndex > 0,
+                        debounceMs = 0L,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(dimensionResource(R.dimen.filter_chip_height))
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                    DebouncedFilledIconButton(
+                        onClick = { practiceViewModel.nextLine() },
+                        enabled = state.currentIndex < state.lines.lastIndex,
+                        debounceMs = 0L,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(dimensionResource(R.dimen.filter_chip_height))
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                    }
                 }
             }
         }
