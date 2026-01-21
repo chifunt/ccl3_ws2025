@@ -29,6 +29,7 @@
     <string name="sort_label">Sort</string>
     <string name="add_new_tab">Add new tab</string>
     <string name="empty_library">No tabs yet. Create your first entry.</string>
+    <string name="empty_search">No results. Try clearing search or filters.</string>
     <string name="favorite_toggle">Toggle favorite</string>
     <string name="tab_metadata_line">Key: %1$s - %2$s</string>
     <string name="tab_tags_line">Tags: %1$s</string>

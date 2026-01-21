@@ -54,6 +54,11 @@ fun LibraryScreen(
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val allLabel = stringResource(R.string.filter_all)
+    val hasFilters = state.searchQuery.isNotBlank() ||
+        state.favoritesOnly ||
+        state.keyFilter != null ||
+        state.difficulty != null ||
+        state.tagFilter.isNotEmpty()
 
     Box(
         modifier = modifier
@@ -101,7 +106,10 @@ fun LibraryScreen(
                 onOpen = onTabClick,
                 onToggleFavorite = tabListViewModel::toggleFavorite,
                 spacingSmall = spacingSmall,
-                contentPadding = PaddingValues(bottom = 80.dp)
+                contentPadding = PaddingValues(bottom = 80.dp),
+                emptyMessage = stringResource(
+                    if (hasFilters) R.string.empty_search else R.string.empty_library
+                )
             )
         }
 
@@ -183,10 +191,11 @@ private fun TabList(
     onOpen: (Int) -> Unit,
     onToggleFavorite: (Tab) -> Unit,
     spacingSmall: Dp,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    emptyMessage: String
 ) {
     if (tabs.isEmpty()) {
-        LibraryEmptyState()
+        LibraryEmptyState(message = emptyMessage)
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(spacingSmall),
