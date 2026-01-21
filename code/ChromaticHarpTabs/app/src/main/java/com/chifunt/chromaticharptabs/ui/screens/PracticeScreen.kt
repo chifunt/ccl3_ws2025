@@ -16,6 +16,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -24,7 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.DebouncedFilledIconButton
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
@@ -38,6 +42,11 @@ fun PracticeScreen(
 ) {
     val state by practiceViewModel.uiState.collectAsStateWithLifecycle()
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
+    val tonePlayer = remember { SineTonePlayer() }
+
+    DisposableEffect(Unit) {
+        onDispose { tonePlayer.release() }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -60,7 +69,11 @@ fun PracticeScreen(
                 TabNotationInlineDisplay(
                     lines = listOf(state.lines[state.currentIndex]),
                     lineSpacing = spacingMedium,
-                    centered = true
+                    centered = true,
+                    onNotePress = { note ->
+                        HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                    },
+                    onNoteRelease = { tonePlayer.stop() }
                 )
             }
 

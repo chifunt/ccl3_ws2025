@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,9 +48,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.data.TabNote
 import com.chifunt.chromaticharptabs.data.TabNotationJson
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.DebouncedIconButton
 import com.chifunt.chromaticharptabs.ui.components.FavoriteToggleButton
 import com.chifunt.chromaticharptabs.ui.components.TagChip
@@ -77,6 +80,11 @@ fun TabDetailScreen(
     val showNotationInfo = remember { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val contentTextColor = if (isDark) RosePineText else RosePineDawnText
+    val tonePlayer = remember { SineTonePlayer() }
+
+    DisposableEffect(Unit) {
+        onDispose { tonePlayer.release() }
+    }
 
     Column(
         modifier = modifier
@@ -122,7 +130,11 @@ fun TabDetailScreen(
             content = state.tab.content,
             spacingSmall = spacingSmall,
             spacingMedium = spacingMedium,
-            contentTextColor = contentTextColor
+            contentTextColor = contentTextColor,
+            onNotePress = { note ->
+                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+            },
+            onNoteRelease = { tonePlayer.stop() }
         )
 
         Spacer(Modifier.height(spacingMedium))
@@ -331,7 +343,9 @@ private fun NotationSection(
     content: String,
     spacingSmall: Dp,
     spacingMedium: Dp,
-    contentTextColor: Color
+    contentTextColor: Color,
+    onNotePress: ((TabNote) -> Unit)? = null,
+    onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -360,7 +374,9 @@ private fun NotationSection(
                 TabNotationInlineDisplay(
                     lines = notation.lines,
                     lineSpacing = spacingMedium,
-                    glyphColor = contentTextColor
+                    glyphColor = contentTextColor,
+                    onNotePress = onNotePress,
+                    onNoteRelease = onNoteRelease
                 )
             } else {
                 Text(content, color = contentTextColor)

@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -24,7 +26,9 @@ fun TabNotationInlineDisplay(
     modifier: Modifier = Modifier,
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
     centered: Boolean = false,
-    glyphColor: androidx.compose.ui.graphics.Color? = null
+    glyphColor: androidx.compose.ui.graphics.Color? = null,
+    onNotePress: ((TabNote) -> Unit)? = null,
+    onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val horizontalArrangement = if (centered) {
@@ -41,11 +45,25 @@ fun TabNotationInlineDisplay(
                 verticalArrangement = Arrangement.spacedBy(spacingSmall)
             ) {
                 line.forEach { note ->
+                    val noteModifier = if (onNotePress != null) {
+                        Modifier.pointerInput(note) {
+                            detectTapGestures(
+                                onPress = {
+                                    onNotePress(note)
+                                    tryAwaitRelease()
+                                    onNoteRelease?.invoke(note)
+                                }
+                            )
+                        }
+                    } else {
+                        Modifier
+                    }
                     NoteGlyph(
                         hole = note.hole,
                         isBlow = note.isBlow,
                         isSlide = note.isSlide,
-                        color = glyphColor
+                        color = glyphColor,
+                        modifier = noteModifier
                     )
                 }
             }
