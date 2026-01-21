@@ -2,8 +2,11 @@ package com.chifunt.chromaticharptabs.ui.components.notation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.indication
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,20 +22,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,6 +73,8 @@ fun TabNotationEditor(
     onToggleBlow: (lineIndex: Int, noteIndex: Int) -> Unit,
     onToggleSlide: (lineIndex: Int, noteIndex: Int) -> Unit,
     onMoveNote: (lineIndex: Int, fromIndex: Int, toIndex: Int) -> Unit,
+    onPreviewNote: (TabNote) -> Unit,
+    onPreviewStop: () -> Unit,
     modifier: Modifier = Modifier,
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small)
 ) {
@@ -91,7 +101,9 @@ fun TabNotationEditor(
                 onToggleBlow = onToggleBlow,
                 onToggleSlide = onToggleSlide,
                 onDeleteNote = onDeleteNote,
-                onMoveNote = onMoveNote
+                onMoveNote = onMoveNote,
+                onPreviewNote = onPreviewNote,
+                onPreviewStop = onPreviewStop
             )
             Spacer(Modifier.height(lineSpacing))
         }
@@ -110,7 +122,9 @@ private fun LineNotesRow(
     onToggleBlow: (Int, Int) -> Unit,
     onToggleSlide: (Int, Int) -> Unit,
     onDeleteNote: (Int, Int) -> Unit,
-    onMoveNote: (Int, Int, Int) -> Unit
+    onMoveNote: (Int, Int, Int) -> Unit,
+    onPreviewNote: (TabNote) -> Unit,
+    onPreviewStop: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -130,7 +144,9 @@ private fun LineNotesRow(
                 onDeleteNote = { onDeleteNote(lineIndex, noteIndex) },
                 onMoveNote = { fromIndex, toIndex ->
                     onMoveNote(lineIndex, fromIndex, toIndex)
-                }
+                },
+                onPreviewNote = onPreviewNote,
+                onPreviewStop = onPreviewStop
             )
         }
         AddNoteTile(onClick = { onAddNote(lineIndex) })
@@ -146,7 +162,9 @@ private fun DraggableNoteTile(
     onToggleBlow: () -> Unit,
     onToggleSlide: () -> Unit,
     onDeleteNote: () -> Unit,
-    onMoveNote: (fromIndex: Int, toIndex: Int) -> Unit
+    onMoveNote: (fromIndex: Int, toIndex: Int) -> Unit,
+    onPreviewNote: (TabNote) -> Unit,
+    onPreviewStop: () -> Unit
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
@@ -193,7 +211,11 @@ private fun DraggableNoteTile(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            NoteTileDeleteButton(onClick = onDeleteNote)
+            NoteTileActionRow(
+                onPreviewStart = { onPreviewNote(note) },
+                onPreviewStop = onPreviewStop,
+                onDelete = onDeleteNote
+            )
             NoteGlyph(
                 hole = note.hole,
                 isBlow = note.isBlow,
@@ -213,10 +235,45 @@ private fun DraggableNoteTile(
 }
 
 @Composable
-private fun NoteTileDeleteButton(onClick: () -> Unit) {
+private fun NoteTileActionRow(
+    onPreviewStart: () -> Unit,
+    onPreviewStop: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val indication = LocalIndication.current
+
     Box(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .size(28.dp)
+                .clip(CircleShape)
+                .indication(interactionSource, indication)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = {
+                            val press = PressInteraction.Press(it)
+                            interactionSource.emit(press)
+                            onPreviewStart()
+                            val released = tryAwaitRelease()
+                            interactionSource.emit(
+                                if (released) PressInteraction.Release(press) else PressInteraction.Cancel(press)
+                            )
+                            onPreviewStop()
+                        }
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = stringResource(R.string.play_note),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
         DebouncedIconButton(
-            onClick = onClick,
+            onClick = onDelete,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .size(28.dp)

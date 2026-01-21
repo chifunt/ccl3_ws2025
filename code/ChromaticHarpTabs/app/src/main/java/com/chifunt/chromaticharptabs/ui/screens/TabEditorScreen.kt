@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +55,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.data.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.TagChip
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorViewModel
@@ -83,6 +86,11 @@ fun TabEditorScreen(
     var lineToDelete by remember { mutableStateOf<Int?>(null) }
     var showDiscardDialog by remember { mutableStateOf(false) }
     val isDirty by tabEditorViewModel.isDirty.collectAsStateWithLifecycle()
+    val tonePlayer = remember { SineTonePlayer() }
+
+    DisposableEffect(Unit) {
+        onDispose { tonePlayer.release() }
+    }
 
     val handleBack = {
         if (isDirty) {
@@ -138,6 +146,10 @@ fun TabEditorScreen(
             onToggleBlow = tabEditorViewModel::toggleBlow,
             onToggleSlide = tabEditorViewModel::toggleSlide,
             onMoveNote = tabEditorViewModel::moveNote,
+            onPreviewNote = { note ->
+                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+            },
+            onPreviewStop = { tonePlayer.stop() },
             spacingSmall = spacingSmall,
             spacingMedium = spacingMedium
         )
@@ -391,6 +403,8 @@ private fun ContentCard(
     onToggleBlow: (Int, Int) -> Unit,
     onToggleSlide: (Int, Int) -> Unit,
     onMoveNote: (Int, Int, Int) -> Unit,
+    onPreviewNote: (TabNote) -> Unit,
+    onPreviewStop: () -> Unit,
     spacingSmall: Dp,
     spacingMedium: Dp
 ) {
@@ -426,6 +440,8 @@ private fun ContentCard(
                 onToggleBlow = onToggleBlow,
                 onToggleSlide = onToggleSlide,
                 onMoveNote = onMoveNote,
+                onPreviewNote = onPreviewNote,
+                onPreviewStop = onPreviewStop,
                 lineSpacing = spacingMedium,
                 modifier = Modifier.fillMaxWidth()
             )

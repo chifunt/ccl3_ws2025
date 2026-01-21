@@ -67,6 +67,7 @@
     <string name="delete_line_message">This will remove the entire line and its notes.</string>
     <string name="delete_line_confirm">Delete</string>
     <string name="delete_note">Delete note</string>
+    <string name="play_note">Play note</string>
     <string name="delete_tab_title">Delete tab?</string>
     <string name="delete_tab_message">This cannot be undone.</string>
     <string name="blow_label">Blow</string>
