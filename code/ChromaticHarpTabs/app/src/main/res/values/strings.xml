@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ChromaticHarpTabs</string>
-    <string name="library_title">Library</string>
+    <string name="library_title">Tab Library</string>
     <string name="settings_title">Settings</string>
     <string name="settings_description">Customize your app experience.</string>
     <string name="settings_button">Open settings</string>
