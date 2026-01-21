@@ -42,6 +42,7 @@
     <string name="detail_metadata_tags_label">Tags</string>
     <string name="tab_content_label">Tab Content</string>
     <string name="practice_button">Practice</string>
+    <string name="practice_line_counter">%1$d/%2$d</string>
     <string name="edit_button">Edit</string>
     <string name="delete_button">Delete</string>
     <string name="back_to_library">Back to library</string>
