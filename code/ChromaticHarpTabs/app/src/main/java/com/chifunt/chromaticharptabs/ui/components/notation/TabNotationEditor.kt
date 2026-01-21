@@ -336,7 +336,8 @@ private fun LineSectionHeader(
         DebouncedIconButton(onClick = onDeleteLine) {
             Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(R.string.delete_line)
+                contentDescription = stringResource(R.string.delete_line),
+                tint = MaterialTheme.colorScheme.error
             )
         }
     }
