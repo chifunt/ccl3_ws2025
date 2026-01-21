@@ -28,24 +28,24 @@ class SineTonePlayer {
                     AudioFormat.CHANNEL_OUT_MONO,
                     AudioFormat.ENCODING_PCM_16BIT
                 )
-            audioTrack = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setSampleRate(sampleRate)
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY)
-                .setBufferSizeInBytes(minBuffer)
-                .setTransferMode(AudioTrack.MODE_STREAM)
-                .build()
+                audioTrack = AudioTrack.Builder()
+                    .setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build()
+                    )
+                    .setAudioFormat(
+                        AudioFormat.Builder()
+                            .setSampleRate(sampleRate)
+                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                            .build()
+                    )
+                    .setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY)
+                    .setBufferSizeInBytes(minBuffer)
+                    .setTransferMode(AudioTrack.MODE_STREAM)
+                    .build()
                 audioTrack?.play()
                 val track = audioTrack ?: return
                 running = true
