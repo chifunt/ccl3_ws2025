@@ -210,12 +210,12 @@ private fun TabCardPreview() {
         TabCard(
             tab = Tab(
                 id = 1,
-                title = stringResource(R.string.sample_title_autumn_leaves),
-                artist = stringResource(R.string.sample_artist_joseph_kosma),
-                key = stringResource(R.string.key_g),
-                difficulty = stringResource(R.string.difficulty_medium),
-                tags = stringResource(R.string.sample_tags_jazz_ballad),
-                content = stringResource(R.string.sample_content_autumn_leaves),
+                title = "Autumn Leaves",
+                artist = "Joseph Kosma",
+                key = "C",
+                difficulty = "Medium",
+                tags = "",
+                content = "",
                 isFavorite = true,
                 createdAt = 0L,
                 updatedAt = 0L

@@ -5,6 +5,7 @@ import com.chifunt.chromaticharptabs.data.SettingsRepository
 import com.chifunt.chromaticharptabs.data.Tab
 import com.chifunt.chromaticharptabs.data.TabRepository
 import com.chifunt.chromaticharptabs.db.TabDatabase
+import org.json.JSONObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,84 +32,39 @@ class ChromaticHarpTabsApplication : Application() {
                 return@launch
             }
             val now = System.currentTimeMillis()
-            val easy = getString(R.string.difficulty_easy)
-            val medium = getString(R.string.difficulty_medium)
-            val hard = getString(R.string.difficulty_hard)
-            val keyC = getString(R.string.key_c)
-            val keyD = getString(R.string.key_d)
-            val keyE = getString(R.string.key_e)
-            val keyF = getString(R.string.key_f)
-            val keyG = getString(R.string.key_g)
-            val samples = listOf(
-                Tab(
-                    title = getString(R.string.sample_title_autumn_leaves),
-                    artist = getString(R.string.sample_artist_joseph_kosma),
-                    key = keyG,
-                    difficulty = medium,
-                    tags = getString(R.string.sample_tags_jazz_ballad),
-                    content = getString(R.string.sample_content_autumn_leaves),
-                    isFavorite = true,
-                    createdAt = now,
-                    updatedAt = now
-                ),
-                Tab(
-                    title = getString(R.string.sample_title_blue_bossa),
-                    artist = getString(R.string.sample_artist_kenny_dorham),
-                    key = keyC,
-                    difficulty = medium,
-                    tags = getString(R.string.sample_tags_latin_jazz),
-                    content = getString(R.string.sample_content_blue_bossa),
-                    isFavorite = false,
-                    createdAt = now,
-                    updatedAt = now
-                ),
-                Tab(
-                    title = getString(R.string.sample_title_amazing_grace),
-                    artist = getString(R.string.sample_artist_traditional),
-                    key = keyD,
-                    difficulty = easy,
-                    tags = getString(R.string.sample_tags_hymn_slow),
-                    content = getString(R.string.sample_content_amazing_grace),
-                    isFavorite = false,
-                    createdAt = now,
-                    updatedAt = now
-                ),
-                Tab(
-                    title = getString(R.string.sample_title_all_blues),
-                    artist = getString(R.string.sample_artist_miles_davis),
-                    key = keyG,
-                    difficulty = hard,
-                    tags = getString(R.string.sample_tags_jazz_modal),
-                    content = getString(R.string.sample_content_all_blues),
-                    isFavorite = true,
-                    createdAt = now,
-                    updatedAt = now
-                ),
-                Tab(
-                    title = getString(R.string.sample_title_misty),
-                    artist = getString(R.string.sample_artist_erroll_garner),
-                    key = keyE,
-                    difficulty = hard,
-                    tags = getString(R.string.sample_tags_ballad_jazz),
-                    content = getString(R.string.sample_content_misty),
-                    isFavorite = false,
-                    createdAt = now,
-                    updatedAt = now
-                ),
-                Tab(
-                    title = getString(R.string.sample_title_songbird),
-                    artist = getString(R.string.sample_artist_christine_mcvie),
-                    key = keyF,
-                    difficulty = medium,
-                    tags = getString(R.string.sample_tags_pop_mellow),
-                    content = getString(R.string.sample_content_songbird),
-                    isFavorite = false,
-                    createdAt = now,
-                    updatedAt = now
-                )
-            )
+            loadSampleTabs(now).forEach { tabRepository.addTab(it) }
+        }
+    }
 
-            samples.forEach { tabRepository.addTab(it) }
+    private fun loadSampleTabs(timestamp: Long): List<Tab> {
+        val defaultKey = getString(R.string.key_c)
+        val defaultDifficulty = getString(R.string.difficulty_medium)
+        val sampleFiles = listOf(
+            "samples/amazing_grace.json",
+            "samples/danny_boy.json",
+            "samples/autumn_leaves.json",
+            "samples/fly_me_to_the_moon.json",
+            "samples/moon_river.json",
+            "samples/somewhere_over_the_rainbow.json",
+            "samples/pink_panther.json"
+        )
+        return sampleFiles.mapNotNull { path ->
+            runCatching {
+                val json = assets.open(path).bufferedReader().use { it.readText() }
+                val root = JSONObject(json)
+                val content = root.getJSONObject("content").toString()
+                Tab(
+                    title = root.optString("title"),
+                    artist = root.optString("artist"),
+                    key = root.optString("key", defaultKey),
+                    difficulty = root.optString("difficulty", defaultDifficulty),
+                    tags = root.optString("tags"),
+                    content = content,
+                    isFavorite = root.optBoolean("favorite", false),
+                    createdAt = timestamp,
+                    updatedAt = timestamp
+                )
+            }.getOrNull()
         }
     }
 }
