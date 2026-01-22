@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 
@@ -29,15 +30,20 @@ internal fun NoteGlyph(
     isSlide: Boolean,
     modifier: Modifier = Modifier,
     color: Color? = null,
+    noteSize: Dp? = null,
     pressed: Boolean = false
 ) {
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
     val outlineColor = color ?: MaterialTheme.colorScheme.onSurface
     val pressedColor = outlineColor.copy(alpha = 0.15f)
+    val glyphSize = noteSize ?: NoteGlyphSize
+    val textSize = with(androidx.compose.ui.platform.LocalDensity.current) {
+        (glyphSize * 0.5f).toSp()
+    }
 
     Box(
         modifier = Modifier
-            .size(NoteGlyphSize)
+            .size(glyphSize)
             .then(modifier)
             .background(
                 color = if (pressed) pressedColor else Color.Transparent,
@@ -68,6 +74,7 @@ internal fun NoteGlyph(
         Text(
             text = hole.toString(),
             fontWeight = FontWeight.SemiBold,
+            fontSize = textSize,
             color = outlineColor
         )
     }

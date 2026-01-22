@@ -34,6 +34,7 @@ fun TabNotationInlineDisplay(
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
     centered: Boolean = false,
     glyphColor: androidx.compose.ui.graphics.Color? = null,
+    noteSize: Dp? = null,
     noteColorProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> androidx.compose.ui.graphics.Color?)? = null,
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
@@ -108,6 +109,7 @@ fun TabNotationInlineDisplay(
                         isBlow = note.isBlow,
                         isSlide = note.isSlide,
                         color = noteColor,
+                        noteSize = noteSize,
                         modifier = noteModifier,
                         pressed = activeKey.value == key
                     )

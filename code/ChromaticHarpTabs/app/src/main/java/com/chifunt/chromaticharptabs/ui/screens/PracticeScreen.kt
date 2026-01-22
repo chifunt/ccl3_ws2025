@@ -10,15 +10,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -85,6 +92,10 @@ fun PracticeScreen(
     var currentNoteIndex by remember(state.currentIndex) { mutableIntStateOf(0) }
     var isTargetPlaying by remember(state.currentIndex) { mutableStateOf(false) }
     var isWrongNotePlaying by remember(state.currentIndex) { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
+    var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
+    var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
+    var advanceOnNoteStart by rememberSaveable { mutableStateOf(false) }
     val toleranceCents = 50.0
 
     val micPermissionLauncher = rememberLauncherForActivityResult(
@@ -130,37 +141,87 @@ fun PracticeScreen(
         TopBackBar(
             onBack = onBack,
             actions = {
-                IconToggleButton(
-                    checked = micEnabled,
-                    onCheckedChange = { enabled ->
-                        if (!enabled) {
-                            micEnabled = false
-                            return@IconToggleButton
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconToggleButton(
+                        checked = micEnabled,
+                        onCheckedChange = { enabled ->
+                            if (!enabled) {
+                                micEnabled = false
+                                return@IconToggleButton
+                            }
+                            val permission = android.Manifest.permission.RECORD_AUDIO
+                            val permissionState = ContextCompat.checkSelfPermission(
+                                context,
+                                permission
+                            )
+                            if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                micEnabled = true
+                            } else {
+                                micPermissionLauncher.launch(permission)
+                            }
                         }
-                        val permission = android.Manifest.permission.RECORD_AUDIO
-                        val permissionState = ContextCompat.checkSelfPermission(
-                            context,
-                            permission
-                        )
-                        if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                            micEnabled = true
+                    ) {
+                        if (micEnabled) {
+                            Icon(
+                                imageVector = Icons.Outlined.Mic,
+                                contentDescription = stringResource(R.string.practice_mic_on),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         } else {
-                            micPermissionLauncher.launch(permission)
+                            Icon(
+                                imageVector = Icons.Outlined.MicOff,
+                                contentDescription = stringResource(R.string.practice_mic_off),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
-                ) {
-                    if (micEnabled) {
+                    IconButton(onClick = { showSettings = true }) {
                         Icon(
-                            imageVector = Icons.Outlined.Mic,
-                            contentDescription = stringResource(R.string.practice_mic_on),
-                            tint = MaterialTheme.colorScheme.primary
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = stringResource(R.string.practice_settings)
                         )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Outlined.MicOff,
-                            contentDescription = stringResource(R.string.practice_mic_off),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    }
+                    DropdownMenu(
+                        expanded = showSettings,
+                        onDismissRequest = { showSettings = false }
+                    ) {
+                        Column(modifier = Modifier.padding(spacingMedium)) {
+                            Text(
+                                text = stringResource(R.string.practice_note_size),
+                                fontWeight = FontWeight.Medium
+                            )
+                            Slider(
+                                value = noteSize,
+                                onValueChange = { noteSize = it },
+                                valueRange = 24f..48f
+                            )
+                            Spacer(Modifier.height(spacingSmall))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(text = stringResource(R.string.practice_auto_advance))
+                                Spacer(Modifier.width(spacingSmall))
+                                Switch(
+                                    checked = autoAdvanceLine,
+                                    onCheckedChange = { autoAdvanceLine = it }
+                                )
+                            }
+                            Spacer(Modifier.height(spacingSmall))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(text = stringResource(R.string.practice_advance_on_start))
+                                Spacer(Modifier.width(spacingSmall))
+                                Switch(
+                                    checked = advanceOnNoteStart,
+                                    onCheckedChange = { advanceOnNoteStart = it }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -185,6 +246,7 @@ fun PracticeScreen(
                         lines = listOf(state.lines[state.currentIndex]),
                         lineSpacing = spacingMedium,
                         centered = true,
+                        noteSize = noteSize.dp,
                         noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
                             if (lineIndex != 0) return@TabNotationInlineDisplay null
                             when {
@@ -255,10 +317,21 @@ fun PracticeScreen(
         if (isCorrect) {
             isTargetPlaying = true
             isWrongNotePlaying = false
+            if (
+                autoAdvanceLine &&
+                advanceOnNoteStart &&
+                currentNoteIndex == currentLine.lastIndex
+            ) {
+                practiceViewModel.nextLine()
+                isTargetPlaying = false
+            }
         } else {
             isWrongNotePlaying = pitch != null
             if (isTargetPlaying) {
                 currentNoteIndex += 1
+                if (autoAdvanceLine && currentNoteIndex > currentLine.lastIndex) {
+                    practiceViewModel.nextLine()
+                }
                 isTargetPlaying = false
             }
         }
