@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabListViewModel
+import com.chifunt.chromaticharptabs.ui.components.common.HapticFloatingActionButton
 import com.chifunt.chromaticharptabs.ui.components.library.SearchField
 import com.chifunt.chromaticharptabs.ui.components.library.LibraryFiltersRow
 import com.chifunt.chromaticharptabs.ui.components.library.LibraryHeaderRow
@@ -102,7 +102,7 @@ fun LibraryScreen(
             )
         }
 
-        FloatingActionButton(
+        HapticFloatingActionButton(
             onClick = onCreateNew,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

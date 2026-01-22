@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticClick
 
 @Composable
 fun DebouncedIconButton(
@@ -19,13 +20,14 @@ fun DebouncedIconButton(
     content: @Composable () -> Unit
 ) {
     var lastClickTime by remember { mutableLongStateOf(0L) }
+    val hapticClick = rememberHapticClick(onClick)
 
     IconButton(
         onClick = {
             val now = SystemClock.elapsedRealtime()
             if (now - lastClickTime >= debounceMs) {
                 lastClickTime = now
-                onClick()
+                hapticClick()
             }
         },
         modifier = modifier,
@@ -44,13 +46,14 @@ fun DebouncedFilledIconButton(
     content: @Composable () -> Unit
 ) {
     var lastClickTime by remember { mutableLongStateOf(0L) }
+    val hapticClick = rememberHapticClick(onClick)
 
     FilledIconButton(
         onClick = {
             val now = SystemClock.elapsedRealtime()
             if (now - lastClickTime >= debounceMs) {
                 lastClickTime = now
-                onClick()
+                hapticClick()
             }
         },
         modifier = modifier,

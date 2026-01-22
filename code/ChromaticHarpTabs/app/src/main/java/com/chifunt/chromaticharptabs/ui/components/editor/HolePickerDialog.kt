@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -17,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticTextButton
 
 @Composable
 fun HolePickerDialog(
@@ -37,7 +37,7 @@ fun HolePickerDialog(
                     ) {
                         for (columnIndex in 0 until 4) {
                             val hole = rowIndex * 4 + columnIndex + 1
-                            Button(
+                            HapticButton(
                                 onClick = { onHoleSelected(hole) },
                                 modifier = Modifier.size(56.dp),
                                 contentPadding = PaddingValues(0.dp)
@@ -55,7 +55,7 @@ fun HolePickerDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) {
+            HapticTextButton(onClick = onDismiss) {
                 Text(text = stringResource(R.string.cancel_button))
             }
         }

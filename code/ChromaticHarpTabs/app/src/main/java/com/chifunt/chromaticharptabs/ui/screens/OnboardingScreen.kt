@@ -14,11 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,6 +30,9 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticOutlinedButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticTextButton
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 
 private data class OnboardingStep(
@@ -86,10 +86,10 @@ fun OnboardingScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        OutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
+                        HapticOutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
                             Text(text = "B")
                         }
-                        OutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
+                        HapticOutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
                             Text(text = "<")
                         }
                     }
@@ -118,7 +118,7 @@ fun OnboardingScreen(
                     fontSize = dimensionResource(R.dimen.headline).value.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                TextButton(onClick = {
+                HapticTextButton(onClick = {
                     settingsViewModel.setOnboardingCompleted(true)
                     onFinish()
                 }) {
@@ -181,7 +181,7 @@ fun OnboardingScreen(
             Spacer(Modifier.height(spacingSmall))
 
             if (stepIndex == steps.lastIndex) {
-                Button(
+                HapticButton(
                     onClick = {
                         settingsViewModel.setOnboardingCompleted(true)
                         onFinish()

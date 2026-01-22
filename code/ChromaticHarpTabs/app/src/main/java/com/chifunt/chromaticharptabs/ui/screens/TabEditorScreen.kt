@@ -19,11 +19,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.DisposableEffect
@@ -52,6 +50,8 @@ import com.chifunt.chromaticharptabs.ui.components.editor.ContentCard
 import com.chifunt.chromaticharptabs.ui.components.editor.DetailsCard
 import com.chifunt.chromaticharptabs.ui.components.editor.HolePickerDialog
 import com.chifunt.chromaticharptabs.ui.components.common.TopBackBar
+import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticTextButton
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -207,7 +207,7 @@ fun TabEditorScreen(
             title = { Text(text = stringResource(R.string.delete_line_title)) },
             text = { Text(text = stringResource(R.string.delete_line_message)) },
             confirmButton = {
-                TextButton(onClick = {
+                HapticTextButton(onClick = {
                     tabEditorViewModel.removeLine(lineIndex)
                     lineToDelete = null
                 }) {
@@ -215,7 +215,7 @@ fun TabEditorScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { lineToDelete = null }) {
+                HapticTextButton(onClick = { lineToDelete = null }) {
                     Text(text = stringResource(R.string.cancel_button))
                 }
             }
@@ -228,7 +228,7 @@ fun TabEditorScreen(
             title = { Text(text = stringResource(R.string.discard_changes_title)) },
             text = { Text(text = stringResource(R.string.discard_changes_message)) },
             confirmButton = {
-                Button(onClick = {
+                HapticButton(onClick = {
                     showDiscardDialog = false
                     tabEditorViewModel.saveTab(onSaved)
                 }) {
@@ -237,10 +237,10 @@ fun TabEditorScreen(
             },
             dismissButton = {
                 Row(horizontalArrangement = Arrangement.spacedBy(spacingSmall)) {
-                    TextButton(onClick = { showDiscardDialog = false }) {
+                    HapticTextButton(onClick = { showDiscardDialog = false }) {
                         Text(text = stringResource(R.string.cancel_button))
                     }
-                    TextButton(onClick = {
+                    HapticTextButton(onClick = {
                         showDiscardDialog = false
                         onCancel()
                     }) {

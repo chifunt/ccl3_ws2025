@@ -33,7 +33,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.foundation.LocalIndication
@@ -45,6 +44,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
@@ -59,6 +60,9 @@ import androidx.compose.ui.zIndex
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticOutlinedButton
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticClick
+import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -222,7 +226,7 @@ private fun DraggableNoteTile(
                 hole = note.hole,
                 isBlow = note.isBlow,
                 isSlide = note.isSlide,
-                modifier = Modifier.clickable(onClick = onEditHole)
+                modifier = Modifier.clickable(onClick = rememberHapticClick(onEditHole))
             )
             Spacer(Modifier.height(spacingSmall))
             NoteToggleRow(
@@ -244,6 +248,8 @@ private fun NoteTileActionRow(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val indication = LocalIndication.current
+    val haptic = LocalHapticFeedback.current
+    val hapticsEnabled = LocalHapticsEnabled.current
 
     Box(modifier = Modifier.fillMaxWidth()) {
         Box(
@@ -257,6 +263,9 @@ private fun NoteTileActionRow(
                         onPress = {
                             val press = PressInteraction.Press(it)
                             interactionSource.emit(press)
+                            if (hapticsEnabled) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
                             onPreviewStart()
                             val released = tryAwaitRelease()
                             interactionSource.emit(
@@ -350,7 +359,7 @@ private fun NoteToggleButton(
     borderStroke: Dp,
     onClick: () -> Unit
 ) {
-    OutlinedButton(
+    HapticOutlinedButton(
         onClick = onClick,
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),

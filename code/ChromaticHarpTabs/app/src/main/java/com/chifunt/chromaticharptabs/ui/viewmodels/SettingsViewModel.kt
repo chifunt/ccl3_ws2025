@@ -24,6 +24,12 @@ class SettingsViewModel(
         false
     )
 
+    val hapticsEnabled = repository.hapticsEnabled.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        true
+    )
+
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch {
             repository.setThemeMode(mode)
@@ -33,6 +39,12 @@ class SettingsViewModel(
     fun setOnboardingCompleted(completed: Boolean) {
         viewModelScope.launch {
             repository.setOnboardingCompleted(completed)
+        }
+    }
+
+    fun setHapticsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            repository.setHapticsEnabled(enabled)
         }
     }
 }

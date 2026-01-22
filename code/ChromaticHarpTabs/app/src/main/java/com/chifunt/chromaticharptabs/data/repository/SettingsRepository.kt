@@ -33,6 +33,10 @@ class SettingsRepository(private val context: Context) {
         prefs[ONBOARDING_COMPLETED_KEY] ?: false
     }
 
+    val hapticsEnabled: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[HAPTICS_ENABLED_KEY] ?: true
+    }
+
     suspend fun setThemeMode(mode: ThemeMode) {
         context.dataStore.edit { prefs ->
             prefs[THEME_MODE_KEY] = mode.storageValue
@@ -45,9 +49,16 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
+    suspend fun setHapticsEnabled(enabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[HAPTICS_ENABLED_KEY] = enabled
+        }
+    }
+
     private companion object {
         val DARK_THEME_KEY = booleanPreferencesKey("dark_theme_enabled")
         val THEME_MODE_KEY = stringPreferencesKey("theme_mode")
         val ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("onboarding_completed")
+        val HAPTICS_ENABLED_KEY = booleanPreferencesKey("haptics_enabled")
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextOverflow
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticFeedback
 
 @Composable
 fun FilterDropdownButton(
@@ -42,6 +43,7 @@ fun FilterDropdownButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val borderWidth = dimensionResource(R.dimen.border_stroke_width)
+    val haptic = rememberHapticFeedback()
 
     Box(modifier = modifier) {
         val buttonModifier = if (minHeight != null) {
@@ -52,7 +54,10 @@ fun FilterDropdownButton(
             Modifier.fillMaxWidth()
         }
         OutlinedButton(
-            onClick = { expanded = true },
+            onClick = {
+                haptic()
+                expanded = true
+            },
             modifier = buttonModifier,
             shape = MaterialTheme.shapes.small,
             border = BorderStroke(borderWidth, MaterialTheme.colorScheme.outline),
@@ -96,6 +101,7 @@ fun FilterDropdownButton(
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
+                        haptic()
                         onSelected(option)
                         expanded = false
                     }

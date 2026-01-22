@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticClick
 
 internal val NoteTileSize = 120.dp
 internal val NoteGlyphSize = 32.dp
@@ -135,7 +136,7 @@ internal fun DashedOutlineBox(
                     )
                 )
             }
-            .clickable(onClick = onClick),
+            .clickable(onClick = rememberHapticClick(onClick)),
         contentAlignment = Alignment.Center
     ) {
         content()

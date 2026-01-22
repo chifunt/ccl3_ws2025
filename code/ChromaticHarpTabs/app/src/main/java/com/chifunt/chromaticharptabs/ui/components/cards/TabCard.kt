@@ -30,6 +30,7 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.Tab
 import com.chifunt.chromaticharptabs.ui.components.common.FavoriteToggleButton
 import com.chifunt.chromaticharptabs.ui.components.common.TagChip
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticClick
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
@@ -58,7 +59,7 @@ fun TabCard(
 
     OutlinedCard(
         modifier = modifier.fillMaxWidth(),
-        onClick = onOpen,
+        onClick = rememberHapticClick(onClick = onOpen),
         shape = MaterialTheme.shapes.medium
     ) {
         Column(Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.spacing_medium))) {

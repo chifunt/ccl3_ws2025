@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticFeedback
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import com.chifunt.chromaticharptabs.ui.components.filters.DifficultyFilterMenu
@@ -56,6 +57,7 @@ fun FavoriteSortRow(
     val borderWidth = dimensionResource(R.dimen.border_stroke_width)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val scrollState = rememberScrollState()
+    val haptic = rememberHapticFeedback()
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(spacingSmall),
@@ -65,7 +67,10 @@ fun FavoriteSortRow(
             .horizontalScroll(scrollState)
     ) {
         OutlinedButton(
-            onClick = onToggleFavorites,
+            onClick = {
+                haptic()
+                onToggleFavorites()
+            },
             modifier = Modifier
                 .height(filterHeight)
                 .width(40.dp),
@@ -133,7 +138,10 @@ fun FavoriteSortRow(
         )
 
         OutlinedButton(
-            onClick = onClearAll,
+            onClick = {
+                haptic()
+                onClearAll()
+            },
             modifier = Modifier
                 .height(filterHeight)
                 .width(140.dp),

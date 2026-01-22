@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.data.model.ThemeMode
+import com.chifunt.chromaticharptabs.ui.components.settings.HapticsRow
 import com.chifunt.chromaticharptabs.ui.components.settings.SettingsHeader
 import com.chifunt.chromaticharptabs.ui.components.settings.ThemeRow
 import com.chifunt.chromaticharptabs.ui.components.settings.ViewOnboardingButton
@@ -32,6 +33,7 @@ fun SettingsScreen(
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val filterHeight = dimensionResource(R.dimen.filter_chip_height)
     val themeMode = settingsViewModel.themeMode.collectAsStateWithLifecycle().value
+    val hapticsEnabled = settingsViewModel.hapticsEnabled.collectAsStateWithLifecycle().value
     val themeOptions = listOf(
         ThemeMode.SYSTEM to stringResource(R.string.theme_system),
         ThemeMode.LIGHT to stringResource(R.string.theme_light),
@@ -62,6 +64,14 @@ fun SettingsScreen(
                     ?: ThemeMode.SYSTEM
                 settingsViewModel.setThemeMode(mode)
             }
+        )
+
+        Spacer(Modifier.height(spacingMedium))
+
+        HapticsRow(
+            enabled = hapticsEnabled,
+            spacingSmall = spacingSmall,
+            onToggle = { settingsViewModel.setHapticsEnabled(it) }
         )
 
         Spacer(Modifier.height(spacingMedium))

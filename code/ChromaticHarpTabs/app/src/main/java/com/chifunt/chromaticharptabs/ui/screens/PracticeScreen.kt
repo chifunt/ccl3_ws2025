@@ -29,10 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -79,6 +77,9 @@ import com.chifunt.chromaticharptabs.ui.theme.RosePineGold
 import com.chifunt.chromaticharptabs.ui.theme.RosePineLove
 import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
 import com.chifunt.chromaticharptabs.ui.theme.RosePineSubtle
+import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
+import com.chifunt.chromaticharptabs.ui.components.common.HapticIconButton
+import com.chifunt.chromaticharptabs.ui.components.common.HapticSwitch
 import kotlin.math.abs
 import kotlin.math.ln
 import kotlinx.coroutines.delay
@@ -95,6 +96,7 @@ fun PracticeScreen(
     val tonePlayer = remember { SineTonePlayer() }
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val hapticsEnabled = LocalHapticsEnabled.current
     val isDarkTheme = MaterialTheme.colorScheme.background == RosePineBase
     val goldColor = if (isDarkTheme) RosePineGold else RosePineDawnGold
     val pineColor = if (isDarkTheme) RosePinePine else RosePineDawnPine
@@ -175,6 +177,9 @@ fun PracticeScreen(
                     IconToggleButton(
                         checked = micEnabled,
                         onCheckedChange = { enabled ->
+                            if (hapticsEnabled) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
                             if (!enabled) {
                                 micEnabled = false
                                 return@IconToggleButton
@@ -205,7 +210,7 @@ fun PracticeScreen(
                             )
                         }
                     }
-                    IconButton(onClick = { showSettings = true }) {
+                    HapticIconButton(onClick = { showSettings = true }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
                             contentDescription = stringResource(R.string.practice_settings)
@@ -233,7 +238,7 @@ fun PracticeScreen(
                             ) {
                                 Text(text = stringResource(R.string.practice_auto_advance))
                                 Spacer(Modifier.width(spacingSmall))
-                                Switch(
+                                HapticSwitch(
                                     checked = autoAdvanceLine,
                                     onCheckedChange = { autoAdvanceLine = it }
                                 )
@@ -246,7 +251,7 @@ fun PracticeScreen(
                             ) {
                                 Text(text = stringResource(R.string.practice_advance_on_start))
                                 Spacer(Modifier.width(spacingSmall))
-                                Switch(
+                                HapticSwitch(
                                     checked = advanceOnNoteStart,
                                     onCheckedChange = { advanceOnNoteStart = it }
                                 )
@@ -391,7 +396,7 @@ fun PracticeScreen(
         val isCorrect = pitch != null &&
             abs(centsDifference(pitch.toDouble(), targetFrequency)) <= toleranceCents
         if (isCorrect) {
-            if (!wasCorrect) {
+            if (!wasCorrect && hapticsEnabled) {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             }
             wasCorrect = true

@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
+import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 data class NoteVisualState(
@@ -50,6 +51,7 @@ fun TabNotationInlineDisplay(
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val haptic = LocalHapticFeedback.current
+    val hapticsEnabled = LocalHapticsEnabled.current
     val horizontalArrangement = if (centered) {
         Arrangement.spacedBy(spacingSmall, Alignment.CenterHorizontally)
     } else {
@@ -87,7 +89,7 @@ fun TabNotationInlineDisplay(
                                     activeKey.value = nextKey
                                     hit?.note?.let {
                                         onNotePress(it)
-                                        if (hapticOnPress) {
+                                        if (hapticOnPress && hapticsEnabled) {
                                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                         }
                                     }

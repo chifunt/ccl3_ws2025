@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,6 +13,7 @@ import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
 
 @Composable
 fun NotationInfoDialog(
@@ -27,7 +27,7 @@ fun NotationInfoDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            Button(onClick = onDismiss) {
+            HapticButton(onClick = onDismiss) {
                 Text(text = stringResource(R.string.close_button))
             }
         },

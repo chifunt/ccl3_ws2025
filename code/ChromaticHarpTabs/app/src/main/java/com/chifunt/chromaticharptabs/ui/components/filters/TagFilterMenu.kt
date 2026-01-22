@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
+import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticFeedback
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @Composable
@@ -40,6 +41,7 @@ fun TagFilterMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val borderWidth = dimensionResource(R.dimen.border_stroke_width)
+    val haptic = rememberHapticFeedback()
     val label = stringResource(R.string.tags_label)
     val selectionText = if (selected.isEmpty()) {
         stringResource(R.string.filter_all)
@@ -48,7 +50,10 @@ fun TagFilterMenu(
     }
 
     OutlinedButton(
-        onClick = { expanded = true },
+        onClick = {
+            haptic()
+            expanded = true
+        },
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
         border = BorderStroke(borderWidth, MaterialTheme.colorScheme.outline)
@@ -86,6 +91,7 @@ fun TagFilterMenu(
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.tag_filter_clear)) },
                 onClick = {
+                    haptic()
                     onClear()
                     expanded = false
                 }
@@ -94,7 +100,10 @@ fun TagFilterMenu(
         if (options.isEmpty()) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.tag_filter_empty)) },
-                onClick = { expanded = false }
+                onClick = {
+                    haptic()
+                    expanded = false
+                }
             )
         } else {
             options.forEach { tag ->
@@ -113,7 +122,10 @@ fun TagFilterMenu(
                             Text(text = tag)
                         }
                     },
-                    onClick = { onToggleTag(tag) }
+                    onClick = {
+                        haptic()
+                        onToggleTag(tag)
+                    }
                 )
             }
         }
