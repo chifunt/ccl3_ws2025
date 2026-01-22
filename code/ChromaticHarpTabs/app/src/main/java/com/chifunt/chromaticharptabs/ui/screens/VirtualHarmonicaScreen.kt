@@ -127,6 +127,7 @@ fun VirtualHarmonicaScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .padding(bottom = spacingSmall)
                 .onGloballyPositioned { coordinates ->
                     containerOffset = coordinates.positionInRoot()
                 }
@@ -194,10 +195,12 @@ fun VirtualHarmonicaScreen(
                 }
         ) {
             val isLandscape = maxWidth > maxHeight
-            val keyHeight = 44.dp
+            val labelHeight = 22.dp
             if (isLandscape) {
                 val rowHeight = (maxHeight - spacingMedium) / 2
                 val keyWidth = (maxWidth - spacingSmall * 11) / 12
+                val keyHeight = ((rowHeight - labelHeight - spacingSmall).coerceAtLeast(0.dp) / 1)
+                    .coerceIn(28.dp, 44.dp)
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(spacingMedium)
@@ -229,6 +232,8 @@ fun VirtualHarmonicaScreen(
                 }
             } else {
                 val columnWidth = (maxWidth - spacingMedium) / 2
+                val keyHeight = ((maxHeight - labelHeight - spacingSmall * 12).coerceAtLeast(0.dp) / 12)
+                    .coerceIn(28.dp, 44.dp)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(spacingMedium)
