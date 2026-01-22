@@ -2,6 +2,7 @@ package com.chifunt.chromaticharptabs.ui.components.editor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 import com.chifunt.chromaticharptabs.ui.components.filters.keyOptions
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCard(
     state: TabEditorUiState,

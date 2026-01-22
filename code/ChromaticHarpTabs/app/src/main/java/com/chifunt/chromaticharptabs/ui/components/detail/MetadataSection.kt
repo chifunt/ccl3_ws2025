@@ -2,6 +2,7 @@ package com.chifunt.chromaticharptabs.ui.components.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import com.chifunt.chromaticharptabs.data.util.parseTags
 import com.chifunt.chromaticharptabs.ui.components.common.TagChip
 import com.chifunt.chromaticharptabs.ui.components.cards.MetadataPill
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MetadataSection(
     key: String,
