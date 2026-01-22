@@ -194,6 +194,7 @@ fun VirtualHarmonicaScreen(
                 }
         ) {
             val columnWidth = (maxWidth - spacingMedium) / 2
+            val keyHeight = 44.dp
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(spacingMedium)
@@ -205,6 +206,8 @@ fun VirtualHarmonicaScreen(
                     activeColor = activeColor,
                     cornerRadiusPx = cornerRadiusPx,
                     slideActive = slideActive,
+                    keyWidth = columnWidth,
+                    keyHeight = keyHeight,
                     noteBounds = noteBounds,
                     modifier = Modifier.width(columnWidth)
                 )
@@ -215,6 +218,8 @@ fun VirtualHarmonicaScreen(
                     activeColor = activeColor,
                     cornerRadiusPx = cornerRadiusPx,
                     slideActive = slideActive,
+                    keyWidth = columnWidth,
+                    keyHeight = keyHeight,
                     noteBounds = noteBounds,
                     modifier = Modifier.width(columnWidth)
                 )
@@ -245,6 +250,8 @@ private fun HarmonicaColumn(
     activeColor: Color,
     cornerRadiusPx: Float,
     slideActive: Boolean,
+    keyWidth: androidx.compose.ui.unit.Dp,
+    keyHeight: androidx.compose.ui.unit.Dp,
     noteBounds: MutableMap<HarmonicaKeyId, Rect>,
     modifier: Modifier = Modifier
 ) {
@@ -268,6 +275,8 @@ private fun HarmonicaColumn(
                 cornerRadiusPx = cornerRadiusPx,
                 isSlide = slideActive,
                 isBlow = isBlow,
+                keyWidth = keyWidth,
+                keyHeight = keyHeight,
                 onBounds = { bounds ->
                     noteBounds[HarmonicaKeyId(hole, isBlow)] = bounds
                 }
@@ -284,16 +293,19 @@ private fun HarmonicaKey(
     cornerRadiusPx: Float,
     isSlide: Boolean,
     isBlow: Boolean,
+    keyWidth: androidx.compose.ui.unit.Dp,
+    keyHeight: androidx.compose.ui.unit.Dp,
     onBounds: (Rect) -> Unit
 ) {
     val border = dimensionResource(R.dimen.border_stroke_width)
-    val size = 44.dp
+    val size = keyHeight
     val scale = if (pressed) 1.08f else 1f
     val color = if (pressed) activeColor else MaterialTheme.colorScheme.onSurface
     val outlineColor = MaterialTheme.colorScheme.outline
     Box(
         modifier = Modifier
-            .size(size)
+            .width(keyWidth)
+            .height(keyHeight)
             .graphicsLayer(
                 scaleX = scale,
                 scaleY = scale
