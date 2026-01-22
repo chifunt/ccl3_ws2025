@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add a filter input above each table-wrap
   document.querySelectorAll('.table-wrap').forEach((wrap, index) => {
+    if (wrap.classList.contains('no-filter')) {
+      return;
+    }
     const controls = document.createElement('div');
     controls.className = 'table-controls';
 
