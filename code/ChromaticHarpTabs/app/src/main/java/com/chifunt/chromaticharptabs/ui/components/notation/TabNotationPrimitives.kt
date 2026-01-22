@@ -1,15 +1,22 @@
 package com.chifunt.chromaticharptabs.ui.components.notation
 
 import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -31,20 +38,42 @@ internal fun NoteGlyph(
     modifier: Modifier = Modifier,
     color: Color? = null,
     noteSize: Dp? = null,
+    isCorrect: Boolean = false,
+    isWrong: Boolean = false,
     pressed: Boolean = false
 ) {
     val borderStroke = dimensionResource(R.dimen.border_stroke_width)
     val outlineColor = color ?: MaterialTheme.colorScheme.onSurface
     val pressedColor = outlineColor.copy(alpha = 0.15f)
     val glyphSize = noteSize ?: NoteGlyphSize
-    val textSize = with(androidx.compose.ui.platform.LocalDensity.current) {
+    val baseTextSize = with(androidx.compose.ui.platform.LocalDensity.current) {
         (glyphSize * 0.5f).toSp()
     }
+    val correctScale by animateFloatAsState(
+        targetValue = if (isCorrect) 1.12f else 1f,
+        animationSpec = tween(durationMillis = 120),
+        label = "noteCorrectScale"
+    )
+    val correctAlpha by animateFloatAsState(
+        targetValue = 1f,
+        animationSpec = tween(durationMillis = 120),
+        label = "noteCorrectAlpha"
+    )
+    val targetScale = correctScale
+    val scaledTextSize = androidx.compose.ui.unit.TextUnit(
+        value = baseTextSize.value * targetScale,
+        type = baseTextSize.type
+    )
 
     Box(
         modifier = Modifier
             .size(glyphSize)
             .then(modifier)
+            .graphicsLayer(
+                scaleX = targetScale,
+                scaleY = targetScale,
+                alpha = if (isCorrect) correctAlpha else 1f
+            )
             .background(
                 color = if (pressed) pressedColor else Color.Transparent,
                 shape = MaterialTheme.shapes.small
@@ -74,7 +103,7 @@ internal fun NoteGlyph(
         Text(
             text = hole.toString(),
             fontWeight = FontWeight.SemiBold,
-            fontSize = textSize,
+            fontSize = scaledTextSize,
             color = outlineColor
         )
     }

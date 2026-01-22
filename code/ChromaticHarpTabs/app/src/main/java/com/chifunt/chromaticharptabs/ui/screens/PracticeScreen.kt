@@ -38,6 +38,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -81,6 +83,7 @@ fun PracticeScreen(
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val tonePlayer = remember { SineTonePlayer() }
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val isDarkTheme = MaterialTheme.colorScheme.background == RosePineBase
     val goldColor = if (isDarkTheme) RosePineGold else RosePineDawnGold
     val pineColor = if (isDarkTheme) RosePinePine else RosePineDawnPine
@@ -93,6 +96,7 @@ fun PracticeScreen(
     var isTargetPlaying by remember(state.currentIndex) { mutableStateOf(false) }
     var isWrongNotePlaying by remember(state.currentIndex) { mutableStateOf(false) }
     var suppressNextLineHighlight by remember { mutableStateOf(false) }
+    var wasCorrect by remember(state.currentIndex, currentNoteIndex) { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
@@ -262,6 +266,15 @@ fun PracticeScreen(
                         } else {
                             null
                         },
+                        noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                            if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
+                            com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
+                                isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
+                                isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
+                            )
+                        } else {
+                            null
+                        },
                         onNotePress = { note ->
                             HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
                         },
@@ -334,6 +347,10 @@ fun PracticeScreen(
         val isCorrect = pitch != null &&
             abs(centsDifference(pitch.toDouble(), targetFrequency)) <= toleranceCents
         if (isCorrect) {
+            if (!wasCorrect) {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            }
+            wasCorrect = true
             isTargetPlaying = true
             isWrongNotePlaying = false
             if (
@@ -348,6 +365,7 @@ fun PracticeScreen(
                 suppressNextLineHighlight = true
             }
         } else {
+            wasCorrect = false
             isWrongNotePlaying = pitch != null
             if (suppressNextLineHighlight) {
                 suppressNextLineHighlight = false

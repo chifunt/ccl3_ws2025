@@ -26,6 +26,11 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
+data class NoteVisualState(
+    val isCorrect: Boolean = false,
+    val isWrong: Boolean = false
+)
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TabNotationInlineDisplay(
@@ -36,6 +41,7 @@ fun TabNotationInlineDisplay(
     glyphColor: androidx.compose.ui.graphics.Color? = null,
     noteSize: Dp? = null,
     noteColorProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> androidx.compose.ui.graphics.Color?)? = null,
+    noteVisualProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> NoteVisualState)? = null,
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
@@ -97,6 +103,7 @@ fun TabNotationInlineDisplay(
                         onDispose { noteBounds.remove(key) }
                     }
                     val noteColor = noteColorProvider?.invoke(lineIndex, noteIndex, note) ?: glyphColor
+                    val noteVisual = noteVisualProvider?.invoke(lineIndex, noteIndex, note) ?: NoteVisualState()
                     val noteModifier = Modifier.onGloballyPositioned { coords ->
                         noteBounds[key] = NoteHit(
                             key = key,
@@ -110,6 +117,8 @@ fun TabNotationInlineDisplay(
                         isSlide = note.isSlide,
                         color = noteColor,
                         noteSize = noteSize,
+                        isCorrect = noteVisual.isCorrect,
+                        isWrong = noteVisual.isWrong,
                         modifier = noteModifier,
                         pressed = activeKey.value == key
                     )
