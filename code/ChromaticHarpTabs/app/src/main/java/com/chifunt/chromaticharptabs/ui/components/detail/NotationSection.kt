@@ -63,6 +63,7 @@ fun NotationSection(
                     lines = notation.lines,
                     lineSpacing = spacingMedium,
                     glyphColor = contentTextColor,
+                    hapticOnPress = onNotePress != null,
                     onNotePress = onNotePress,
                     onNoteRelease = onNoteRelease
                 )

@@ -290,11 +290,11 @@ fun PracticeScreen(
                             lineSpacing = spacingMedium,
                             centered = true,
                             noteSize = noteSize.dp,
-                            noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                                if (lineIndex != 0) return@TabNotationInlineDisplay null
-                                when {
-                                    noteIndex < currentNoteIndex -> subtleColor
-                                    suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
+                        noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                            if (lineIndex != 0) return@TabNotationInlineDisplay null
+                            when {
+                                noteIndex < currentNoteIndex -> subtleColor
+                                suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
                                     noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
                                     noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
                                     noteIndex == currentNoteIndex -> goldColor
@@ -303,18 +303,19 @@ fun PracticeScreen(
                             } else {
                                 null
                             },
-                            noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                                if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
-                                com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
-                                    isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
-                                    isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
-                                )
-                            } else {
-                                null
-                            },
-                            onNotePress = { note ->
-                                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                            },
+                        noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                            if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
+                            com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
+                                isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
+                                isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
+                            )
+                        } else {
+                            null
+                        },
+                        hapticOnPress = true,
+                        onNotePress = { note ->
+                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                        },
                             onNoteRelease = { tonePlayer.stop() }
                         )
                     }

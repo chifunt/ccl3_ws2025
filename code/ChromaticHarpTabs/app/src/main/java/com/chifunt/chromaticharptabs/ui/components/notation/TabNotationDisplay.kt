@@ -20,6 +20,8 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
@@ -42,10 +44,12 @@ fun TabNotationInlineDisplay(
     noteSize: Dp? = null,
     noteColorProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> androidx.compose.ui.graphics.Color?)? = null,
     noteVisualProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> NoteVisualState)? = null,
+    hapticOnPress: Boolean = false,
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val haptic = LocalHapticFeedback.current
     val horizontalArrangement = if (centered) {
         Arrangement.spacedBy(spacingSmall, Alignment.CenterHorizontally)
     } else {
@@ -81,7 +85,12 @@ fun TabNotationInlineDisplay(
                                         noteBounds[key]?.note?.let { onNoteRelease?.invoke(it) }
                                     }
                                     activeKey.value = nextKey
-                                    hit?.note?.let { onNotePress(it) }
+                                    hit?.note?.let {
+                                        onNotePress(it)
+                                        if (hapticOnPress) {
+                                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                        }
+                                    }
                                 }
                             }
                         }
