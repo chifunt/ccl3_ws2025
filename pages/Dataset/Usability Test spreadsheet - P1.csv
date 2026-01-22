@@ -1,0 +1,7 @@
+Task ID,Task Name,Completed,Errors,Help Needed,Key Observation,User Quote,Screen,Nielsen Heuristic,Severity,Suggested Fix,SUS Score
+T1,Find a Tab,s,-,-,-,-,,,,,
+T2,Filter and Sort Tabs,s,-,-,-,-,,,,,
+T3,Favourite a Tab,s,-,-,-,-,-,,,,
+T4,Create a New Tab,p,-,Hint,-,-,Add Lines,,,,
+T5,Edit and Exit Safely,s,-,-,,-,-,,,,
+T6,Practice Mode,s,-,-,Unaware of the feature of playing the song ,-,Practice,,,,

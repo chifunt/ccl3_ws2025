@@ -1,0 +1,60 @@
+{
+  "sus_scores": [
+    95.0,
+    97.5,
+    95.0,
+    97.5,
+    100.0,
+    87.5
+  ],
+  "sus_mean": 95.42,
+  "demographics": {
+    "age_group": {
+      "18-23": 2,
+      "24-29": 4
+    },
+    "harmonica_experience": {
+      "beginner": 1,
+      "none": 5
+    },
+    "app_experience": {
+      "Frequent use": 1,
+      "No Experience": 2,
+      "Some experience": 3
+    }
+  },
+  "task_outcomes": {
+    "labels": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6"
+    ],
+    "success": [
+      6,
+      5,
+      5,
+      4,
+      6,
+      6
+    ],
+    "partial": [
+      0,
+      1,
+      1,
+      2,
+      0,
+      0
+    ],
+    "fail": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

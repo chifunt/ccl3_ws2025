@@ -389,6 +389,33 @@ tbody tr:hover{ background: var(--hl-med); }
   border: 1px solid rgba(224,222,244,0.04);
 }
 
+.figure canvas{
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid rgba(224,222,244,0.04);
+  background: var(--surface);
+}
+
+.chart-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.chart-card{
+  background: var(--surface);
+  border: 1px solid rgba(224,222,244,0.02);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+
+.chart-card canvas{
+  width: 100%;
+  display: block;
+}
+
 .figure--chart img{ max-height: 420px; }
 .figure--screenshot img{ max-height: 620px; }
 .figure--full img{ max-height: none; }
@@ -495,6 +522,7 @@ blockquote{
   .callouts{ grid-template-columns: 1fr; }
   .two-col{ grid-template-columns: 1fr; }
   .methods-grid{ grid-template-columns: 1fr 1fr; }
+  .chart-grid{ grid-template-columns: 1fr; }
   h1{ font-size: 28px; }
   table{ min-width: 420px; }
   .figure img{ max-height: 360px; }

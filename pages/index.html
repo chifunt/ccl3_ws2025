@@ -299,10 +299,18 @@
         </div>
 
         <h3 class="mt">6.1 Demographics</h3>
-        <figure class="figure">
-          <img src="./images/domograph 26.png" alt="Participant demographics chart" />
-          <figcaption>Figure 1: Participant demographics (n = 6).</figcaption>
-        </figure>
+        <div class="chart-grid" role="group" aria-label="Participant demographics charts">
+          <div class="chart-card">
+            <canvas id="ageChart" height="220" aria-label="Age group distribution" role="img"></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas id="experienceChart" height="220" aria-label="Harmonica experience distribution" role="img"></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas id="appExperienceChart" height="220" aria-label="App experience distribution" role="img"></canvas>
+          </div>
+        </div>
+        <p class="muted">Figure 1: Participant demographics (age group, harmonica experience, app experience).</p>
 
         <h3 class="mt">6.2 SUS Results</h3>
         <p>
@@ -310,8 +318,8 @@
           The mean SUS score (<strong>95.42</strong>) indicates excellent perceived usability.
         </p>
         <figure class="figure">
-          <img src="./images/Screenshot 2026-01-22 at 09.39.36.png" alt="SUS distribution chart" />
-          <figcaption>Figure 2: SUS score distribution (n = 6).</figcaption>
+          <canvas id="susChart" height="240" aria-label="SUS scores per participant" role="img"></canvas>
+          <figcaption>Figure 2: SUS scores per participant with mean line (n = 6).</figcaption>
         </figure>
 
         <h3 class="mt">6.3 Task Outcomes</h3>
@@ -337,15 +345,14 @@
         </div>
 
         <figure class="figure">
-          <img src="images/task outcome.png" alt="Task outcomes chart" />
-          <figcaption>Figure 3: Task outcomes per task (S = success, P = partial with hint, F = fail).</figcaption>
+          <canvas id="outcomesChart" height="240" aria-label="Task outcomes chart" role="img"></canvas>
+          <figcaption>Figure 3: Task outcomes derived from task ratings (5 = success, 4 = partial, ≤3 = fail).</figcaption>
         </figure>
 
         <h3 class="mt">6.4 Issue Severity Distribution</h3>
-        <figure class="figure">
-          <img src="./images/usability issues severity.png" alt="Issue severity distribution chart" />
-          <figcaption>Figure 4: Usability issue severity distribution (Nielsen heuristic mapping).</figcaption>
-        </figure>
+        <div class="note">
+          <strong>Note:</strong> Severity data is not present in the current dataset, so this chart has been removed.
+        </div>
       </div>
     </section>
 
@@ -404,6 +411,7 @@
       </p>
     </div>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
