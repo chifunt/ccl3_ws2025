@@ -84,10 +84,10 @@ fun TabCard(
                     imageVector = Icons.Outlined.VpnKey,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(Modifier.width(spacingSmall))
-                Text(stringResource(R.string.detail_metadata_key, tab.key))
+                Text(tab.key)
             }
             Spacer(Modifier.height(spacingSmall))
             Row(
@@ -98,11 +98,11 @@ fun TabCard(
                     imageVector = Icons.Outlined.Tune,
                     contentDescription = null,
                     tint = difficultyColor,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(Modifier.width(spacingSmall))
                 Text(
-                    text = stringResource(R.string.detail_metadata_difficulty, tab.difficulty),
+                    text = tab.difficulty,
                     color = difficultyColor
                 )
             }
