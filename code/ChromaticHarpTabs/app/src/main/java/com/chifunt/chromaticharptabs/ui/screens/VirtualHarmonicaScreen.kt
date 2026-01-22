@@ -127,6 +127,7 @@ fun VirtualHarmonicaScreen(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
+                .weight(1f)
                 .onGloballyPositioned { coordinates ->
                     containerOffset = coordinates.positionInRoot()
                 }
@@ -193,36 +194,71 @@ fun VirtualHarmonicaScreen(
                     }
                 }
         ) {
-            val columnWidth = (maxWidth - spacingMedium) / 2
+            val isLandscape = maxWidth > maxHeight
             val keyHeight = 44.dp
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(spacingMedium)
-            ) {
-                HarmonicaColumn(
-                    label = stringResource(R.string.draw_label),
-                    isBlow = false,
-                    activeKey = activeKey,
-                    activeColor = activeColor,
-                    cornerRadiusPx = cornerRadiusPx,
-                    slideActive = slideActive,
-                    keyWidth = columnWidth,
-                    keyHeight = keyHeight,
-                    noteBounds = noteBounds,
-                    modifier = Modifier.width(columnWidth)
-                )
-                HarmonicaColumn(
-                    label = stringResource(R.string.blow_label),
-                    isBlow = true,
-                    activeKey = activeKey,
-                    activeColor = activeColor,
-                    cornerRadiusPx = cornerRadiusPx,
-                    slideActive = slideActive,
-                    keyWidth = columnWidth,
-                    keyHeight = keyHeight,
-                    noteBounds = noteBounds,
-                    modifier = Modifier.width(columnWidth)
-                )
+            if (isLandscape) {
+                val rowHeight = (maxHeight - spacingMedium) / 2
+                val keyWidth = (maxWidth - spacingSmall * 11) / 12
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(spacingMedium)
+                ) {
+                    HarmonicaRow(
+                        label = stringResource(R.string.blow_label),
+                        isBlow = true,
+                        activeKey = activeKey,
+                        activeColor = activeColor,
+                        cornerRadiusPx = cornerRadiusPx,
+                        slideActive = slideActive,
+                        keyWidth = keyWidth,
+                        keyHeight = keyHeight,
+                        noteBounds = noteBounds,
+                        modifier = Modifier.fillMaxWidth().height(rowHeight)
+                    )
+                    HarmonicaRow(
+                        label = stringResource(R.string.draw_label),
+                        isBlow = false,
+                        activeKey = activeKey,
+                        activeColor = activeColor,
+                        cornerRadiusPx = cornerRadiusPx,
+                        slideActive = slideActive,
+                        keyWidth = keyWidth,
+                        keyHeight = keyHeight,
+                        noteBounds = noteBounds,
+                        modifier = Modifier.fillMaxWidth().height(rowHeight)
+                    )
+                }
+            } else {
+                val columnWidth = (maxWidth - spacingMedium) / 2
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(spacingMedium)
+                ) {
+                    HarmonicaColumn(
+                        label = stringResource(R.string.draw_label),
+                        isBlow = false,
+                        activeKey = activeKey,
+                        activeColor = activeColor,
+                        cornerRadiusPx = cornerRadiusPx,
+                        slideActive = slideActive,
+                        keyWidth = columnWidth,
+                        keyHeight = keyHeight,
+                        noteBounds = noteBounds,
+                        modifier = Modifier.width(columnWidth)
+                    )
+                    HarmonicaColumn(
+                        label = stringResource(R.string.blow_label),
+                        isBlow = true,
+                        activeKey = activeKey,
+                        activeColor = activeColor,
+                        cornerRadiusPx = cornerRadiusPx,
+                        slideActive = slideActive,
+                        keyWidth = columnWidth,
+                        keyHeight = keyHeight,
+                        noteBounds = noteBounds,
+                        modifier = Modifier.width(columnWidth)
+                    )
+                }
             }
         }
 
@@ -281,6 +317,54 @@ private fun HarmonicaColumn(
                     noteBounds[HarmonicaKeyId(hole, isBlow)] = bounds
                 }
             )
+        }
+    }
+}
+
+@Composable
+private fun HarmonicaRow(
+    label: String,
+    isBlow: Boolean,
+    activeKey: HarmonicaKeyId?,
+    activeColor: Color,
+    cornerRadiusPx: Float,
+    slideActive: Boolean,
+    keyWidth: androidx.compose.ui.unit.Dp,
+    keyHeight: androidx.compose.ui.unit.Dp,
+    noteBounds: MutableMap<HarmonicaKeyId, Rect>,
+    modifier: Modifier = Modifier
+) {
+    val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(spacingSmall),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = label,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(spacingSmall)
+        ) {
+            (1..12).forEach { hole ->
+                val pressed = activeKey?.hole == hole && activeKey.isBlow == isBlow
+                HarmonicaKey(
+                    hole = hole,
+                    pressed = pressed,
+                    activeColor = activeColor,
+                    cornerRadiusPx = cornerRadiusPx,
+                    isSlide = slideActive,
+                    isBlow = isBlow,
+                    keyWidth = keyWidth,
+                    keyHeight = keyHeight,
+                    onBounds = { bounds ->
+                        noteBounds[HarmonicaKeyId(hole, isBlow)] = bounds
+                    }
+                )
+            }
         }
     }
 }
