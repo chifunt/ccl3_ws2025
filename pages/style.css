@@ -84,6 +84,13 @@ html, body{
   flex-wrap: wrap;
 }
 
+.header-actions{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .badge{
   display: inline-block;
   padding: 6px 10px;
@@ -106,6 +113,25 @@ html, body{
   color: var(--text);
   font-size: 13px;
   cursor: pointer;
+}
+
+.download-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--pine);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(156,207,216,0.35);
+  box-shadow: 0 6px 16px rgba(49,116,143,0.3);
+}
+
+.download-btn:hover{
+  background: rgba(49,116,143,0.85);
+  color: var(--text);
 }
 
 .theme-toggle:hover{
