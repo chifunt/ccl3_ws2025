@@ -218,21 +218,30 @@ th{
   background: rgba(255,255,255,0.03);
 }
 
+/* Figures */
 .figure{
   margin: 12px 0 0;
   background: rgba(255,255,255,0.02);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 16px; /* slightly more breathing room */
 }
 
 .figure img{
   width: 100%;
   height: auto;
+  max-height: 520px;     /* prevents oversized images */
+  object-fit: contain;   /* keeps aspect ratio nicely */
   display: block;
+  margin: 0 auto;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
 }
+
+/* Optional variants if you want different sizing later */
+.figure--chart img{ max-height: 420px; }
+.figure--screenshot img{ max-height: 620px; }
+.figure--full img{ max-height: none; }
 
 figcaption{
   color: var(--muted);
@@ -293,16 +302,7 @@ blockquote{
   text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 980px){
-  .meta-grid{ grid-template-columns: 1fr 1fr; }
-  .results-grid{ grid-template-columns: 1fr 1fr; }
-  .callouts{ grid-template-columns: 1fr; }
-  .two-col{ grid-template-columns: 1fr; }
-  h1{ font-size: 32px; }
-}
-
-
+/* Heuristic table tweaks */
 .data-table td:nth-child(4),
 .data-table th:nth-child(4){
   text-align: center;
@@ -323,4 +323,15 @@ blockquote{
 
 .data-table td{
   vertical-align: top;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .meta-grid{ grid-template-columns: 1fr 1fr; }
+  .results-grid{ grid-template-columns: 1fr 1fr; }
+  .callouts{ grid-template-columns: 1fr; }
+  .two-col{ grid-template-columns: 1fr; }
+  h1{ font-size: 32px; }
+  table{ min-width: 520px; }
+  .figure img{ max-height: 420px; }
 }
