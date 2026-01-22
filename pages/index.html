@@ -8,10 +8,10 @@
 </head>
 
 <body>
-  <header class="site-header">
+  <header class="product-header">
     <div class="container">
       <div class="header-row">
-        <div class="badge">ChromaticHarp Tab App</div>
+        
         <div class="header-actions">
           <a class="download-btn" href="#" aria-label="Download the app">Download App</a>
           <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle theme">
@@ -20,16 +20,26 @@
           </button>
         </div>
       </div>
+      <h1 class="product-title">Chromatic HarpTabs</h1>
+      <p class="product-subtitle">
+        A focused tool for chromatic harmonica players to collect, read, and practice tabs with clear notation and mic assisted feedback during play.
+      </p>
+      <div class="team-row">
+        <span class="team-label">Team</span>
+        <span class="team-names">Abiodun Adefusi &amp; Joshua Tjhie</span>
+      </div>
+    </div>
+  </header>
+
+  <header class="site-header">
+    <div class="container">
       <h1>Usability Evaluation Report</h1>
       <p class="subtitle">
         Heuristic Evaluation (Initial Prototype) + User-Based Usability Test (n = 6)
       </p>
 
       <div class="meta-grid">
-        <div class="meta-card">
-          <div class="meta-label">Team</div>
-          <div class="meta-value">Abiodun Adefusi & Joshua Tjhie</div>
-        </div>
+        
         <div class="meta-card">
           <div class="meta-label">Test Subjects</div>
           <div class="meta-value">6</div>
@@ -82,7 +92,8 @@
         <a href="#hypotheses">Hypotheses</a>
         <a href="#data">Data Collected</a>
         <a href="#methods">Methods</a>
-        <a href="#results">Results</a>
+        <a href="#results">Results Overview</a>
+        <a href="#visualizations">Visualizations</a>
         <a href="#feedback">Feedback</a>
         <a href="#updates">Updates</a>
         <a href="#summary">Summary</a>
@@ -276,7 +287,7 @@
 
     <section id="results" class="section">
       <div class="container">
-        <h2>6. User Test Results</h2>
+        <h2>6. Results Overview</h2>
 
         <div class="results-grid">
           <div class="stat">
@@ -300,8 +311,15 @@
             <div class="stat-sub">Create a New Tab</div>
           </div>
         </div>
+        <p class="muted">Highlights from the evaluation are summarized above; detailed charts are available in the visualizations section.</p>
+      </div>
+    </section>
 
-        <h3 class="mt">6.1 Demographics</h3>
+    <section id="visualizations" class="section">
+      <div class="container">
+        <h2>7. Data Visualizations</h2>
+
+        <h3 class="mt">7.1 Demographics</h3>
         <div class="chart-grid" role="group" aria-label="Participant demographics charts">
           <div class="chart-card">
             <canvas id="ageChart" height="220" aria-label="Age group distribution" role="img"></canvas>
@@ -315,7 +333,7 @@
         </div>
         <p class="muted">Figure 1: Participant demographics (age group, harmonica experience, app experience).</p>
 
-        <h3 class="mt">6.2 SUS Results</h3>
+        <h3 class="mt">7.2 SUS Results</h3>
         <p>
           Individual SUS scores: <strong>95.0, 97.5, 95.0, 97.5, 100.0, 87.5</strong>.
           The mean SUS score (<strong>95.42</strong>) indicates excellent perceived usability.
@@ -329,7 +347,7 @@
           <figcaption>Figure 2b: SUS score distribution (boxplot).</figcaption>
         </figure>
 
-        <h3 class="mt">6.3 Task Outcomes</h3>
+        <h3 class="mt">7.3 Task Outcomes</h3>
         <div class="table-wrap no-filter">
           <table>
             <thead>
@@ -360,7 +378,7 @@
           <figcaption>Figure 3b: Task rating distribution per task (boxplot).</figcaption>
         </figure>
 
-        <h3 class="mt">6.4 Issue Severity Distribution</h3>
+        <h3 class="mt">7.4 Issue Severity Distribution</h3>
         <div class="note">
           <strong>Note:</strong> Severity data is not present in the current dataset, so this chart has been removed.
         </div>
@@ -369,7 +387,7 @@
 
     <section id="feedback" class="section">
       <div class="container">
-        <h2>7. Most Relevant Feedback / Comments</h2>
+        <h2>8. Most Relevant Feedback / Comments</h2>
         <div class="quotes">
           <blockquote>“Add a popup prompt before deleting a tab just to confirm.”</blockquote>
           <blockquote>“In the editing screen, add an info popup for notation editing to explain how it works.”</blockquote>
@@ -386,7 +404,7 @@
 
     <section id="updates" class="section">
       <div class="container">
-        <h2>8. Updates Made Based on Feedback</h2>
+        <h2>9. Updates Made Based on Feedback</h2>
         <ul class="checklist">
           <li>Delete confirmation dialog (and optional undo snackbar).</li>
           <li>Info popup / tooltip for notation editing.</li>
@@ -402,7 +420,7 @@
 
     <section id="summary" class="section">
       <div class="container">
-        <h2>9. Summary</h2>
+        <h2>10. Summary</h2>
         <p>
           The usability evaluation indicates <strong>excellent user satisfaction</strong> (Mean SUS = 95.42) and
           strong task performance (no failures). Most usability improvements are centered on
