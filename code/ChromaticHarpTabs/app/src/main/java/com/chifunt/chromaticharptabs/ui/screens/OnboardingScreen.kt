@@ -14,24 +14,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
+import com.chifunt.chromaticharptabs.data.model.Tab
+import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
+import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
+import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
+import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationEditor
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
-import com.chifunt.chromaticharptabs.ui.components.common.HapticOutlinedButton
 import com.chifunt.chromaticharptabs.ui.components.common.HapticTextButton
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
 
@@ -50,48 +61,90 @@ fun OnboardingScreen(
 ) {
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val tonePlayer = remember { SineTonePlayer() }
+    DisposableEffect(Unit) {
+        onDispose { tonePlayer.release() }
+    }
     val steps = remember {
         listOf(
             OnboardingStep(
-                titleRes = R.string.onboarding_title_welcome,
-                bodyRes = R.string.onboarding_body_welcome,
+                titleRes = R.string.onboarding_title_app,
+                bodyRes = R.string.onboarding_body_app,
                 visual = {
-                    val line = listOf(
-                        TabNote(hole = 4, isBlow = true, isSlide = false),
-                        TabNote(hole = 4, isBlow = false, isSlide = false),
-                        TabNote(hole = 5, isBlow = true, isSlide = true),
-                        TabNote(hole = 6, isBlow = true, isSlide = false)
-                    )
-                    TabNotationInlineDisplay(lines = listOf(line), centered = true)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        ImageBlock(
+                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            size = 512.dp,
+                            showBackground = false
+                        )
+                    }
                 }
             ),
             OnboardingStep(
-                titleRes = R.string.onboarding_title_notation,
-                bodyRes = R.string.onboarding_body_notation,
+                titleRes = R.string.onboarding_title_library,
+                bodyRes = R.string.onboarding_body_library,
                 visual = {
-                    val line = listOf(
-                        TabNote(hole = 3, isBlow = true, isSlide = false),
-                        TabNote(hole = 3, isBlow = false, isSlide = false),
-                        TabNote(hole = 3, isBlow = true, isSlide = true)
+                    TabCard(
+                        tab = Tab(
+                            id = 1,
+                            title = "Fly Me to the Moon",
+                            artist = "Frank Sinatra",
+                            key = "C",
+                            difficulty = "Medium",
+                            tags = "jazz standard",
+                            content = "",
+                            isFavorite = true,
+                            createdAt = 0L,
+                            updatedAt = 0L
+                        ),
+                        onOpen = {},
+                        onToggleFavorite = {}
                     )
-                    TabNotationInlineDisplay(lines = listOf(line), centered = true)
                 }
             ),
             OnboardingStep(
-                titleRes = R.string.onboarding_title_edit,
-                bodyRes = R.string.onboarding_body_edit,
+                titleRes = R.string.onboarding_title_create,
+                bodyRes = R.string.onboarding_body_create,
                 visual = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(spacingSmall),
-                        verticalAlignment = Alignment.CenterVertically,
+                    TabNotationEditor(
+                        lines = listOf(listOf(TabNote(hole = 7, isBlow = true, isSlide = false))),
+                        onAddNote = {},
+                        onAddLine = {},
+                        onDeleteLine = {},
+                        onDeleteNote = { _, _ -> },
+                        onEditHole = { _, _ -> },
+                        onToggleBlow = { _, _ -> },
+                        onToggleSlide = { _, _ -> },
+                        onMoveNote = { _, _, _ -> },
+                        onPreviewNote = { _, _ -> },
+                        onPreviewStop = {},
                         modifier = Modifier.fillMaxWidth()
-                    ) {
-                        HapticOutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                            Text(text = "B")
-                        }
-                        HapticOutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                            Text(text = "<")
-                        }
+                    )
+                }
+            ),
+            OnboardingStep(
+                titleRes = R.string.onboarding_title_practice,
+                bodyRes = R.string.onboarding_body_practice,
+                visual = {
+                    val line = listOf(
+                        TabNote(hole = 8, isBlow = true, isSlide = false),
+                        TabNote(hole = 8, isBlow = false, isSlide = false),
+                        TabNote(hole = 7, isBlow = false, isSlide = false),
+                        TabNote(hole = 7, isBlow = true, isSlide = false),
+                        TabNote(hole = 6, isBlow = false, isSlide = false)
+                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Spacer(Modifier.height(spacingSmall))
+                        TabNotationInlineDisplay(
+                            lines = listOf(line),
+                            centered = true,
+                            pressHighlightColor = MaterialTheme.colorScheme.primary,
+                            pressHighlightScale = true,
+                            onNotePress = { note ->
+                                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                            },
+                            onNoteRelease = { tonePlayer.stop() }
+                        )
                     }
                 }
             )
@@ -107,27 +160,23 @@ fun OnboardingScreen(
             .padding(spacingMedium),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.onboarding_title),
-                    fontSize = dimensionResource(R.dimen.headline).value.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                HapticTextButton(onClick = {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            HapticTextButton(
+                onClick = {
                     settingsViewModel.setOnboardingCompleted(true)
                     onFinish()
-                }) {
-                    Text(text = stringResource(R.string.onboarding_skip))
                 }
+            ) {
+                Text(text = stringResource(R.string.onboarding_skip))
             }
+        }
 
-            Spacer(Modifier.height(spacingMedium))
+        Spacer(Modifier.height(spacingSmall))
 
+        Column(modifier = Modifier.weight(1f)) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
@@ -136,24 +185,33 @@ fun OnboardingScreen(
             ) { page ->
                 val step = steps[page]
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = stringResource(step.titleRes),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(Modifier.height(spacingSmall))
-                    Text(text = stringResource(step.bodyRes))
                     Spacer(Modifier.height(spacingMedium))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(120.dp),
+                            .height(180.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         step.visual()
                     }
+                    Spacer(Modifier.height(spacingSmall))
+                    Text(
+                        text = stringResource(step.bodyRes),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
@@ -192,5 +250,29 @@ fun OnboardingScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ImageBlock(
+    painter: Painter,
+    size: Dp,
+    showBackground: Boolean = true
+) {
+    Box(
+        modifier = Modifier
+            .size(size)
+            .background(
+                if (showBackground) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
+                shape = MaterialTheme.shapes.large
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(size * 0.72f)
+        )
     }
 }
