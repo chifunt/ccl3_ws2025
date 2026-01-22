@@ -31,6 +31,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Scroll reveal for sections
+  const revealTargets = document.querySelectorAll('.section');
+  revealTargets.forEach(section => section.classList.add('reveal'));
+
+  const revealObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  revealTargets.forEach(section => revealObserver.observe(section));
+
+  // Active TOC highlight
+  const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+  const sectionMap = Array.from(tocLinks)
+    .map(link => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+
+  const tocObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        tocLinks.forEach(link => link.classList.remove('is-active'));
+        const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('is-active');
+      });
+    },
+    { rootMargin: "-20% 0px -70% 0px", threshold: 0.1 }
+  );
+
+  sectionMap.forEach(section => tocObserver.observe(section));
+
   // Add a filter input above each table-wrap
   document.querySelectorAll('.table-wrap').forEach((wrap, index) => {
     if (wrap.classList.contains('no-filter')) {
