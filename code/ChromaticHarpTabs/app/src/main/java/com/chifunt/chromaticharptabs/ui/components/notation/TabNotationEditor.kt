@@ -73,7 +73,7 @@ fun TabNotationEditor(
     onToggleBlow: (lineIndex: Int, noteIndex: Int) -> Unit,
     onToggleSlide: (lineIndex: Int, noteIndex: Int) -> Unit,
     onMoveNote: (lineIndex: Int, fromIndex: Int, toIndex: Int) -> Unit,
-    onPreviewNote: (TabNote) -> Unit,
+    onPreviewNote: (lineIndex: Int, noteIndex: Int) -> Unit,
     onPreviewStop: () -> Unit,
     modifier: Modifier = Modifier,
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small)
@@ -123,7 +123,7 @@ private fun LineNotesRow(
     onToggleSlide: (Int, Int) -> Unit,
     onDeleteNote: (Int, Int) -> Unit,
     onMoveNote: (Int, Int, Int) -> Unit,
-    onPreviewNote: (TabNote) -> Unit,
+    onPreviewNote: (Int, Int) -> Unit,
     onPreviewStop: () -> Unit
 ) {
     Row(
@@ -137,6 +137,7 @@ private fun LineNotesRow(
             DraggableNoteTile(
                 note = note,
                 noteIndex = noteIndex,
+                lineIndex = lineIndex,
                 lineSize = line.size,
                 onEditHole = { onEditHole(lineIndex, noteIndex) },
                 onToggleBlow = { onToggleBlow(lineIndex, noteIndex) },
@@ -156,6 +157,7 @@ private fun LineNotesRow(
 @Composable
 private fun DraggableNoteTile(
     note: TabNote,
+    lineIndex: Int,
     noteIndex: Int,
     lineSize: Int,
     onEditHole: () -> Unit,
@@ -163,7 +165,7 @@ private fun DraggableNoteTile(
     onToggleSlide: () -> Unit,
     onDeleteNote: () -> Unit,
     onMoveNote: (fromIndex: Int, toIndex: Int) -> Unit,
-    onPreviewNote: (TabNote) -> Unit,
+    onPreviewNote: (Int, Int) -> Unit,
     onPreviewStop: () -> Unit
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
@@ -212,7 +214,7 @@ private fun DraggableNoteTile(
             verticalArrangement = Arrangement.Center
         ) {
             NoteTileActionRow(
-                onPreviewStart = { onPreviewNote(note) },
+                onPreviewStart = { onPreviewNote(lineIndex, noteIndex) },
                 onPreviewStop = onPreviewStop,
                 onDelete = onDeleteNote
             )

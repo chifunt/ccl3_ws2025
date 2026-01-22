@@ -145,8 +145,9 @@ fun TabEditorScreen(
                 onToggleBlow = tabEditorViewModel::toggleBlow,
                 onToggleSlide = tabEditorViewModel::toggleSlide,
                 onMoveNote = tabEditorViewModel::moveNote,
-                onPreviewNote = { note ->
-                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                onPreviewNote = { lineIndex, noteIndex ->
+                    val note = state.lines.getOrNull(lineIndex)?.getOrNull(noteIndex)
+                    note?.let { HarmonicaNoteMap.frequencyFor(it) }?.let { tonePlayer.start(it) }
                 },
                 onPreviewStop = { tonePlayer.stop() },
                 spacingSmall = spacingSmall,

@@ -35,7 +35,7 @@ fun ContentCard(
     onToggleBlow: (Int, Int) -> Unit,
     onToggleSlide: (Int, Int) -> Unit,
     onMoveNote: (Int, Int, Int) -> Unit,
-    onPreviewNote: (TabNote) -> Unit,
+    onPreviewNote: (Int, Int) -> Unit,
     onPreviewStop: () -> Unit,
     spacingSmall: Dp,
     spacingMedium: Dp
