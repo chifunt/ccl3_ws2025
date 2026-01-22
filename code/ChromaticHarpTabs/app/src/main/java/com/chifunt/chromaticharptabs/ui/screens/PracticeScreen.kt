@@ -339,7 +339,8 @@ fun PracticeScreen(
             if (
                 autoAdvanceLine &&
                 advanceOnNoteStart &&
-                currentNoteIndex == currentLine.lastIndex
+                currentNoteIndex == currentLine.lastIndex &&
+                state.currentIndex < state.lines.lastIndex
             ) {
                 practiceViewModel.nextLine()
                 currentNoteIndex = 0
@@ -353,7 +354,11 @@ fun PracticeScreen(
             }
             if (isTargetPlaying) {
                 currentNoteIndex += 1
-                if (autoAdvanceLine && currentNoteIndex > currentLine.lastIndex) {
+                if (
+                    autoAdvanceLine &&
+                    currentNoteIndex > currentLine.lastIndex &&
+                    state.currentIndex < state.lines.lastIndex
+                ) {
                     practiceViewModel.nextLine()
                 }
                 isTargetPlaying = false
