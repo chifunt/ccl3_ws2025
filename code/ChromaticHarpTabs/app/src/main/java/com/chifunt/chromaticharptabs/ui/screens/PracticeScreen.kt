@@ -1,37 +1,15 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.MicOff
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,18 +23,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,10 +41,11 @@ import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.MicrophonePitchDetector
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
-import com.chifunt.chromaticharptabs.ui.components.common.DebouncedFilledIconButton
-import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.components.practice.PracticeHeader
+import com.chifunt.chromaticharptabs.ui.components.practice.PracticeLineCounter
+import com.chifunt.chromaticharptabs.ui.components.practice.PracticeNavigationRow
+import com.chifunt.chromaticharptabs.ui.components.practice.PracticeNotationArea
 import com.chifunt.chromaticharptabs.ui.viewmodels.PracticeViewModel
-import com.chifunt.chromaticharptabs.ui.components.common.TopBackBar
 import com.chifunt.chromaticharptabs.ui.theme.RosePineBase
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnGold
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnLove
@@ -81,8 +56,6 @@ import com.chifunt.chromaticharptabs.ui.theme.RosePineLove
 import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
 import com.chifunt.chromaticharptabs.ui.theme.RosePineSubtle
 import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
-import com.chifunt.chromaticharptabs.ui.components.common.HapticIconButton
-import com.chifunt.chromaticharptabs.ui.components.common.HapticSwitch
 import kotlin.math.abs
 import kotlin.math.ln
 import kotlinx.coroutines.delay
@@ -193,229 +166,93 @@ fun PracticeScreen(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBackBar(
-            onBack = onBack,
-            actions = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconToggleButton(
-                        checked = micEnabled,
-                        onCheckedChange = { enabled ->
-                            if (hapticsEnabled) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            }
-                            if (!enabled) {
-                                micEnabled = false
-                                return@IconToggleButton
-                            }
-                            val permission = android.Manifest.permission.RECORD_AUDIO
-                            val permissionState = ContextCompat.checkSelfPermission(
-                                context,
-                                permission
-                            )
-                            if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                                micEnabled = true
-                            } else {
-                                micPermissionLauncher.launch(permission)
-                            }
-                        }
-                    ) {
-                        if (micEnabled) {
-                            val micTint = MaterialTheme.colorScheme.primary
-                            Icon(
-                                imageVector = Icons.Outlined.Mic,
-                                contentDescription = stringResource(R.string.practice_mic_on),
-                                tint = micTint,
-                                modifier = Modifier
-                                    .graphicsLayer(
-                                        scaleX = micScale.value,
-                                        scaleY = micScale.value
-                                    )
-                                    .drawBehind {
-                                        val alpha = (1f - micHalo.value).coerceIn(0f, 1f) * 0.35f
-                                        if (alpha > 0f) {
-                                            drawCircle(
-                                                color = micTint.copy(alpha = alpha),
-                                                radius = size.minDimension / 2f * (1f + micHalo.value)
-                                            )
-                                        }
-                                    }
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.MicOff,
-                                contentDescription = stringResource(R.string.practice_mic_off),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    HapticIconButton(onClick = { showSettings = true }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Settings,
-                            contentDescription = stringResource(R.string.practice_settings)
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = showSettings,
-                        onDismissRequest = { showSettings = false }
-                    ) {
-                        Column(modifier = Modifier.padding(spacingMedium)) {
-                            Text(
-                                text = stringResource(R.string.practice_note_size),
-                                fontWeight = FontWeight.Medium
-                            )
-                            Slider(
-                                value = noteSize,
-                                onValueChange = { noteSize = it },
-                                valueRange = 24f..48f
-                            )
-                            Spacer(Modifier.height(spacingSmall))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(text = stringResource(R.string.practice_auto_advance))
-                                Spacer(Modifier.width(spacingSmall))
-                                HapticSwitch(
-                                    checked = autoAdvanceLine,
-                                    onCheckedChange = { autoAdvanceLine = it }
-                                )
-                            }
-                            Spacer(Modifier.height(spacingSmall))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(text = stringResource(R.string.practice_advance_on_start))
-                                Spacer(Modifier.width(spacingSmall))
-                                HapticSwitch(
-                                    checked = advanceOnNoteStart,
-                                    onCheckedChange = { advanceOnNoteStart = it }
-                                )
-                            }
-                        }
-                    }
+        PracticeHeader(
+            spacingSmall = spacingSmall,
+            spacingMedium = spacingMedium,
+            micEnabled = micEnabled,
+            micScale = micScale.value,
+            micHalo = micHalo.value,
+            onMicToggle = { enabled ->
+                if (hapticsEnabled) {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 }
-            }
+                if (!enabled) {
+                    micEnabled = false
+                    return@PracticeHeader
+                }
+                val permission = android.Manifest.permission.RECORD_AUDIO
+                val permissionState = ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                )
+                if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    micEnabled = true
+                } else {
+                    micPermissionLauncher.launch(permission)
+                }
+            },
+            onBack = onBack,
+            showSettings = showSettings,
+            onShowSettingsChange = { showSettings = it },
+            noteSize = noteSize,
+            onNoteSizeChange = { noteSize = it },
+            autoAdvanceLine = autoAdvanceLine,
+            onAutoAdvanceLineChange = { autoAdvanceLine = it },
+            advanceOnNoteStart = advanceOnNoteStart,
+            onAdvanceOnNoteStartChange = { advanceOnNoteStart = it }
         )
 
-        Scaffold { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AnimatedContent(
-                        targetState = state.currentIndex,
-                        transitionSpec = {
-                            if (targetState > initialState) {
-                                (slideInVertically { slideOffsetPx } + fadeIn(tween(120))) togetherWith
-                                    (slideOutVertically { -slideOffsetPx } + fadeOut(tween(120)))
-                            } else {
-                                (slideInVertically { -slideOffsetPx } + fadeIn(tween(120))) togetherWith
-                                    (slideOutVertically { slideOffsetPx } + fadeOut(tween(120)))
-                            }
-                        },
-                        label = "practiceLineTransition"
-                    ) { index ->
-                            TabNotationInlineDisplay(
-                                lines = listOf(state.lines[index]),
-                                lineSpacing = spacingMedium,
-                                centered = true,
-                                noteSize = noteSize.dp,
-                                noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                                    if (lineIndex != 0) return@TabNotationInlineDisplay null
-                                    when {
-                                        noteIndex < currentNoteIndex -> subtleColor
-                                        suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
-                                        noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
-                                        noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
-                                        noteIndex == currentNoteIndex -> goldColor
-                                        else -> null
-                                    }
-                                } else {
-                                    null
-                                },
-                                noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                                    if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
-                                    com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
-                                        isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
-                                        isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
-                                    )
-                                } else {
-                                    null
-                                },
-                                pressHighlightColor = if (micEnabled) null else pineColor,
-                                pressHighlightScale = !micEnabled,
-                                hapticOnPress = true,
-                                onNotePress = { note ->
-                                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                                },
-                            onNoteRelease = { tonePlayer.stop() }
-                        )
-                    }
-                }
+            PracticeNotationArea(
+                lines = state.lines,
+                currentIndex = state.currentIndex,
+                spacingMedium = spacingMedium,
+                slideOffsetPx = slideOffsetPx,
+                noteSize = noteSize.dp,
+                micEnabled = micEnabled,
+                currentNoteIndex = currentNoteIndex,
+                isTargetPlaying = isTargetPlaying,
+                isWrongNotePlaying = isWrongNotePlaying,
+                suppressNextLineHighlight = suppressNextLineHighlight,
+                goldColor = goldColor,
+                pineColor = pineColor,
+                subtleColor = subtleColor,
+                loveColor = loveColor,
+                onNotePress = { note ->
+                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                },
+                onNoteRelease = { tonePlayer.stop() }
+            )
 
-                Text(
-                    text = stringResource(
-                        R.string.practice_line_counter,
-                        state.currentIndex + 1,
-                        state.lines.size
-                    ),
-                    fontWeight = FontWeight.Medium,
-                    color = lineColor,
-                    modifier = Modifier.graphicsLayer(
-                        scaleX = lineScale.value,
-                        scaleY = lineScale.value
-                    )
-                )
+            PracticeLineCounter(
+                currentIndex = state.currentIndex,
+                total = state.lines.size,
+                lineColor = lineColor,
+                lineScale = lineScale.value
+            )
 
-                Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(spacingMedium))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(spacingMedium),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    DebouncedFilledIconButton(
-                        onClick = {
-                            suppressNextLineHighlight = false
-                            currentNoteIndex = 0
-                            practiceViewModel.previousLine()
-                        },
-                        enabled = state.currentIndex > 0,
-                        debounceMs = 0L,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(dimensionResource(R.dimen.filter_chip_height))
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
-                    DebouncedFilledIconButton(
-                        onClick = {
-                            suppressNextLineHighlight = false
-                            currentNoteIndex = 0
-                            practiceViewModel.nextLine()
-                        },
-                        enabled = state.currentIndex < state.lines.lastIndex,
-                        debounceMs = 0L,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(dimensionResource(R.dimen.filter_chip_height))
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
-                    }
-                }
-            }
+            PracticeNavigationRow(
+                spacingMedium = spacingMedium,
+                onPrev = {
+                    suppressNextLineHighlight = false
+                    currentNoteIndex = 0
+                    practiceViewModel.previousLine()
+                },
+                onNext = {
+                    suppressNextLineHighlight = false
+                    currentNoteIndex = 0
+                    practiceViewModel.nextLine()
+                },
+                hasPrev = state.currentIndex > 0,
+                hasNext = state.currentIndex < state.lines.lastIndex
+            )
         }
     }
 
