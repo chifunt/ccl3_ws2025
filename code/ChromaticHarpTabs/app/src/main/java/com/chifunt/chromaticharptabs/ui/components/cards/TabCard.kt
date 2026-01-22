@@ -45,6 +45,7 @@ fun TabCard(
     modifier: Modifier = Modifier
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
+    val spacingMedium = dimensionResource(R.dimen.spacing_medium)
     val easyLabel = stringResource(R.string.difficulty_easy)
     val mediumLabel = stringResource(R.string.difficulty_medium)
     val hardLabel = stringResource(R.string.difficulty_hard)
@@ -88,12 +89,7 @@ fun TabCard(
                 )
                 Spacer(Modifier.width(spacingSmall))
                 Text(tab.key)
-            }
-            Spacer(Modifier.height(spacingSmall))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+                Spacer(Modifier.width(spacingMedium))
                 Icon(
                     imageVector = Icons.Outlined.Tune,
                     contentDescription = null,
