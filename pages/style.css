@@ -79,21 +79,15 @@ html, body{
 }
 
 .app-icon{
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid rgba(224,222,244,0.06);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
-  box-shadow: var(--shadow);
 }
 
 .app-icon img{
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   display: block;
 }
