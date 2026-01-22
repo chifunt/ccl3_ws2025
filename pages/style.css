@@ -78,11 +78,42 @@ html, body{
               radial-gradient(600px 240px at 80% 0%, rgba(196,167,231,0.12), transparent);
 }
 
+.app-icon{
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid rgba(224,222,244,0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  box-shadow: var(--shadow);
+}
+
+.app-icon img{
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
 .product-title{
   font-size: 42px;
   line-height: 1.12;
   margin: 8px 0 10px;
   letter-spacing: -0.02em;
+}
+
+.title-row{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 6px;
+}
+
+.title-row .product-title{
+  margin: 0;
 }
 
 .product-subtitle{
@@ -96,6 +127,41 @@ html, body{
   padding: 28px 0 18px;
   border-bottom: 1px solid rgba(224,222,244,0.04);
   background: linear-gradient(180deg, rgba(196,167,231,0.06), transparent 60%);
+}
+
+.app-shots .muted{
+  max-width: 70ch;
+}
+
+.shot-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.shot-card{
+  margin: 0;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid rgba(224,222,244,0.04);
+  display: grid;
+  gap: 8px;
+}
+
+.shot-card img{
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(224,222,244,0.04);
+}
+
+.shot-card figcaption{
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .team-row{
@@ -614,6 +680,7 @@ blockquote{
   .two-col{ grid-template-columns: 1fr; }
   .methods-grid{ grid-template-columns: 1fr 1fr; }
   .chart-grid{ grid-template-columns: 1fr; }
+  .shot-grid{ grid-template-columns: 1fr 1fr; }
   h1{ font-size: 30px; }
   table{ min-width: 420px; }
   .figure img{ max-height: 360px; }
@@ -624,6 +691,7 @@ blockquote{
   .hero-grid{ grid-template-columns: 1fr; }
   .meta-grid{ grid-template-columns: 1fr; }
   .methods-grid{ grid-template-columns: 1fr; }
+  .shot-grid{ grid-template-columns: 1fr; }
 }
 
 /* Removed duplicated responsive and heuristic blocks */
