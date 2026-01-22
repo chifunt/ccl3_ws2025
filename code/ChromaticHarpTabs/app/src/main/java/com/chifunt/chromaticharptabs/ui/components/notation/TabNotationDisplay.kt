@@ -34,6 +34,7 @@ fun TabNotationInlineDisplay(
     lineSpacing: Dp = dimensionResource(R.dimen.spacing_small),
     centered: Boolean = false,
     glyphColor: androidx.compose.ui.graphics.Color? = null,
+    noteColorProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> androidx.compose.ui.graphics.Color?)? = null,
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
@@ -94,6 +95,7 @@ fun TabNotationInlineDisplay(
                     DisposableEffect(key) {
                         onDispose { noteBounds.remove(key) }
                     }
+                    val noteColor = noteColorProvider?.invoke(lineIndex, noteIndex, note) ?: glyphColor
                     val noteModifier = Modifier.onGloballyPositioned { coords ->
                         noteBounds[key] = NoteHit(
                             key = key,
@@ -105,7 +107,7 @@ fun TabNotationInlineDisplay(
                         hole = note.hole,
                         isBlow = note.isBlow,
                         isSlide = note.isSlide,
-                        color = glyphColor,
+                        color = noteColor,
                         modifier = noteModifier,
                         pressed = activeKey.value == key
                     )
