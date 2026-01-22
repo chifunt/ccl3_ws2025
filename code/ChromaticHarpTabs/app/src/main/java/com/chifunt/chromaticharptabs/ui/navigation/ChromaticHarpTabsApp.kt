@@ -15,6 +15,7 @@ import com.chifunt.chromaticharptabs.ui.screens.PracticeScreen
 import com.chifunt.chromaticharptabs.ui.screens.SettingsScreen
 import com.chifunt.chromaticharptabs.ui.screens.TabDetailScreen
 import com.chifunt.chromaticharptabs.ui.screens.TabEditorScreen
+import com.chifunt.chromaticharptabs.ui.screens.VirtualHarmonicaScreen
 
 enum class Routes(val route: String) {
     Library(ROUTE_LIBRARY),
@@ -22,6 +23,7 @@ enum class Routes(val route: String) {
     Editor(ROUTE_EDITOR),
     Practice(ROUTE_PRACTICE),
     Settings(ROUTE_SETTINGS),
+    Harmonica(ROUTE_HARMONICA),
     Onboarding(ROUTE_ONBOARDING)
 }
 
@@ -40,7 +42,8 @@ fun ChromaticHarpTabsApp(
             LibraryScreen(
                 onTabClick = { id -> navController.navigate(detailRoute(id)) },
                 onCreateNew = { navController.navigate(editorRoute(null)) },
-                onSettings = { navController.navigate(ROUTE_SETTINGS) }
+                onSettings = { navController.navigate(ROUTE_SETTINGS) },
+                onHarmonica = { navController.navigate(ROUTE_HARMONICA) }
             )
         }
         composable(
@@ -80,6 +83,9 @@ fun ChromaticHarpTabsApp(
                 onBack = { navController.popBackStack() },
                 onViewOnboarding = { navController.navigate(ROUTE_ONBOARDING) }
             )
+        }
+        composable(Routes.Harmonica.route) {
+            VirtualHarmonicaScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.Onboarding.route) {
             OnboardingScreen(

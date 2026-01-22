@@ -36,7 +36,8 @@ fun LibraryScreen(
     tabListViewModel: TabListViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onTabClick: (Int) -> Unit,
     onCreateNew: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onHarmonica: () -> Unit
 ) {
     val state by tabListViewModel.uiState.collectAsStateWithLifecycle()
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
@@ -59,7 +60,8 @@ fun LibraryScreen(
         ) {
             LibraryHeaderRow(
                 spacingSmall = spacingSmall,
-                onSettings = onSettings
+                onSettings = onSettings,
+                onHarmonica = onHarmonica
             )
             Spacer(Modifier.height(spacingSmall))
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
 @Composable
 fun LibraryHeaderRow(
     spacingSmall: Dp,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onHarmonica: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -26,6 +28,12 @@ fun LibraryHeaderRow(
     ) {
         LibraryHeader(modifier = Modifier.padding(start = spacingSmall))
         Spacer(Modifier.weight(1f))
+        DebouncedIconButton(onClick = onHarmonica) {
+            Icon(
+                imageVector = Icons.Outlined.MusicNote,
+                contentDescription = stringResource(R.string.virtual_harmonica)
+            )
+        }
         DebouncedIconButton(onClick = onSettings) {
             Icon(
                 imageVector = Icons.Filled.Settings,

@@ -32,7 +32,7 @@ internal val NoteGlyphSize = 32.dp
 private val DashedCornerRadius = 14.dp
 
 @Composable
-internal fun NoteGlyph(
+fun NoteGlyph(
     hole: Int,
     isBlow: Boolean,
     isSlide: Boolean,

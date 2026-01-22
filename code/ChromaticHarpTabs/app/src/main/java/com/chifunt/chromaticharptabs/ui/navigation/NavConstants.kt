@@ -9,6 +9,7 @@ const val ROUTE_EDITOR = "$ROUTE_EDITOR_BASE?$NAV_ARG_TAB_ID={$NAV_ARG_TAB_ID}"
 const val ROUTE_PRACTICE_BASE = "practice"
 const val ROUTE_PRACTICE = "$ROUTE_PRACTICE_BASE/{$NAV_ARG_TAB_ID}"
 const val ROUTE_SETTINGS = "settings"
+const val ROUTE_HARMONICA = "harmonica"
 const val ROUTE_ONBOARDING = "onboarding"
 
 fun detailRoute(tabId: Int): String = "$ROUTE_DETAIL_BASE/$tabId"
