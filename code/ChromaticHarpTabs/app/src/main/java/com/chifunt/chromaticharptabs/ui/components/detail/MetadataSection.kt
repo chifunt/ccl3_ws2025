@@ -62,23 +62,29 @@ fun MetadataSection(
             }
             Spacer(Modifier.height(spacingMedium))
             Column(verticalArrangement = Arrangement.spacedBy(spacingTight)) {
-                MetadataPill(
-                    text = stringResource(
-                        R.string.detail_metadata_key,
-                        key.ifBlank { stringResource(R.string.unknown_value) }
-                    ),
-                    icon = Icons.Outlined.VpnKey,
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    iconTint = MaterialTheme.colorScheme.primary
-                )
-                MetadataPill(
-                    text = stringResource(R.string.detail_metadata_difficulty, difficulty),
-                    icon = Icons.Outlined.Tune,
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    iconTint = MaterialTheme.colorScheme.secondary
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    MetadataPill(
+                        text = stringResource(
+                            R.string.detail_metadata_key,
+                            key.ifBlank { stringResource(R.string.unknown_value) }
+                        ),
+                        icon = Icons.Outlined.VpnKey,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        iconTint = MaterialTheme.colorScheme.primary
+                    )
+                    MetadataPill(
+                        text = stringResource(R.string.detail_metadata_difficulty, difficulty),
+                        icon = Icons.Outlined.Tune,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        iconTint = MaterialTheme.colorScheme.secondary
+                    )
+                }
                 val tagList = parseTags(tags)
                 if (tagList.isNotEmpty()) {
                     Spacer(Modifier.height(spacingTight))
