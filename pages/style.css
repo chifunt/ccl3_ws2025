@@ -407,7 +407,7 @@ blockquote{
 .hero-grid{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .hero-card{ background: var(--surface); border: 1px solid rgba(224,222,244,0.02); border-radius: 12px; padding: 14px; }
 .hero-label{ color: var(--muted); font-size: 12px; }
-.hero-value{ font-size: 22px; margin-top: 6px; font-weight: 800; color: var(--foam); }
+.hero-value{ font-size: 22px; margin-top: 6px; font-weight: 800; color: var(--pine); }
 .hero-sub{ color: var(--subtle); font-size: 12px; margin-top: 6px; }
 
 /* Table controls (filter bar) */
