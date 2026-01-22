@@ -9,7 +9,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [TabEntity::class],
-    version = 2
+    version = 2,
+    exportSchema = false
 )
 abstract class TabDatabase : RoomDatabase() {
 
