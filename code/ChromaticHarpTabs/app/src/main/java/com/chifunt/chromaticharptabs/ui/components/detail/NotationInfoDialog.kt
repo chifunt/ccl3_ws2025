@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
 
 @Composable

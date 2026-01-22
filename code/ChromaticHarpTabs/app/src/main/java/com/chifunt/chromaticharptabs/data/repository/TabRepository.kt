@@ -1,7 +1,8 @@
-package com.chifunt.chromaticharptabs.data
+package com.chifunt.chromaticharptabs.data.repository
 
 import com.chifunt.chromaticharptabs.db.TabDao
 import com.chifunt.chromaticharptabs.db.TabEntity
+import com.chifunt.chromaticharptabs.data.model.Tab
 import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

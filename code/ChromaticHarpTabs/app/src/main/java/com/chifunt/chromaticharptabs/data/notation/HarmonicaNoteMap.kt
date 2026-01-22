@@ -1,4 +1,6 @@
-package com.chifunt.chromaticharptabs.data
+package com.chifunt.chromaticharptabs.data.notation
+
+import com.chifunt.chromaticharptabs.data.model.TabNote
 
 data class HarmonicaNoteKey(
     val hole: Int,

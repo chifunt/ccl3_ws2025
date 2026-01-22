@@ -2,8 +2,8 @@ package com.chifunt.chromaticharptabs.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chifunt.chromaticharptabs.data.SettingsRepository
-import com.chifunt.chromaticharptabs.data.ThemeMode
+import com.chifunt.chromaticharptabs.data.repository.SettingsRepository
+import com.chifunt.chromaticharptabs.data.model.ThemeMode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch

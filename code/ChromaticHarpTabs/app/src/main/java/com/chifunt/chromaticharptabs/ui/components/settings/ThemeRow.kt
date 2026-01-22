@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.ThemeMode
+import com.chifunt.chromaticharptabs.data.model.ThemeMode
 import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 
 @Composable

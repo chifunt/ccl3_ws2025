@@ -1,9 +1,9 @@
 package com.chifunt.chromaticharptabs
 
 import android.app.Application
-import com.chifunt.chromaticharptabs.data.SettingsRepository
-import com.chifunt.chromaticharptabs.data.Tab
-import com.chifunt.chromaticharptabs.data.TabRepository
+import com.chifunt.chromaticharptabs.data.repository.SettingsRepository
+import com.chifunt.chromaticharptabs.data.model.Tab
+import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.db.TabDatabase
 import org.json.JSONObject
 import kotlinx.coroutines.CoroutineScope

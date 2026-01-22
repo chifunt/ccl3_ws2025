@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.data
+package com.chifunt.chromaticharptabs.data.model
 
 data class Tab(
     val id: Int = 0,

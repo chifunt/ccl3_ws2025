@@ -3,9 +3,9 @@ package com.chifunt.chromaticharptabs.ui.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chifunt.chromaticharptabs.data.TabNote
-import com.chifunt.chromaticharptabs.data.TabNotationJson
-import com.chifunt.chromaticharptabs.data.TabRepository
+import com.chifunt.chromaticharptabs.data.model.TabNote
+import com.chifunt.chromaticharptabs.data.model.TabNotationJson
+import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

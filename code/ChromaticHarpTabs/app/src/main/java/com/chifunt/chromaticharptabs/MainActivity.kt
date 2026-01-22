@@ -16,7 +16,7 @@ import com.chifunt.chromaticharptabs.ui.navigation.ChromaticHarpTabsApp
 import com.chifunt.chromaticharptabs.ui.navigation.Routes
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
-import com.chifunt.chromaticharptabs.data.ThemeMode
+import com.chifunt.chromaticharptabs.data.model.ThemeMode
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

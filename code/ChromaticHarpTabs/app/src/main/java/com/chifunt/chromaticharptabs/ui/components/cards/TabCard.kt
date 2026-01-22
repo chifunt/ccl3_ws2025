@@ -27,13 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.Tab
+import com.chifunt.chromaticharptabs.data.model.Tab
 import com.chifunt.chromaticharptabs.ui.components.common.FavoriteToggleButton
 import com.chifunt.chromaticharptabs.ui.components.common.TagChip
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyEasy
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyHard
 import com.chifunt.chromaticharptabs.ui.theme.DifficultyMedium
-import com.chifunt.chromaticharptabs.data.parseTags
+import com.chifunt.chromaticharptabs.data.util.parseTags
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @OptIn(ExperimentalLayoutApi::class)

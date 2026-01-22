@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.chifunt.chromaticharptabs.data.Tab
+import com.chifunt.chromaticharptabs.data.model.Tab
 import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
 
 @Composable

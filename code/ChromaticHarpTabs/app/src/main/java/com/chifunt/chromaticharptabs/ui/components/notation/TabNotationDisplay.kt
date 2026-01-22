@@ -23,7 +23,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.TabNote
+import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 
 @OptIn(ExperimentalLayoutApi::class)

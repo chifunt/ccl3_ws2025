@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
-import com.chifunt.chromaticharptabs.data.ThemeMode
+import com.chifunt.chromaticharptabs.data.model.ThemeMode
 import com.chifunt.chromaticharptabs.ui.components.settings.SettingsHeader
 import com.chifunt.chromaticharptabs.ui.components.settings.ThemeRow
 import com.chifunt.chromaticharptabs.ui.components.settings.ViewOnboardingButton

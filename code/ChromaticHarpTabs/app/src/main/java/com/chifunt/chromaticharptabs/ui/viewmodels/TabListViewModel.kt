@@ -4,9 +4,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.Tab
-import com.chifunt.chromaticharptabs.data.TabRepository
-import com.chifunt.chromaticharptabs.data.parseTags
+import com.chifunt.chromaticharptabs.data.model.Tab
+import com.chifunt.chromaticharptabs.data.repository.TabRepository
+import com.chifunt.chromaticharptabs.data.util.parseTags
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

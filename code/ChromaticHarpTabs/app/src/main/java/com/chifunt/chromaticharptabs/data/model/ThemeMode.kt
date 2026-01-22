@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.data
+package com.chifunt.chromaticharptabs.data.model
 
 enum class ThemeMode(val storageValue: String) {
     SYSTEM("system"),

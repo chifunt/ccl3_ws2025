@@ -1,4 +1,4 @@
-package com.chifunt.chromaticharptabs.data
+package com.chifunt.chromaticharptabs.data.model
 
 import org.json.JSONArray
 import org.json.JSONObject
