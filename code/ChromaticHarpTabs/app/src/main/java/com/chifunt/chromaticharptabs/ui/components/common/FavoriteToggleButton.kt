@@ -9,6 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -24,9 +27,12 @@ fun FavoriteToggleButton(
     @StringRes contentDescriptionRes: Int? = null
 ) {
     val scale = remember { Animatable(1f) }
-    val halo = remember { Animatable(0f) }
+    val halo = remember { Animatable(1f) }
+    var wasFavorite by remember { mutableStateOf(isFavorite) }
     LaunchedEffect(isFavorite) {
-        if (isFavorite) {
+        val shouldAnimate = isFavorite && !wasFavorite
+        wasFavorite = isFavorite
+        if (shouldAnimate) {
             scale.snapTo(1f)
             halo.snapTo(0f)
             scale.animateTo(
@@ -41,6 +47,9 @@ fun FavoriteToggleButton(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)
             )
+        } else {
+            scale.snapTo(1f)
+            halo.snapTo(1f)
         }
     }
 
@@ -57,7 +66,7 @@ fun FavoriteToggleButton(
                     scaleY = scale.value
                 )
                 .drawBehind {
-                    if (isFavorite) {
+                    if (isFavorite && halo.value < 1f) {
                         val alpha = (1f - halo.value).coerceIn(0f, 1f) * 0.35f
                         if (alpha > 0f) {
                             drawCircle(
