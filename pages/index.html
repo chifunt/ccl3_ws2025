@@ -83,19 +83,57 @@
     </section>
 
     <section id="heuristics" class="section">
-      <div class="container">
-        <h2>2. Heuristic Evaluation (Initial Prototype)</h2>
-        <p>
-          We used <strong>Nielsen’s 10 usability heuristics</strong> to identify
-          potential risks prior to user testing. Key areas of concern included error prevention, visibility of system
-          status, and help/documentation for first-time users.
-        </p>
+  <div class="container">
+    <h2>2. Heuristic Evaluation (Initial Prototype)</h2>
+    <p>
+      We used <strong>Nielsen’s 10 usability heuristics</strong> to identify
+      potential risks prior to user testing. Key areas of concern included error prevention, visibility of system
+      status, and help/documentation for first-time users.
+    </p>
 
-        <div class="note">
-          <strong>Note:</strong> This heuristic review reflects the initial prototype (before incorporating user-test feedback).
-        </div>
-      </div>
-    </section>
+    <div class="note">
+      <strong>Note:</strong> This heuristic review reflects the initial prototype (before incorporating user-test feedback).
+    </div>
+
+    <h3 class="mt">Heuristic Evaluation Table (Initial Prototype)</h3>
+    <p class="muted">
+      Severity scale: 0 = No problem · 1 = Cosmetic · 2 = Minor · 3 = Major · 4 = Critical
+    </p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>S/N</th>
+            <th>Screen / Feature</th>
+            <th>Nielsen Heuristic</th>
+            <th>Agreed Severity</th>
+            <th>Suggested Improvement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Library</td><td>Visibility of system status</td><td>2</td><td>Indicate clearly when search, filters, or sorting are active (visual highlights or status indicators).</td></tr>
+          <tr><td>2</td><td>Library</td><td>Recognition rather than recall</td><td>2</td><td>Make filtering and sorting options more visible so users do not have to remember where options are located.</td></tr>
+          <tr><td>3</td><td>Library</td><td>Consistency and standards</td><td>2</td><td>Align search bar behaviour and icon usage with common Android list/search patterns.</td></tr>
+          <tr><td>4</td><td>Tab Detail</td><td>User control and freedom</td><td>3</td><td>Provide clearer navigation and safe exit paths, especially for destructive actions such as delete.</td></tr>
+          <tr><td>5</td><td>Tab Detail</td><td>Error prevention</td><td>3</td><td>Add safeguards to prevent accidental deletion or unintended actions.</td></tr>
+          <tr><td>6</td><td>Tab Detail</td><td>Match between system and real world</td><td>2</td><td>Improve terminology and iconography to better reflect how users naturally think about tabs and songs.</td></tr>
+          <tr><td>7</td><td>Editor</td><td>Error prevention</td><td>3</td><td>Prevent accidental loss of work by ensuring users are warned before exiting with unsaved changes.</td></tr>
+          <tr><td>8</td><td>Editor</td><td>User control and freedom</td><td>2</td><td>Allow users to easily cancel or undo actions during editing without confusion or fear of losing progress.</td></tr>
+          <tr><td>9</td><td>Editor</td><td>Recognition rather than recall</td><td>3</td><td>Reduce the need to remember notation rules by providing inline hints or visible guidance within the editor.</td></tr>
+          <tr><td>10</td><td>Practice</td><td>Visibility of system status</td><td>3</td><td>Make it clearer which part of the tab is currently being practiced and how progress is structured.</td></tr>
+          <tr><td>11</td><td>Practice</td><td>Flexibility and efficiency of use</td><td>2</td><td>Support efficient navigation for experienced users (e.g., quicker movement between lines).</td></tr>
+          <tr><td>12</td><td>Practice</td><td>Aesthetic and minimalist design</td><td>1</td><td>Minor visual refinements to keep focus on the active practice content without unnecessary distraction.</td></tr>
+          <tr><td>13</td><td>Global</td><td>Consistency and standards</td><td>2</td><td>Ensure consistent visual language, icon behavior, and navigation patterns across all screens.</td></tr>
+          <tr><td>14</td><td>Global</td><td>Help and documentation</td><td>3</td><td>Provide basic in-app guidance or onboarding to explain core concepts and workflows.</td></tr>
+          <tr><td>15</td><td>Global</td><td>Help users recognize &amp; recover from errors</td><td>2</td><td>Use clearer feedback messages when something goes wrong and indicate how the user can recover.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
 
     <section id="hypotheses" class="section">
       <div class="container">

@@ -301,3 +301,26 @@ blockquote{
   .two-col{ grid-template-columns: 1fr; }
   h1{ font-size: 32px; }
 }
+
+
+.data-table td:nth-child(4),
+.data-table th:nth-child(4){
+  text-align: center;
+  width: 110px;
+  white-space: nowrap;
+}
+
+.data-table td:first-child,
+.data-table th:first-child{
+  width: 70px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.data-table tbody tr:hover{
+  background: rgba(255,255,255,0.03);
+}
+
+.data-table td{
+  vertical-align: top;
+}
