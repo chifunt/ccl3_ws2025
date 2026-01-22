@@ -1,5 +1,13 @@
 package com.chifunt.chromaticharptabs.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,9 +46,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,6 +81,7 @@ import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
 import com.chifunt.chromaticharptabs.ui.theme.RosePineSubtle
 import kotlin.math.abs
 import kotlin.math.ln
+import kotlinx.coroutines.delay
 
 @Composable
 fun PracticeScreen(
@@ -102,6 +113,10 @@ fun PracticeScreen(
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
     var advanceOnNoteStart by rememberSaveable { mutableStateOf(true) }
     val toleranceCents = 50.0
+    val lineScale = remember { Animatable(1f) }
+    var linePulse by remember { mutableStateOf(false) }
+    val lineColor = if (linePulse) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+    val slideOffsetPx = with(LocalDensity.current) { 6.dp.roundToPx() }
 
     val micPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -129,6 +144,15 @@ fun PracticeScreen(
             suppressNextLineHighlight = false
         }
         onDispose { micDetector.stop() }
+    }
+
+    LaunchedEffect(state.currentIndex) {
+        linePulse = true
+        lineScale.snapTo(1f)
+        lineScale.animateTo(1.08f, tween(durationMillis = 120))
+        lineScale.animateTo(1f, tween(durationMillis = 160))
+        delay(140)
+        linePulse = false
     }
 
     Column(
@@ -248,38 +272,52 @@ fun PracticeScreen(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    TabNotationInlineDisplay(
-                        lines = listOf(state.lines[state.currentIndex]),
-                        lineSpacing = spacingMedium,
-                        centered = true,
-                        noteSize = noteSize.dp,
-                        noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                            if (lineIndex != 0) return@TabNotationInlineDisplay null
-                            when {
-                                noteIndex < currentNoteIndex -> subtleColor
-                                suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
-                                noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
-                                noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
-                                noteIndex == currentNoteIndex -> goldColor
-                                else -> null
+                    AnimatedContent(
+                        targetState = state.currentIndex,
+                        transitionSpec = {
+                            if (targetState > initialState) {
+                                (slideInVertically { slideOffsetPx } + fadeIn(tween(120))) togetherWith
+                                    (slideOutVertically { -slideOffsetPx } + fadeOut(tween(120)))
+                            } else {
+                                (slideInVertically { -slideOffsetPx } + fadeIn(tween(120))) togetherWith
+                                    (slideOutVertically { slideOffsetPx } + fadeOut(tween(120)))
                             }
-                        } else {
-                            null
                         },
-                        noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                            if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
-                            com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
-                                isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
-                                isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
-                            )
-                        } else {
-                            null
-                        },
-                        onNotePress = { note ->
-                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                        },
-                        onNoteRelease = { tonePlayer.stop() }
-                    )
+                        label = "practiceLineTransition"
+                    ) { index ->
+                        TabNotationInlineDisplay(
+                            lines = listOf(state.lines[index]),
+                            lineSpacing = spacingMedium,
+                            centered = true,
+                            noteSize = noteSize.dp,
+                            noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                                if (lineIndex != 0) return@TabNotationInlineDisplay null
+                                when {
+                                    noteIndex < currentNoteIndex -> subtleColor
+                                    suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
+                                    noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
+                                    noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
+                                    noteIndex == currentNoteIndex -> goldColor
+                                    else -> null
+                                }
+                            } else {
+                                null
+                            },
+                            noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                                if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
+                                com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
+                                    isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
+                                    isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
+                                )
+                            } else {
+                                null
+                            },
+                            onNotePress = { note ->
+                                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                            },
+                            onNoteRelease = { tonePlayer.stop() }
+                        )
+                    }
                 }
 
                 Text(
@@ -288,7 +326,12 @@ fun PracticeScreen(
                         state.currentIndex + 1,
                         state.lines.size
                     ),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = lineColor,
+                    modifier = Modifier.graphicsLayer(
+                        scaleX = lineScale.value,
+                        scaleY = lineScale.value
+                    )
                 )
 
                 Spacer(Modifier.height(spacingMedium))
