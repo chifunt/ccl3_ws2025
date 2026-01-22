@@ -96,7 +96,7 @@ fun PracticeScreen(
     var showSettings by remember { mutableStateOf(false) }
     var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
-    var advanceOnNoteStart by rememberSaveable { mutableStateOf(false) }
+    var advanceOnNoteStart by rememberSaveable { mutableStateOf(true) }
     val toleranceCents = 50.0
 
     val micPermissionLauncher = rememberLauncherForActivityResult(
