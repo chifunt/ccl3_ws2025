@@ -2,6 +2,7 @@ package com.chifunt.chromaticharptabs.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,6 +45,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -117,6 +120,8 @@ fun PracticeScreen(
     val toleranceCents = 50.0
     val lineScale = remember { Animatable(1f) }
     var linePulse by remember { mutableStateOf(false) }
+    val micScale = remember { Animatable(1f) }
+    val micHalo = remember { Animatable(0f) }
     val lineColor = if (linePulse) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
     val slideOffsetPx = with(LocalDensity.current) { 6.dp.roundToPx() }
 
@@ -155,6 +160,24 @@ fun PracticeScreen(
         lineScale.animateTo(1f, tween(durationMillis = 160))
         delay(140)
         linePulse = false
+    }
+    LaunchedEffect(micEnabled) {
+        if (micEnabled) {
+            micScale.snapTo(1f)
+            micHalo.snapTo(0f)
+            micScale.animateTo(
+                targetValue = 1.18f,
+                animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing)
+            )
+            micScale.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 160, easing = FastOutSlowInEasing)
+            )
+            micHalo.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)
+            )
+        }
     }
 
     Column(
@@ -197,10 +220,25 @@ fun PracticeScreen(
                         }
                     ) {
                         if (micEnabled) {
+                            val micTint = MaterialTheme.colorScheme.primary
                             Icon(
                                 imageVector = Icons.Outlined.Mic,
                                 contentDescription = stringResource(R.string.practice_mic_on),
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = micTint,
+                                modifier = Modifier
+                                    .graphicsLayer(
+                                        scaleX = micScale.value,
+                                        scaleY = micScale.value
+                                    )
+                                    .drawBehind {
+                                        val alpha = (1f - micHalo.value).coerceIn(0f, 1f) * 0.35f
+                                        if (alpha > 0f) {
+                                            drawCircle(
+                                                color = micTint.copy(alpha = alpha),
+                                                radius = size.minDimension / 2f * (1f + micHalo.value)
+                                            )
+                                        }
+                                    }
                             )
                         } else {
                             Icon(
