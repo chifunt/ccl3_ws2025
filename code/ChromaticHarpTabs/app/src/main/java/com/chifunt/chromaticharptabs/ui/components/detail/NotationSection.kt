@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -25,6 +26,8 @@ import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNotationJson
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDisplay
+import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnPine
+import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
 
 @Composable
 fun NotationSection(
@@ -35,6 +38,8 @@ fun NotationSection(
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
 ) {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val activeColor = if (isDark) RosePinePine else RosePineDawnPine
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
@@ -63,6 +68,8 @@ fun NotationSection(
                     lines = notation.lines,
                     lineSpacing = spacingMedium,
                     glyphColor = contentTextColor,
+                    pressHighlightColor = activeColor,
+                    pressHighlightScale = true,
                     hapticOnPress = onNotePress != null,
                     onNotePress = onNotePress,
                     onNoteRelease = onNoteRelease

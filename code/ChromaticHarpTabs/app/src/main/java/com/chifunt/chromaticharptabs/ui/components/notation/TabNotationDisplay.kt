@@ -45,6 +45,8 @@ fun TabNotationInlineDisplay(
     noteSize: Dp? = null,
     noteColorProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> androidx.compose.ui.graphics.Color?)? = null,
     noteVisualProvider: ((lineIndex: Int, noteIndex: Int, note: TabNote) -> NoteVisualState)? = null,
+    pressHighlightColor: androidx.compose.ui.graphics.Color? = null,
+    pressHighlightScale: Boolean = false,
     hapticOnPress: Boolean = false,
     onNotePress: ((TabNote) -> Unit)? = null,
     onNoteRelease: ((TabNote) -> Unit)? = null
@@ -113,8 +115,19 @@ fun TabNotationInlineDisplay(
                     DisposableEffect(key) {
                         onDispose { noteBounds.remove(key) }
                     }
-                    val noteColor = noteColorProvider?.invoke(lineIndex, noteIndex, note) ?: glyphColor
-                    val noteVisual = noteVisualProvider?.invoke(lineIndex, noteIndex, note) ?: NoteVisualState()
+                    val isPressed = activeKey.value == key
+                    val baseColor = noteColorProvider?.invoke(lineIndex, noteIndex, note) ?: glyphColor
+                    val noteColor = if (isPressed && pressHighlightColor != null) {
+                        pressHighlightColor
+                    } else {
+                        baseColor
+                    }
+                    val baseVisual = noteVisualProvider?.invoke(lineIndex, noteIndex, note) ?: NoteVisualState()
+                    val noteVisual = if (isPressed && pressHighlightScale) {
+                        baseVisual.copy(isCorrect = true)
+                    } else {
+                        baseVisual
+                    }
                     val noteModifier = Modifier.onGloballyPositioned { coords ->
                         noteBounds[key] = NoteHit(
                             key = key,

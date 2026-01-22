@@ -290,37 +290,39 @@ fun PracticeScreen(
                         },
                         label = "practiceLineTransition"
                     ) { index ->
-                        TabNotationInlineDisplay(
-                            lines = listOf(state.lines[index]),
-                            lineSpacing = spacingMedium,
-                            centered = true,
-                            noteSize = noteSize.dp,
-                        noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                            if (lineIndex != 0) return@TabNotationInlineDisplay null
-                            when {
-                                noteIndex < currentNoteIndex -> subtleColor
-                                suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
-                                    noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
-                                    noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
-                                    noteIndex == currentNoteIndex -> goldColor
-                                    else -> null
-                                }
-                            } else {
-                                null
-                            },
-                        noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
-                            if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
-                            com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
-                                isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
-                                isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
-                            )
-                        } else {
-                            null
-                        },
-                        hapticOnPress = true,
-                        onNotePress = { note ->
-                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                        },
+                            TabNotationInlineDisplay(
+                                lines = listOf(state.lines[index]),
+                                lineSpacing = spacingMedium,
+                                centered = true,
+                                noteSize = noteSize.dp,
+                                noteColorProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                                    if (lineIndex != 0) return@TabNotationInlineDisplay null
+                                    when {
+                                        noteIndex < currentNoteIndex -> subtleColor
+                                        suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
+                                        noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
+                                        noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
+                                        noteIndex == currentNoteIndex -> goldColor
+                                        else -> null
+                                    }
+                                } else {
+                                    null
+                                },
+                                noteVisualProvider = if (micEnabled) { lineIndex, noteIndex, _ ->
+                                    if (lineIndex != 0) return@TabNotationInlineDisplay com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState()
+                                    com.chifunt.chromaticharptabs.ui.components.notation.NoteVisualState(
+                                        isCorrect = noteIndex == currentNoteIndex && isTargetPlaying,
+                                        isWrong = noteIndex == currentNoteIndex && isWrongNotePlaying
+                                    )
+                                } else {
+                                    null
+                                },
+                                pressHighlightColor = if (micEnabled) null else pineColor,
+                                pressHighlightScale = !micEnabled,
+                                hapticOnPress = true,
+                                onNotePress = { note ->
+                                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                                },
                             onNoteRelease = { tonePlayer.stop() }
                         )
                     }
