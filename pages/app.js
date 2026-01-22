@@ -31,6 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (window.ChartBoxPlot) {
+    const { BoxPlotController, BoxAndWhiskers, ViolinController, Violin } = window.ChartBoxPlot;
+    const components = [BoxPlotController, BoxAndWhiskers, ViolinController, Violin].filter(Boolean);
+    if (components.length) {
+      Chart.register(...components);
+    }
+  }
+
   const getVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const chartColors = {
     text: getVar('--text'),
@@ -70,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const expCtx = document.getElementById('experienceChart');
       const appCtx = document.getElementById('appExperienceChart');
       const susCtx = document.getElementById('susChart');
+      const susBoxCtx = document.getElementById('susBoxplot');
       const outcomesCtx = document.getElementById('outcomesChart');
+      const taskBoxCtx = document.getElementById('taskBoxplot');
 
       if (ageCtx) {
         const labels = Object.keys(data.demographics.age_group);
@@ -146,6 +156,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
+      if (susBoxCtx) {
+        try {
+          new Chart(susBoxCtx, {
+            type: 'boxplot',
+            data: {
+              labels: ['SUS'],
+              datasets: [{
+                label: 'SUS Distribution',
+                backgroundColor: 'rgba(196,167,231,0.25)',
+                borderColor: chartColors.iris,
+                medianColor: chartColors.gold,
+                itemRadius: 3,
+                outlierColor: chartColors.rose,
+                data: [data.sus_scores]
+              }]
+            },
+            options: {
+              ...chartDefaults,
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true, max: 100 } }
+            }
+          });
+        } catch (err) {
+          // Skip if boxplot plugin is unavailable
+        }
+      }
+
       if (outcomesCtx) {
         new Chart(outcomesCtx, {
           type: 'bar',
@@ -163,6 +200,35 @@ document.addEventListener('DOMContentLoaded', () => {
             scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
           }
         });
+      }
+
+      if (taskBoxCtx) {
+        const labels = Object.keys(data.task_ratings);
+        const values = labels.map(label => data.task_ratings[label].map(val => val * 20));
+        try {
+          new Chart(taskBoxCtx, {
+            type: 'boxplot',
+            data: {
+              labels,
+              datasets: [{
+                label: 'Task Ratings',
+                backgroundColor: 'rgba(156,207,216,0.2)',
+                borderColor: chartColors.foam,
+                medianColor: chartColors.gold,
+                itemRadius: 2,
+                outlierColor: chartColors.rose,
+                data: values
+              }]
+            },
+            options: {
+              ...chartDefaults,
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } }
+            }
+          });
+        } catch (err) {
+          // Skip if boxplot plugin is unavailable
+        }
       }
     })
     .catch(() => {

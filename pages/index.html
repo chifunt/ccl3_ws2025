@@ -324,6 +324,10 @@
           <canvas id="susChart" height="240" aria-label="SUS scores per participant" role="img"></canvas>
           <figcaption>Figure 2: SUS scores per participant with mean line (n = 6).</figcaption>
         </figure>
+        <figure class="figure">
+          <canvas id="susBoxplot" height="200" aria-label="SUS score distribution" role="img"></canvas>
+          <figcaption>Figure 2b: SUS score distribution (boxplot).</figcaption>
+        </figure>
 
         <h3 class="mt">6.3 Task Outcomes</h3>
         <div class="table-wrap no-filter">
@@ -350,6 +354,10 @@
         <figure class="figure">
           <canvas id="outcomesChart" height="240" aria-label="Task outcomes chart" role="img"></canvas>
           <figcaption>Figure 3: Task outcomes derived from task ratings (5 = success, 4 = partial, ≤3 = fail).</figcaption>
+        </figure>
+        <figure class="figure">
+          <canvas id="taskBoxplot" height="240" aria-label="Task rating distribution" role="img"></canvas>
+          <figcaption>Figure 3b: Task rating distribution per task (boxplot).</figcaption>
         </figure>
 
         <h3 class="mt">6.4 Issue Severity Distribution</h3>
@@ -414,7 +422,8 @@
       </p>
     </div>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@4.3.0/build/index.umd.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

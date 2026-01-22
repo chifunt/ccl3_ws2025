@@ -67,6 +67,11 @@ for col in cols:
 outcomes_df = pd.DataFrame(outcome_counts).T
 outcomes_df.index = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6']
 
+task_ratings = {}
+for idx, col in enumerate(cols, start=1):
+    key = f"T{idx}"
+    task_ratings[key] = [int(x) for x in task_df[col].dropna().astype(int).tolist()]
+
 payload = {
     'sus_scores': [round(float(x), 2) for x in sus_score.fillna(0)],
     'sus_mean': round(float(sus_score.mean()), 2),
@@ -80,7 +85,8 @@ payload = {
         'success': outcomes_df['Success'].astype(int).tolist(),
         'partial': outcomes_df['Partial'].astype(int).tolist(),
         'fail': outcomes_df['Fail'].astype(int).tolist()
-    }
+    },
+    'task_ratings': task_ratings
 }
 
 with output.open('w', encoding='utf-8') as f:
