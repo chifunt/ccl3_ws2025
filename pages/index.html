@@ -1,11 +1,322 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>CCL3 ABIODUN ADEFUSI & JOSHUA TJHIE</h1>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chromatic App — Usability Evaluation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="badge">Chromatic App</div>
+      <h1>Usability Evaluation Report</h1>
+      <p class="subtitle">
+        Heuristic Evaluation (Initial Prototype) + User-Based Usability Test (n = 6)
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-card">
+          <div class="meta-label">Team Size</div>
+          <div class="meta-value">2</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Participants</div>
+          <div class="meta-value">6</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Primary Metrics</div>
+          <div class="meta-value">Task Outcomes, SUS</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Tools</div>
+          <div class="meta-value">Android • Google Forms • Colab</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="container">
+      <a href="#plan">Plan</a>
+      <a href="#heuristics">Heuristics</a>
+      <a href="#hypotheses">Hypotheses</a>
+      <a href="#data">Data Collected</a>
+      <a href="#methods">Methods</a>
+      <a href="#results">Results</a>
+      <a href="#feedback">Feedback</a>
+      <a href="#updates">Updates</a>
+      <a href="#summary">Summary</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="plan" class="section">
+      <div class="container">
+        <h2>1. Usability Test Plan</h2>
+        <p>
+          This evaluation assesses the <strong>effectiveness</strong>, <strong>learnability</strong>,
+          and <strong>user satisfaction</strong> of the Chromatic App—an Android application for browsing,
+          creating, editing, and practicing chromatic harmonica tabs.
+        </p>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>Goals</h3>
+            <ul>
+              <li>Verify users can complete core workflows successfully.</li>
+              <li>Identify learnability barriers (especially for novices).</li>
+              <li>Measure perceived usability using SUS.</li>
+              <li>Capture issues using Nielsen’s heuristics + severity ratings.</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <h3>Approach</h3>
+            <ol>
+              <li><strong>Heuristic evaluation</strong> of the initial prototype.</li>
+              <li><strong>Moderated user test</strong> with task-based protocol + SUS.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="heuristics" class="section">
+      <div class="container">
+        <h2>2. Heuristic Evaluation (Initial Prototype)</h2>
+        <p>
+          An expert inspection was conducted using <strong>Nielsen’s 10 usability heuristics</strong> to identify
+          potential risks prior to user testing. Key areas of concern included error prevention, visibility of system
+          status, and help/documentation for first-time users.
+        </p>
+
+        <div class="note">
+          <strong>Note:</strong> This heuristic review reflects the initial prototype (before incorporating user-test feedback).
+        </div>
+      </div>
+    </section>
+
+    <section id="hypotheses" class="section">
+      <div class="container">
+        <h2>3. Hypotheses / Testable Questions</h2>
+        <ul class="checklist">
+          <li><strong>H1:</strong> Users can complete all main tasks without failure.</li>
+          <li><strong>H2:</strong> Users without harmonica experience can still use the app effectively.</li>
+          <li><strong>H3:</strong> The app achieves a high SUS score (≥ 80).</li>
+          <li><strong>H4:</strong> Creation/editing tasks require more support than browsing/practice tasks.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="data" class="section">
+      <div class="container">
+        <h2>4. Planned Data to Collect</h2>
+
+        <div class="two-col">
+          <div class="panel">
+            <h3>Quantitative</h3>
+            <ul>
+              <li>Task outcomes per task: <strong>S</strong> (Success), <strong>P</strong> (Partial with hint), <strong>F</strong> (Fail)</li>
+              <li>SUS scores (0–100)</li>
+              <li>Participant demographics (age, harmonica experience, tab-app experience)</li>
+              <li>Counts of partial completions per task</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Qualitative</h3>
+            <ul>
+              <li>Moderator observations during task execution</li>
+              <li>Oral feedback and notable quotes</li>
+              <li>Usability issues mapped to Nielsen heuristics</li>
+              <li>Issue severity ratings (1–4)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="methods" class="section">
+      <div class="container">
+        <h2>5. Methods Used (User Test)</h2>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>Participants</h3>
+            <p><strong>n = 6</strong>, majority novice harmonica users.</p>
+          </div>
+          <div class="callout">
+            <h3>Setup</h3>
+            <ul>
+              <li>Android smartphone + Chromatic App prototype</li>
+              <li>Moderated test, think-aloud encouraged</li>
+              <li>SUS questionnaire administered post-test</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="mt">Tasks</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task ID</th>
+                <th>Task Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>T1</td><td>Find a tab</td></tr>
+              <tr><td>T2</td><td>Filter and sort tabs</td></tr>
+              <tr><td>T3</td><td>Favourite a tab</td></tr>
+              <tr><td>T4</td><td>Create a new tab</td></tr>
+              <tr><td>T5</td><td>Edit a tab and exit safely</td></tr>
+              <tr><td>T6</td><td>Practice a tab</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <strong>Materials:</strong> SUS questionnaire (Google Forms), task observation sheet, and Python (Google Colab) for analysis and visualizations.
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <div class="container">
+        <h2>6. User Test Results</h2>
+
+        <div class="results-grid">
+          <div class="stat">
+            <div class="stat-label">Mean SUS</div>
+            <div class="stat-value">95.42</div>
+            <div class="stat-sub">Best imaginable usability range</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">SUS Range</div>
+            <div class="stat-value">87.5–100</div>
+            <div class="stat-sub">n = 6</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Critical Issues</div>
+            <div class="stat-value">1</div>
+            <div class="stat-sub">Severity 4</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Highest Support Task</div>
+            <div class="stat-value">T4</div>
+            <div class="stat-sub">Create a New Tab</div>
+          </div>
+        </div>
+
+        <h3 class="mt">6.1 Demographics</h3>
+        <p class="muted">Insert your Python-generated demographics chart here.</p>
+        <figure class="figure">
+          <img src="images/participant_demographics.png" alt="Participant demographics chart" />
+          <figcaption>Figure 1: Participant demographics (n = 6).</figcaption>
+        </figure>
+
+        <h3 class="mt">6.2 SUS Results</h3>
+        <p>
+          Individual SUS scores: <strong>95.0, 97.5, 95.0, 97.5, 100.0, 87.5</strong>.
+          The mean SUS score (<strong>95.42</strong>) indicates excellent perceived usability.
+        </p>
+        <figure class="figure">
+          <img src="images/sus_distribution.png" alt="SUS distribution chart" />
+          <figcaption>Figure 2: SUS score distribution (n = 6).</figcaption>
+        </figure>
+
+        <h3 class="mt">6.3 Task Outcomes</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Success</th>
+                <th>Partial (Hint)</th>
+                <th>Fail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>T1</td><td>6</td><td>0</td><td>0</td></tr>
+              <tr><td>T2</td><td>5</td><td>1</td><td>0</td></tr>
+              <tr><td>T3</td><td>6</td><td>0</td><td>0</td></tr>
+              <tr><td>T4</td><td>1</td><td>5</td><td>0</td></tr>
+              <tr><td>T5</td><td>5</td><td>1</td><td>0</td></tr>
+              <tr><td>T6</td><td>6</td><td>0</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure class="figure">
+          <img src="images/task_outcomes.png" alt="Task outcomes chart" />
+          <figcaption>Figure 3: Task outcomes per task (S = success, P = partial with hint, F = fail).</figcaption>
+        </figure>
+
+        <h3 class="mt">6.4 Issue Severity Distribution</h3>
+        <figure class="figure">
+          <img src="images/usability_issues_severity.png" alt="Issue severity distribution chart" />
+          <figcaption>Figure 4: Usability issue severity distribution (Nielsen heuristic mapping).</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="feedback" class="section">
+      <div class="container">
+        <h2>7. Most Relevant Feedback / Comments</h2>
+        <div class="quotes">
+          <blockquote>“Add a popup prompt before deleting a tab just to confirm.”</blockquote>
+          <blockquote>“In the editing screen, add an info popup for notation editing to explain how it works.”</blockquote>
+          <blockquote>“Enter should also enter the tag.”</blockquote>
+          <blockquote>“The search bar is weird behaviorally.”</blockquote>
+          <blockquote>“Pressing cancel doesn’t bring up the popup like back.”</blockquote>
+          <blockquote>“Clear all filters button would help.”</blockquote>
+          <blockquote>“Show line number out of how many lines in practice mode.”</blockquote>
+          <blockquote>“Play the note on the editor screen.”</blockquote>
+          <blockquote>“The library icon looks like a button.”</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section id="updates" class="section">
+      <div class="container">
+        <h2>8. Updates Made / Planned Based on Feedback</h2>
+        <ul class="checklist">
+          <li>Delete confirmation dialog (and optional undo snackbar).</li>
+          <li>Info popup / tooltip for notation editing.</li>
+          <li>Enter/Done commits tags in the editor.</li>
+          <li>Improve search UX (clear state, consistent cancel behavior).</li>
+          <li>Add “Clear all filters” action in Library.</li>
+          <li>Add “Line X of Y” progress indicator in Practice.</li>
+          <li>Add note playback feedback in Editor.</li>
+          <li>Refine library icon styling to reduce false affordance.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Status:</strong> Add commit links here once changes are implemented (e.g., PR #12).
+        </div>
+      </div>
+    </section>
+
+    <section id="summary" class="section">
+      <div class="container">
+        <h2>9. Summary</h2>
+        <p>
+          The usability evaluation indicates <strong>excellent user satisfaction</strong> (Mean SUS = 95.42) and
+          strong task performance (no failures). Most usability improvements are centered on
+          <strong>learnability</strong> and <strong>feedback</strong>, especially for creation/editing workflows (T4).
+          Implementing the proposed changes is expected to improve first-time user confidence and reduce reliance on hints.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Generated for the Chromatic App team project • Analysis produced using Python (Google Colab)
+      </p>
+    </div>
+  </footer>
+</body>
 </html>
