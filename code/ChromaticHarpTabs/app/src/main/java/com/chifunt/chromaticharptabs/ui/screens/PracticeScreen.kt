@@ -92,6 +92,7 @@ fun PracticeScreen(
     var currentNoteIndex by remember(state.currentIndex) { mutableIntStateOf(0) }
     var isTargetPlaying by remember(state.currentIndex) { mutableStateOf(false) }
     var isWrongNotePlaying by remember(state.currentIndex) { mutableStateOf(false) }
+    var suppressNextLineHighlight by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
@@ -121,6 +122,7 @@ fun PracticeScreen(
             detectedPitch = Float.NaN
             isTargetPlaying = false
             isWrongNotePlaying = false
+            suppressNextLineHighlight = false
         }
         onDispose { micDetector.stop() }
     }
@@ -251,6 +253,7 @@ fun PracticeScreen(
                             if (lineIndex != 0) return@TabNotationInlineDisplay null
                             when {
                                 noteIndex < currentNoteIndex -> subtleColor
+                                suppressNextLineHighlight && noteIndex == currentNoteIndex -> subtleColor
                                 noteIndex == currentNoteIndex && isTargetPlaying -> pineColor
                                 noteIndex == currentNoteIndex && isWrongNotePlaying -> loveColor
                                 noteIndex == currentNoteIndex -> goldColor
@@ -282,7 +285,11 @@ fun PracticeScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     DebouncedFilledIconButton(
-                        onClick = { practiceViewModel.previousLine() },
+                        onClick = {
+                            suppressNextLineHighlight = false
+                            currentNoteIndex = 0
+                            practiceViewModel.previousLine()
+                        },
                         enabled = state.currentIndex > 0,
                         debounceMs = 0L,
                         modifier = Modifier
@@ -292,7 +299,11 @@ fun PracticeScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                     DebouncedFilledIconButton(
-                        onClick = { practiceViewModel.nextLine() },
+                        onClick = {
+                            suppressNextLineHighlight = false
+                            currentNoteIndex = 0
+                            practiceViewModel.nextLine()
+                        },
                         enabled = state.currentIndex < state.lines.lastIndex,
                         debounceMs = 0L,
                         modifier = Modifier
@@ -312,6 +323,14 @@ fun PracticeScreen(
         val targetNote = currentLine.getOrNull(currentNoteIndex) ?: return@LaunchedEffect
         val targetFrequency = HarmonicaNoteMap.frequencyFor(targetNote) ?: return@LaunchedEffect
         val pitch = detectedPitch.takeIf { it.isFinite() }
+        if (suppressNextLineHighlight) {
+            if (pitch != null) {
+                isTargetPlaying = false
+                isWrongNotePlaying = false
+                return@LaunchedEffect
+            }
+            suppressNextLineHighlight = false
+        }
         val isCorrect = pitch != null &&
             abs(centsDifference(pitch.toDouble(), targetFrequency)) <= toleranceCents
         if (isCorrect) {
@@ -323,10 +342,15 @@ fun PracticeScreen(
                 currentNoteIndex == currentLine.lastIndex
             ) {
                 practiceViewModel.nextLine()
+                currentNoteIndex = 0
                 isTargetPlaying = false
+                suppressNextLineHighlight = true
             }
         } else {
             isWrongNotePlaying = pitch != null
+            if (suppressNextLineHighlight) {
+                suppressNextLineHighlight = false
+            }
             if (isTargetPlaying) {
                 currentNoteIndex += 1
                 if (autoAdvanceLine && currentNoteIndex > currentLine.lastIndex) {
