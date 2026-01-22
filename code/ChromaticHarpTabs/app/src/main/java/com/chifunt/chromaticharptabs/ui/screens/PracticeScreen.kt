@@ -92,6 +92,7 @@ fun PracticeScreen(
     var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
     var advanceOnNoteStart by rememberSaveable { mutableStateOf(true) }
+    var repeatLine by rememberSaveable { mutableStateOf(false) }
     val toleranceCents = 50.0
     val lineScale = remember { Animatable(1f) }
     var linePulse by remember { mutableStateOf(false) }
@@ -201,7 +202,9 @@ fun PracticeScreen(
             autoAdvanceLine = autoAdvanceLine,
             onAutoAdvanceLineChange = { autoAdvanceLine = it },
             advanceOnNoteStart = advanceOnNoteStart,
-            onAdvanceOnNoteStartChange = { advanceOnNoteStart = it }
+            onAdvanceOnNoteStartChange = { advanceOnNoteStart = it },
+            repeatLine = repeatLine,
+            onRepeatLineChange = { repeatLine = it }
         )
 
         Column(
@@ -313,6 +316,8 @@ fun PracticeScreen(
                     state.currentIndex < state.lines.lastIndex
                 ) {
                     practiceViewModel.nextLine()
+                } else if (!autoAdvanceLine && repeatLine && currentNoteIndex > currentLine.lastIndex) {
+                    currentNoteIndex = 0
                 }
                 isTargetPlaying = false
             }

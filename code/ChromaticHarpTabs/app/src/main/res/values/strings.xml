@@ -51,6 +51,7 @@
     <string name="practice_note_size">Note size</string>
     <string name="practice_auto_advance">Auto-advance line</string>
     <string name="practice_advance_on_start">Advance on last note start</string>
+    <string name="practice_repeat_line">Repeat line</string>
     <string name="virtual_harmonica">Virtual Harmonica</string>
     <string name="slide_hold">Hold slide</string>
     <string name="edit_button">Edit</string>

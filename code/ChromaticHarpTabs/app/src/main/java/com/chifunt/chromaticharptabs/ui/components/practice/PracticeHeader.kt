@@ -47,7 +47,9 @@ fun PracticeHeader(
     autoAdvanceLine: Boolean,
     onAutoAdvanceLineChange: (Boolean) -> Unit,
     advanceOnNoteStart: Boolean,
-    onAdvanceOnNoteStartChange: (Boolean) -> Unit
+    onAdvanceOnNoteStartChange: (Boolean) -> Unit,
+    repeatLine: Boolean,
+    onRepeatLineChange: (Boolean) -> Unit
 ) {
     TopBackBar(
         onBack = onBack,
@@ -130,6 +132,19 @@ fun PracticeHeader(
                             HapticSwitch(
                                 checked = advanceOnNoteStart,
                                 onCheckedChange = onAdvanceOnNoteStartChange
+                            )
+                        }
+                        Spacer(Modifier.height(spacingSmall))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = stringResource(R.string.practice_repeat_line))
+                            Spacer(Modifier.width(spacingSmall))
+                            HapticSwitch(
+                                checked = repeatLine,
+                                onCheckedChange = onRepeatLineChange
                             )
                         }
                     }
