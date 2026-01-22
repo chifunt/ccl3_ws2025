@@ -37,21 +37,50 @@
     </div>
   </header>
 
-  <nav class="toc">
-    <div class="container">
-      <a href="#plan">Plan</a>
-      <a href="#heuristics">Heuristics</a>
-      <a href="#hypotheses">Hypotheses</a>
-      <a href="#data">Data Collected</a>
-      <a href="#methods">Methods</a>
-      <a href="#results">Results</a>
-      <a href="#feedback">Feedback</a>
-      <a href="#updates">Updates</a>
-      <a href="#summary">Summary</a>
-    </div>
-  </nav>
+  <div class="hero">
+    <div class="container hero-grid" role="region" aria-label="Key metrics">
+      <div class="hero-card">
+        <div class="hero-label">Mean SUS</div>
+        <div class="hero-value">95.42</div>
+        <div class="hero-sub">Perceived usability (n = 6)</div>
+      </div>
 
-  <main>
+      <div class="hero-card">
+        <div class="hero-label">Critical Issues</div>
+        <div class="hero-value">1</div>
+        <div class="hero-sub">Severity 4</div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-label">Participants</div>
+        <div class="hero-value">6</div>
+        <div class="hero-sub">Moderated user tests</div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-label">Top Support Task</div>
+        <div class="hero-value">T4</div>
+        <div class="hero-sub">Create a new tab</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout container">
+    <aside class="left-nav" aria-label="Table of contents">
+      <nav class="toc">
+        <a href="#plan">Plan</a>
+        <a href="#heuristics">Heuristics</a>
+        <a href="#hypotheses">Hypotheses</a>
+        <a href="#data">Data Collected</a>
+        <a href="#methods">Methods</a>
+        <a href="#results">Results</a>
+        <a href="#feedback">Feedback</a>
+        <a href="#updates">Updates</a>
+        <a href="#summary">Summary</a>
+      </nav>
+    </aside>
+
+    <main>
     <section id="plan" class="section">
       <div class="container">
         <h2>1. Usability Test Plan</h2>
@@ -344,6 +373,8 @@
     </section>
   </main>
 
+  </div> <!-- /.layout.container -->
+
   <footer class="site-footer">
     <div class="container">
       <p>
@@ -351,5 +382,6 @@
       </p>
     </div>
   </footer>
+  <script src="app.js"></script>
 </body>
 </html>
