@@ -1,5 +1,36 @@
 // Simple table sorting and filtering
 document.addEventListener('DOMContentLoaded', () => {
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+
+  const applyTheme = (theme, persist = true) => {
+    root.setAttribute('data-theme', theme);
+    if (persist) {
+      localStorage.setItem('theme', theme);
+    }
+    if (themeToggle) {
+      const isLight = theme === 'light';
+      themeToggle.setAttribute('aria-pressed', String(isLight));
+      themeToggle.querySelector('.theme-toggle__icon').textContent = isLight ? '◑' : '◐';
+      themeToggle.querySelector('.theme-toggle__label').textContent = isLight ? 'Light' : 'Dark';
+    }
+  };
+
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme) {
+    applyTheme(storedTheme, false);
+  } else {
+    applyTheme(prefersLight.matches ? 'light' : 'dark', false);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') || (prefersLight.matches ? 'light' : 'dark');
+      applyTheme(current === 'light' ? 'dark' : 'light');
+    });
+  }
+
   // Add a filter input above each table-wrap
   document.querySelectorAll('.table-wrap').forEach((wrap, index) => {
     const controls = document.createElement('div');
