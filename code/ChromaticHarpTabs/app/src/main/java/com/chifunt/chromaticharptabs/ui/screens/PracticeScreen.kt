@@ -6,9 +6,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -208,26 +210,33 @@ fun PracticeScreen(
         ) {
             Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
 
-            PracticeNotationArea(
-                lines = state.lines,
-                currentIndex = state.currentIndex,
-                spacingMedium = spacingMedium,
-                slideOffsetPx = slideOffsetPx,
-                noteSize = noteSize.dp,
-                micEnabled = micEnabled,
-                currentNoteIndex = currentNoteIndex,
-                isTargetPlaying = isTargetPlaying,
-                isWrongNotePlaying = isWrongNotePlaying,
-                suppressNextLineHighlight = suppressNextLineHighlight,
-                goldColor = goldColor,
-                pineColor = pineColor,
-                subtleColor = subtleColor,
-                loveColor = loveColor,
-                onNotePress = { note ->
-                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                },
-                onNoteRelease = { tonePlayer.stop() }
-            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                PracticeNotationArea(
+                    lines = state.lines,
+                    currentIndex = state.currentIndex,
+                    spacingMedium = spacingMedium,
+                    slideOffsetPx = slideOffsetPx,
+                    noteSize = noteSize.dp,
+                    micEnabled = micEnabled,
+                    currentNoteIndex = currentNoteIndex,
+                    isTargetPlaying = isTargetPlaying,
+                    isWrongNotePlaying = isWrongNotePlaying,
+                    suppressNextLineHighlight = suppressNextLineHighlight,
+                    goldColor = goldColor,
+                    pineColor = pineColor,
+                    subtleColor = subtleColor,
+                    loveColor = loveColor,
+                    onNotePress = { note ->
+                        HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                    },
+                    onNoteRelease = { tonePlayer.stop() }
+                )
+            }
 
             PracticeLineCounter(
                 currentIndex = state.currentIndex,
