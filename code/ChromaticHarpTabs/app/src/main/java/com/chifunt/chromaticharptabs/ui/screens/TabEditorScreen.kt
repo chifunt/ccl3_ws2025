@@ -118,6 +118,7 @@ fun TabEditorScreen(
                     )
                 )
                 .padding(top = topBarHeight + spacingSmall)
+                .imePadding()
                 .verticalScroll(scrollState)
         ) {
             Text(

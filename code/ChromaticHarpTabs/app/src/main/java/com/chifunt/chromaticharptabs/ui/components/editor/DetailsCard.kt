@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -25,8 +27,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +44,7 @@ import com.chifunt.chromaticharptabs.ui.components.filters.difficultyOptions
 import com.chifunt.chromaticharptabs.ui.components.filters.FilterDropdownButton
 import com.chifunt.chromaticharptabs.ui.components.filters.keyOptions
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabEditorUiState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -56,6 +63,15 @@ fun DetailsCard(
     keyDefault: String,
     mediumLabel: String
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(state.tags.size) {
+        if (state.tags.isNotEmpty()) {
+            bringIntoViewRequester.bringIntoView()
+        }
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
@@ -142,33 +158,45 @@ fun DetailsCard(
             )
             Spacer(Modifier.height(spacingSmall))
 
-            LabeledTextField(
-                value = state.tagsInput,
-                labelRes = R.string.tags_label,
-                onValueChange = onTagsInputChange,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { onCommitTag() }),
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Label,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-            )
-            if (state.tags.isNotEmpty()) {
-                Spacer(Modifier.height(spacingSmall))
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(spacingSmall),
-                    verticalArrangement = Arrangement.spacedBy(spacingSmall),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    state.tags.forEach { tag ->
-                        TagChip(
-                            text = tag,
-                            onRemove = { onRemoveTag(tag) }
+            Column(
+                modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester)
+            ) {
+                LabeledTextField(
+                    value = state.tagsInput,
+                    labelRes = R.string.tags_label,
+                    onValueChange = onTagsInputChange,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onCommitTag() }),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onFocusEvent { focusState ->
+                            if (focusState.isFocused) {
+                                coroutineScope.launch {
+                                    bringIntoViewRequester.bringIntoView()
+                                }
+                            }
+                        },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Label,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
+                    }
+                )
+                if (state.tags.isNotEmpty()) {
+                    Spacer(Modifier.height(spacingSmall))
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(spacingSmall),
+                        verticalArrangement = Arrangement.spacedBy(spacingSmall),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        state.tags.forEach { tag ->
+                            TagChip(
+                                text = tag,
+                                onRemove = { onRemoveTag(tag) }
+                            )
+                        }
                     }
                 }
             }
