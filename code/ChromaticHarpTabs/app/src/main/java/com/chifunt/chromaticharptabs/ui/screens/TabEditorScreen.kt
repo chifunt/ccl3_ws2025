@@ -14,12 +14,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
@@ -78,9 +82,17 @@ fun TabEditorScreen(
     val topBarHeight = with(density) { topBarHeightPx.toDp() }
     val isScrolled = scrollState.value > with(density) { spacingSmall.toPx() }
     val topBarColor = if (isScrolled) MaterialTheme.colorScheme.surface else Color.Transparent
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     DisposableEffect(Unit) {
         onDispose { tonePlayer.release() }
+    }
+
+    LaunchedEffect(state.errorMessageResId) {
+        state.errorMessageResId?.let { resId ->
+            snackbarHostState.showSnackbar(context.getString(resId))
+        }
     }
 
     val handleBack = {
@@ -154,10 +166,6 @@ fun TabEditorScreen(
                 spacingMedium = spacingMedium
             )
 
-            state.errorMessageResId?.let { messageResId ->
-                Spacer(Modifier.height(spacingSmall))
-                Text(text = stringResource(messageResId), color = MaterialTheme.colorScheme.error)
-            }
         }
 
         Column(
@@ -183,6 +191,14 @@ fun TabEditorScreen(
                 }
             )
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .imePadding()
+                .padding(horizontal = spacingMedium, vertical = spacingSmall)
+        )
     }
 
     holePickerTarget?.let { target ->
