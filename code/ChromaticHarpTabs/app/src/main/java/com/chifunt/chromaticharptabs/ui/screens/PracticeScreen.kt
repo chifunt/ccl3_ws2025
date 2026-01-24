@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,8 +60,6 @@ import com.chifunt.chromaticharptabs.ui.theme.RosePineLove
 import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
 import com.chifunt.chromaticharptabs.ui.theme.RosePineSubtle
 import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
-import kotlin.math.abs
-import kotlin.math.ln
 import kotlinx.coroutines.delay
 
 @Composable
@@ -80,26 +80,22 @@ fun PracticeScreen(
     val pineColor = if (isDarkTheme) RosePinePine else RosePineDawnPine
     val subtleColor = if (isDarkTheme) RosePineSubtle else RosePineDawnSubtle
     val loveColor = if (isDarkTheme) RosePineLove else RosePineDawnLove
-    val currentLine = state.lines.getOrNull(state.currentIndex).orEmpty()
     var micEnabled by rememberSaveable { mutableStateOf(false) }
     var detectedPitch by remember { mutableFloatStateOf(Float.NaN) }
-    var currentNoteIndex by remember(state.currentIndex) { mutableIntStateOf(0) }
-    var isTargetPlaying by remember(state.currentIndex) { mutableStateOf(false) }
-    var isWrongNotePlaying by remember(state.currentIndex) { mutableStateOf(false) }
-    var suppressNextLineHighlight by remember { mutableStateOf(false) }
-    var wasCorrect by remember(state.currentIndex, currentNoteIndex) { mutableStateOf(false) }
+    var wasCorrect by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var noteSize by rememberSaveable { mutableFloatStateOf(32f) }
     var autoAdvanceLine by rememberSaveable { mutableStateOf(true) }
     var advanceOnNoteStart by rememberSaveable { mutableStateOf(true) }
     var repeatLine by rememberSaveable { mutableStateOf(false) }
-    val toleranceCents = 50.0
     val lineScale = remember { Animatable(1f) }
     var linePulse by remember { mutableStateOf(false) }
     val micScale = remember { Animatable(1f) }
     val micHalo = remember { Animatable(0f) }
     val lineColor = if (linePulse) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
     val slideOffsetPx = with(LocalDensity.current) { 6.dp.roundToPx() }
+    val snackbarHostState = remember { SnackbarHostState() }
+    var micErrorCount by remember { mutableIntStateOf(0) }
 
     val micPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -107,7 +103,12 @@ fun PracticeScreen(
         micEnabled = granted
     }
     val micDetector = remember {
-        MicrophonePitchDetector { pitch ->
+        MicrophonePitchDetector(
+            onError = {
+                micEnabled = false
+                micErrorCount += 1
+            }
+        ) { pitch ->
             detectedPitch = pitch ?: Float.NaN
         }
     }
@@ -122,11 +123,26 @@ fun PracticeScreen(
         } else {
             micDetector.stop()
             detectedPitch = Float.NaN
-            isTargetPlaying = false
-            isWrongNotePlaying = false
-            suppressNextLineHighlight = false
+            practiceViewModel.onMicDisabled()
         }
         onDispose { micDetector.stop() }
+    }
+
+    LaunchedEffect(micErrorCount) {
+        if (micErrorCount > 0) {
+            snackbarHostState.showSnackbar(context.getString(R.string.practice_mic_unavailable))
+        }
+    }
+
+    LaunchedEffect(state.isTargetPlaying, state.currentIndex, micEnabled) {
+        if (!micEnabled) {
+            wasCorrect = false
+            return@LaunchedEffect
+        }
+        if (state.isTargetPlaying && !wasCorrect && hapticsEnabled) {
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+        wasCorrect = state.isTargetPlaying
     }
 
     LaunchedEffect(state.currentIndex) {
@@ -156,175 +172,134 @@ fun PracticeScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                PaddingValues(
-                    start = spacingMedium,
-                    end = spacingMedium,
-                    top = spacingSmall,
-                    bottom = spacingMedium
-                )
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        PracticeHeader(
-            spacingSmall = spacingSmall,
-            spacingMedium = spacingMedium,
-            micEnabled = micEnabled,
-            micScale = micScale.value,
-            micHalo = micHalo.value,
-            onMicToggle = { enabled ->
-                if (hapticsEnabled) {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                }
-                if (!enabled) {
-                    micEnabled = false
-                    return@PracticeHeader
-                }
-                val permission = android.Manifest.permission.RECORD_AUDIO
-                val permissionState = ContextCompat.checkSelfPermission(
-                    context,
-                    permission
-                )
-                if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                    micEnabled = true
-                } else {
-                    micPermissionLauncher.launch(permission)
-                }
-            },
-            onBack = onBack,
-            showSettings = showSettings,
-            onShowSettingsChange = { showSettings = it },
-            noteSize = noteSize,
-            onNoteSizeChange = { noteSize = it },
-            autoAdvanceLine = autoAdvanceLine,
-            onAutoAdvanceLineChange = { autoAdvanceLine = it },
-            advanceOnNoteStart = advanceOnNoteStart,
-            onAdvanceOnNoteStartChange = { advanceOnNoteStart = it },
-            repeatLine = repeatLine,
-            onRepeatLineChange = { repeatLine = it }
-        )
-
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    PaddingValues(
+                        start = spacingMedium,
+                        end = spacingMedium,
+                        top = spacingSmall,
+                        bottom = spacingMedium
+                    )
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            PracticeHeader(
+                spacingSmall = spacingSmall,
+                spacingMedium = spacingMedium,
+                micEnabled = micEnabled,
+                micScale = micScale.value,
+                micHalo = micHalo.value,
+                onMicToggle = { enabled ->
+                    if (hapticsEnabled) {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    }
+                    if (!enabled) {
+                        micEnabled = false
+                        return@PracticeHeader
+                    }
+                    val permission = android.Manifest.permission.RECORD_AUDIO
+                    val permissionState = ContextCompat.checkSelfPermission(
+                        context,
+                        permission
+                    )
+                    if (permissionState == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                        micEnabled = true
+                    } else {
+                        micPermissionLauncher.launch(permission)
+                    }
+                },
+                onBack = onBack,
+                showSettings = showSettings,
+                onShowSettingsChange = { showSettings = it },
+                noteSize = noteSize,
+                onNoteSizeChange = { noteSize = it },
+                autoAdvanceLine = autoAdvanceLine,
+                onAutoAdvanceLineChange = { autoAdvanceLine = it },
+                advanceOnNoteStart = advanceOnNoteStart,
+                onAdvanceOnNoteStartChange = { advanceOnNoteStart = it },
+                repeatLine = repeatLine,
+                onRepeatLineChange = { repeatLine = it }
+            )
 
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PracticeNotationArea(
-                    lines = state.lines,
+                Text(text = state.title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    PracticeNotationArea(
+                        lines = state.lines,
+                        currentIndex = state.currentIndex,
+                        spacingMedium = spacingMedium,
+                        slideOffsetPx = slideOffsetPx,
+                        noteSize = noteSize.dp,
+                        micEnabled = micEnabled,
+                        currentNoteIndex = state.currentNoteIndex,
+                        isTargetPlaying = state.isTargetPlaying,
+                        isWrongNotePlaying = state.isWrongNotePlaying,
+                        suppressNextLineHighlight = state.suppressNextLineHighlight,
+                        goldColor = goldColor,
+                        pineColor = pineColor,
+                        subtleColor = subtleColor,
+                        loveColor = loveColor,
+                        onNotePress = { note ->
+                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                        },
+                        onNoteRelease = { tonePlayer.stop() }
+                    )
+                }
+
+                PracticeLineCounter(
                     currentIndex = state.currentIndex,
+                    total = state.lines.size,
+                    lineColor = lineColor,
+                    lineScale = lineScale.value
+                )
+
+                Spacer(Modifier.height(spacingMedium))
+
+                PracticeNavigationRow(
                     spacingMedium = spacingMedium,
-                    slideOffsetPx = slideOffsetPx,
-                    noteSize = noteSize.dp,
-                    micEnabled = micEnabled,
-                    currentNoteIndex = currentNoteIndex,
-                    isTargetPlaying = isTargetPlaying,
-                    isWrongNotePlaying = isWrongNotePlaying,
-                    suppressNextLineHighlight = suppressNextLineHighlight,
-                    goldColor = goldColor,
-                    pineColor = pineColor,
-                    subtleColor = subtleColor,
-                    loveColor = loveColor,
-                    onNotePress = { note ->
-                        HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                    },
-                    onNoteRelease = { tonePlayer.stop() }
+                    onPrev = { practiceViewModel.previousLine() },
+                    onNext = { practiceViewModel.nextLine() },
+                    hasPrev = state.currentIndex > 0,
+                    hasNext = state.currentIndex < state.lines.lastIndex
                 )
             }
-
-            PracticeLineCounter(
-                currentIndex = state.currentIndex,
-                total = state.lines.size,
-                lineColor = lineColor,
-                lineScale = lineScale.value
-            )
-
-            Spacer(Modifier.height(spacingMedium))
-
-            PracticeNavigationRow(
-                spacingMedium = spacingMedium,
-                onPrev = {
-                    suppressNextLineHighlight = false
-                    currentNoteIndex = 0
-                    practiceViewModel.previousLine()
-                },
-                onNext = {
-                    suppressNextLineHighlight = false
-                    currentNoteIndex = 0
-                    practiceViewModel.nextLine()
-                },
-                hasPrev = state.currentIndex > 0,
-                hasNext = state.currentIndex < state.lines.lastIndex
-            )
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = spacingMedium, vertical = spacingSmall)
+        )
     }
 
-    LaunchedEffect(micEnabled, detectedPitch, state.currentIndex, currentNoteIndex) {
-        if (!micEnabled || currentLine.isEmpty()) return@LaunchedEffect
-        if (currentNoteIndex > currentLine.lastIndex) return@LaunchedEffect
-        val targetNote = currentLine.getOrNull(currentNoteIndex) ?: return@LaunchedEffect
-        val targetFrequency = HarmonicaNoteMap.frequencyFor(targetNote) ?: return@LaunchedEffect
-        val pitch = detectedPitch.takeIf { it.isFinite() }
-        if (suppressNextLineHighlight) {
-            if (pitch != null) {
-                isTargetPlaying = false
-                isWrongNotePlaying = false
-                return@LaunchedEffect
-            }
-            suppressNextLineHighlight = false
-        }
-        val isCorrect = pitch != null &&
-            abs(centsDifference(pitch.toDouble(), targetFrequency)) <= toleranceCents
-        if (isCorrect) {
-            if (!wasCorrect && hapticsEnabled) {
-                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-            wasCorrect = true
-            isTargetPlaying = true
-            isWrongNotePlaying = false
-            if (
-                autoAdvanceLine &&
-                advanceOnNoteStart &&
-                currentNoteIndex == currentLine.lastIndex &&
-                state.currentIndex < state.lines.lastIndex
-            ) {
-                practiceViewModel.nextLine()
-                currentNoteIndex = 0
-                isTargetPlaying = false
-                suppressNextLineHighlight = true
-            }
-        } else {
-            wasCorrect = false
-            isWrongNotePlaying = pitch != null
-            if (suppressNextLineHighlight) {
-                suppressNextLineHighlight = false
-            }
-            if (isTargetPlaying) {
-                currentNoteIndex += 1
-                if (
-                    autoAdvanceLine &&
-                    currentNoteIndex > currentLine.lastIndex &&
-                    state.currentIndex < state.lines.lastIndex
-                ) {
-                    practiceViewModel.nextLine()
-                } else if (!autoAdvanceLine && repeatLine && currentNoteIndex > currentLine.lastIndex) {
-                    currentNoteIndex = 0
-                }
-                isTargetPlaying = false
-            }
-        }
+    LaunchedEffect(
+        micEnabled,
+        detectedPitch,
+        state.currentIndex,
+        state.currentNoteIndex,
+        autoAdvanceLine,
+        advanceOnNoteStart,
+        repeatLine
+    ) {
+        practiceViewModel.onPitchUpdate(
+            pitch = detectedPitch.takeIf { it.isFinite() },
+            micEnabled = micEnabled,
+            autoAdvanceLine = autoAdvanceLine,
+            advanceOnNoteStart = advanceOnNoteStart,
+            repeatLine = repeatLine
+        )
     }
-}
-
-private fun centsDifference(detectedFrequency: Double, targetFrequency: Double): Double {
-    return 1200.0 * ln(detectedFrequency / targetFrequency) / ln(2.0)
 }

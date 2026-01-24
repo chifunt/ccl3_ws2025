@@ -46,6 +46,7 @@
     <string name="practice_line_counter">%1$d/%2$d</string>
     <string name="practice_mic_on">Mic practice on</string>
     <string name="practice_mic_off">Mic practice off</string>
+    <string name="practice_mic_unavailable">Microphone unavailable</string>
     <string name="practice_settings">Practice settings</string>
     <string name="practice_note_size">Note size</string>
     <string name="practice_auto_advance">Auto-advance line</string>

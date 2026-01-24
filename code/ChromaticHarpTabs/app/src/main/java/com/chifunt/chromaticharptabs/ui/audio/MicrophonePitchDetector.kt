@@ -14,6 +14,7 @@ class MicrophonePitchDetector(
     private val minFrequency: Float = 200f,
     private val maxFrequency: Float = 2500f,
     private val amplitudeThreshold: Float = 0.02f,
+    private val onError: (() -> Unit)? = null,
     private val onPitchDetected: (Float?) -> Unit
 ) {
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -31,6 +32,7 @@ class MicrophonePitchDetector(
             AudioFormat.ENCODING_PCM_16BIT
         )
         if (minBufferSize == AudioRecord.ERROR || minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
+            notifyError()
             return
         }
         val bufferSize = max(minBufferSize, 2048)
@@ -44,6 +46,7 @@ class MicrophonePitchDetector(
             )
             if (record.state != AudioRecord.STATE_INITIALIZED) {
                 record.release()
+                notifyError()
                 return
             }
             audioRecord = record
@@ -61,6 +64,7 @@ class MicrophonePitchDetector(
                 }
             }.apply { start() }
         } catch (_: SecurityException) {
+            notifyError()
             onPitchDetected(null)
         }
     }
@@ -119,5 +123,11 @@ class MicrophonePitchDetector(
         }
         if (bestLag <= 0 || abs(bestCorrelation) < 1e-6f) return null
         return sampleRate.toFloat() / bestLag.toFloat()
+    }
+
+    private fun notifyError() {
+        onError?.let { callback ->
+            mainHandler.post { callback() }
+        }
     }
 }
