@@ -154,14 +154,15 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { steps.size })
     val stepIndex = pagerState.currentPage
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(spacingMedium),
-        verticalArrangement = Arrangement.SpaceBetween
+            .padding(spacingMedium)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.TopEnd),
             horizontalArrangement = Arrangement.End
         ) {
             HapticTextButton(
@@ -174,49 +175,50 @@ fun OnboardingScreen(
             }
         }
 
-        Spacer(Modifier.height(spacingSmall))
-
-        Column(modifier = Modifier.weight(1f)) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) { page ->
-                val step = steps[page]
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .padding(bottom = 84.dp, top = 48.dp)
+        ) { page ->
+            val step = steps[page]
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(step.titleRes),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(spacingMedium))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = stringResource(step.titleRes),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(spacingMedium))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        step.visual()
-                    }
-                    Spacer(Modifier.height(spacingSmall))
-                    Text(
-                        text = stringResource(step.bodyRes),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    step.visual()
                 }
+                Spacer(Modifier.height(spacingSmall))
+                Text(
+                    text = stringResource(step.bodyRes),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -238,15 +240,21 @@ fun OnboardingScreen(
 
             Spacer(Modifier.height(spacingSmall))
 
-            if (stepIndex == steps.lastIndex) {
-                HapticButton(
-                    onClick = {
-                        settingsViewModel.setOnboardingCompleted(true)
-                        onFinish()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = stringResource(R.string.onboarding_finish))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                if (stepIndex == steps.lastIndex) {
+                    HapticButton(
+                        onClick = {
+                            settingsViewModel.setOnboardingCompleted(true)
+                            onFinish()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.onboarding_finish))
+                    }
                 }
             }
         }
