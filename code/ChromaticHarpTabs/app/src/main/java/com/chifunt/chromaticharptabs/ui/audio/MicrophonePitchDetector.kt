@@ -69,9 +69,16 @@ class MicrophonePitchDetector(
         running = false
         worker?.join(200)
         worker = null
-        audioRecord?.stop()
-        audioRecord?.release()
+        val record = audioRecord
         audioRecord = null
+        if (record != null) {
+            try {
+                record.stop()
+            } catch (_: IllegalStateException) {
+                // Best-effort shutdown.
+            }
+            record.release()
+        }
     }
 
     private fun detectPitch(

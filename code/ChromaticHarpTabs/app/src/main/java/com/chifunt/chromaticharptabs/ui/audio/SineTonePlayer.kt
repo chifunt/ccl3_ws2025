@@ -28,6 +28,10 @@ class SineTonePlayer {
                     AudioFormat.CHANNEL_OUT_MONO,
                     AudioFormat.ENCODING_PCM_16BIT
                 )
+                if (minBuffer == AudioTrack.ERROR || minBuffer == AudioTrack.ERROR_BAD_VALUE) {
+                    return
+                }
+                val bufferSize = minBuffer.coerceAtLeast(2048)
                 audioTrack = AudioTrack.Builder()
                     .setAudioAttributes(
                         AudioAttributes.Builder()
@@ -43,14 +47,14 @@ class SineTonePlayer {
                             .build()
                     )
                     .setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY)
-                    .setBufferSizeInBytes(minBuffer)
+                    .setBufferSizeInBytes(bufferSize)
                     .setTransferMode(AudioTrack.MODE_STREAM)
                     .build()
                 audioTrack?.play()
                 val track = audioTrack ?: return
                 running = true
                 playThread = thread(start = true, name = "SineTonePlayer") {
-                    renderLoop(track, minBuffer)
+                    renderLoop(track, bufferSize)
                 }
             }
             targetAmplitude = 1.0
