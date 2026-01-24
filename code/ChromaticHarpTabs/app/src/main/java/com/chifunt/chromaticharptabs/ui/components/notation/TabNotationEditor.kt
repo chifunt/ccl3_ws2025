@@ -193,8 +193,12 @@ private fun DraggableNoteTile(
                         dragOffset += dragAmount.x
                     },
                     onDragEnd = {
-                        val deltaIndex = (dragOffset / itemWidthPx).roundToInt()
-                        val targetIndex = (noteIndex + deltaIndex).coerceIn(0, lineSize - 1)
+                        val targetIndex = computeReorderTargetIndex(
+                            dragOffset = dragOffset,
+                            itemWidthPx = itemWidthPx,
+                            startIndex = noteIndex,
+                            lineSize = lineSize
+                        )
                         if (lineSize > 1 && targetIndex != noteIndex) {
                             onMoveNote(noteIndex, targetIndex)
                         }
@@ -238,6 +242,17 @@ private fun DraggableNoteTile(
             )
         }
     }
+}
+
+// Map drag distance to the nearest drop slot within the line bounds.
+private fun computeReorderTargetIndex(
+    dragOffset: Float,
+    itemWidthPx: Float,
+    startIndex: Int,
+    lineSize: Int
+): Int {
+    val deltaIndex = (dragOffset / itemWidthPx).roundToInt()
+    return (startIndex + deltaIndex).coerceIn(0, lineSize - 1)
 }
 
 @Composable

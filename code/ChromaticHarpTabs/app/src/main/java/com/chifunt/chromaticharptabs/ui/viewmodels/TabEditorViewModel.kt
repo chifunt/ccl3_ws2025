@@ -61,6 +61,24 @@ private fun TabEditorUiState.toSnapshot(): TabEditorSnapshot {
     )
 }
 
+private data class ParsedTagsInput(
+    val tagsToAdd: List<String>,
+    val remainingInput: String
+)
+
+private fun parseTagsInput(raw: String): ParsedTagsInput {
+    val normalized = normalizeTagsInput(raw.replace("\n", " ").replace("\r", " "))
+    val endsWithDelimiter = raw.endsWith(" ") || raw.endsWith(",") || raw.endsWith("\n")
+    val tokens = normalized.split(" ").filter { it.isNotBlank() }
+    return if (tokens.isEmpty()) {
+        ParsedTagsInput(tagsToAdd = emptyList(), remainingInput = if (endsWithDelimiter) "" else normalized)
+    } else if (endsWithDelimiter) {
+        ParsedTagsInput(tagsToAdd = tokens, remainingInput = "")
+    } else {
+        ParsedTagsInput(tagsToAdd = tokens.dropLast(1), remainingInput = tokens.last())
+    }
+}
+
 data class TabEditorUiState(
     val id: Int,
     val title: String,
@@ -164,21 +182,15 @@ class TabEditorViewModel(
 
 
     fun updateTagsInput(value: String) {
-        val normalized = normalizeTagsInput(value.replace("\n", " ").replace("\r", " "))
-        val endsWithSpace = value.endsWith(" ") || value.endsWith(",") || value.endsWith("\n")
-        val tokens = normalized.split(" ").filter { it.isNotBlank() }
+        val parsed = parseTagsInput(value)
         clearError { state ->
             val current = state.tags
-            return@clearError if (tokens.isEmpty()) {
-                state.copy(tagsInput = if (endsWithSpace) "" else normalized, errorMessageResId = null)
-            } else if (endsWithSpace) {
-                val combined = (current + tokens).distinct()
-                state.copy(tags = combined, tagsInput = "", errorMessageResId = null)
-            } else {
-                val toAdd = tokens.dropLast(1)
-                val combined = (current + toAdd).distinct()
-                state.copy(tags = combined, tagsInput = tokens.last(), errorMessageResId = null)
-            }
+            val combined = (current + parsed.tagsToAdd).distinct()
+            return@clearError state.copy(
+                tags = combined,
+                tagsInput = parsed.remainingInput,
+                errorMessageResId = null
+            )
         }
     }
 
