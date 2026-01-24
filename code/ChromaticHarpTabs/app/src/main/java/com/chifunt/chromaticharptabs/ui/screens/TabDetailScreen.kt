@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,8 +43,8 @@ import com.chifunt.chromaticharptabs.ui.components.detail.DetailTopBar
 import com.chifunt.chromaticharptabs.ui.components.detail.MetadataSection
 import com.chifunt.chromaticharptabs.ui.components.detail.NotationInfoDialog
 import com.chifunt.chromaticharptabs.ui.components.detail.NotationSection
-import com.chifunt.chromaticharptabs.ui.components.detail.PracticeRow
 import com.chifunt.chromaticharptabs.ui.components.detail.TitleRow
+import com.chifunt.chromaticharptabs.ui.components.common.HapticFloatingActionButton
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnText
 import com.chifunt.chromaticharptabs.ui.theme.RosePineText
 import com.chifunt.chromaticharptabs.ui.viewmodels.TabDetailViewModel
@@ -136,12 +140,8 @@ fun TabDetailScreen(
                 onNoteRelease = { tonePlayer.stop() }
             )
 
-            Spacer(Modifier.height(spacingMedium))
+            Spacer(Modifier.height(88.dp))
 
-            PracticeRow(
-                onPractice = { onPractice(state.tab.id) },
-                spacingSmall = spacingSmall
-            )
         }
 
         Column(
@@ -159,6 +159,20 @@ fun TabDetailScreen(
                 onShowNotationInfo = { showNotationInfo.value = true },
                 onEdit = { onEdit(state.tab.id) },
                 onDelete = { showDeleteConfirm.value = true }
+            )
+        }
+
+        HapticFloatingActionButton(
+            onClick = { onPractice(state.tab.id) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(spacingMedium + spacingSmall),
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = stringResource(R.string.practice_button)
             )
         }
     }
