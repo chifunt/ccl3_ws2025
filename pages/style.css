@@ -159,6 +159,24 @@ html, body{
   letter-spacing: 0.08em;
 }
 
+.shot-card.placeholder{
+  padding: 0;
+  min-height: 180px;
+  border-style: dashed;
+}
+
+.placeholder-box{
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(82,79,103,0.1);
+}
+
 .team-row{
   display: inline-flex;
   align-items: center;
@@ -512,6 +530,7 @@ blockquote{
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 14px;
+  align-items: stretch;
 }
 
 .panel{
@@ -519,6 +538,19 @@ blockquote{
   border: 1px solid rgba(224,222,244,0.02);
   border-radius: var(--radius);
   padding: 14px;
+  height: 100%;
+}
+
+.panel + .panel{
+  margin-top: 16px;
+}
+
+.two-col .panel + .panel{
+  margin-top: 0;
+}
+
+.app-concept .two-col + .panel{
+  margin-top: 16px;
 }
 
 .checklist{
