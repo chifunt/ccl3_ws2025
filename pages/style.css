@@ -167,6 +167,7 @@ html, body{
   border-radius: 999px;
   background: rgba(49,116,143,0.2);
   border: 1px solid rgba(156,207,216,0.3);
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
@@ -259,6 +260,16 @@ html, body{
   font-size: 14px;
 }
 
+.repo-link{
+  color: var(--foam);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.repo-link:hover{
+  text-decoration: underline;
+}
+
 h1{
   font-size: 38px;
   line-height: 1.15;
@@ -277,6 +288,54 @@ h1{
   color: var(--subtle);
   max-width: 72ch;
   font-size: 16px;
+}
+
+.erd-wrap{
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid rgba(224,222,244,0.08);
+  border-radius: 16px;
+}
+
+.erd-diagram{
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.erd-card{
+  fill: rgba(28,26,46,0.55);
+  stroke: rgba(224,222,244,0.12);
+  stroke-width: 2;
+}
+
+[data-theme='light'] .erd-card{
+  fill: rgba(248,246,253,0.9);
+  stroke: rgba(45,43,61,0.12);
+}
+
+.erd-header{
+  fill: rgba(98,203,228,0.18);
+}
+
+.erd-line{
+  stroke: rgba(224,222,244,0.16);
+  stroke-width: 2;
+}
+
+.erd-title{
+  fill: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.erd-field{
+  fill: var(--text);
+  font-size: 14px;
 }
 
 .meta-grid{

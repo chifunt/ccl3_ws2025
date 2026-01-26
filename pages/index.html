@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ChromaticHarp Tab App — Usability Evaluation</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -33,8 +34,46 @@
         <span class="team-label">Team</span>
         <span class="team-names">Abiodun Adefusi &amp; Joshua Tjhie</span>
       </div>
+      <div class="team-row">
+        <span class="team-label">Repository</span>
+        <span class="team-names"><a href="https://github.com/chifunt/ccl3_ws2025" class="repo-link" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></span>
+      </div>
     </div>
   </header>
+
+  <section class="section app-concept" id="app-concept">
+    <div class="container">
+      <h2>App Concept</h2>
+      <p>
+        Chromatic HarpTabs is a focused application for collecting, viewing, and practicing chromatic harmonica tabs.
+        It provides a structured tab library with consistent notation for blow, draw, and slide use, and a practice mode designed
+        for active playing. In addition to reading tabs, users can preview notes directly in the app using a virtual harmonica,
+        allowing them to hear how passages should sound before playing them on a real instrument. The app emphasizes clarity,
+        quick access, and practice oriented interaction rather than passive browsing.
+      </p>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>Target User</h3>
+          <ul>
+            <li>Beginners learning chromatic harmonica who are not yet comfortable reading standard music notation.</li>
+            <li>Players transitioning from diatonic harmonica who are familiar with tab based notation.</li>
+            <li>Hobbyists who want quick reference material and practice support for simple tunes.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Use Case</h3>
+          <p><strong>Use Case – Tab Library &amp; Music Practice</strong></p>
+          <p>
+            The app supports individual music practice by helping users organize and actively work with their learning material.
+            Users can store their own chromatic harmonica tabs, read them in a consistent format, preview notes through a virtual
+            harmonica, and practice along using a dedicated practice view. Optional microphone based feedback can support awareness
+            during practice without replacing traditional learning methods.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section app-shots" id="app-screenshots">
     <div class="container">
@@ -57,6 +96,54 @@
           <img src="images/practice%20mode.jpg" alt="Practice mode screen" />
           <figcaption>Practice Mode</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="erd" class="section">
+    <div class="container">
+      <h2>SQLite Database ERD</h2>
+      <p class="muted">Room schema for the app database (single-table design).</p>
+      <div class="erd-wrap" role="img" aria-label="ERD showing the tabs table and its fields">
+        <svg class="erd-diagram" viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="40" width="600" height="280" rx="16" class="erd-card"/>
+          <rect x="60" y="40" width="600" height="56" rx="16" class="erd-header"/>
+          <text x="360" y="75" text-anchor="middle" class="erd-title">tabs</text>
+          <line x1="60" y1="96" x2="660" y2="96" class="erd-line"/>
+
+          <text x="88" y="130" class="erd-field">id (PK, auto)</text>
+          <text x="88" y="155" class="erd-field">title</text>
+          <text x="88" y="180" class="erd-field">artist</text>
+          <text x="88" y="205" class="erd-field">key_name</text>
+          <text x="88" y="230" class="erd-field">difficulty</text>
+          <text x="88" y="255" class="erd-field">tags</text>
+          <text x="88" y="280" class="erd-field">content</text>
+          <text x="360" y="130" class="erd-field">is_favorite</text>
+          <text x="360" y="155" class="erd-field">created_at</text>
+          <text x="360" y="180" class="erd-field">updated_at</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="reflection" class="section">
+    <div class="container">
+      <h2>Final Reflections</h2>
+      <div class="two-col">
+        <div class="panel">
+          <h3>Abiodun Adefusi</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Joshua Tjhie</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -483,9 +570,11 @@
         </p>
       </div>
     </section>
+
   </main>
 
   </div> <!-- /.layout.container -->
+
 
   <footer class="site-footer">
     <div class="container">
