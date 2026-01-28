@@ -125,7 +125,7 @@ html, body{
 }
 
 .app-shots .muted{
-  max-width: 70ch;
+  max-width: none;
 }
 
 .shot-grid{
