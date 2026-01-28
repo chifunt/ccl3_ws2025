@@ -7,6 +7,7 @@ import com.chifunt.chromaticharptabs.data.model.Tab
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.data.model.TabNotation
 import com.chifunt.chromaticharptabs.data.model.TabNotationJson
+import com.chifunt.chromaticharptabs.data.notation.NoteFrequencyProvider
 import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.util.normalizeTagsInput
@@ -96,7 +97,8 @@ data class TabEditorUiState(
 
 class TabEditorViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: TabRepository
+    private val repository: TabRepository,
+    private val frequencyProvider: NoteFrequencyProvider
 ) : ViewModel() {
 
     private val tabId: Int = savedStateHandle[NAV_ARG_TAB_ID] ?: NEW_TAB_ID
@@ -387,5 +389,9 @@ class TabEditorViewModel(
             val updated = transform(state.lines) ?: return@update state
             state.copy(lines = updated, errorMessageResId = null)
         }
+    }
+
+    fun frequencyFor(note: TabNote): Double? {
+        return frequencyProvider.frequencyFor(note)
     }
 }

@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.ui.haptics.rememberHapticFeedback
-import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
+import com.chifunt.chromaticharptabs.data.model.SortOption
 import com.chifunt.chromaticharptabs.ui.theme.ChromaticHarpTabsTheme
 import com.chifunt.chromaticharptabs.ui.components.filters.DifficultyFilterMenu
 import com.chifunt.chromaticharptabs.ui.components.filters.KeyFilterMenu

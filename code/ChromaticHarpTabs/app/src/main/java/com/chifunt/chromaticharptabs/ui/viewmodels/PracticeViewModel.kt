@@ -7,7 +7,7 @@ import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.data.model.TabNotationJson
 import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
-import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
+import com.chifunt.chromaticharptabs.data.notation.NoteFrequencyProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +27,8 @@ data class PracticeUiState(
 
 class PracticeViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: TabRepository
+    private val repository: TabRepository,
+    private val frequencyProvider: NoteFrequencyProvider
 ) : ViewModel() {
 
     private val tabId: Int = savedStateHandle[NAV_ARG_TAB_ID] ?: 0
@@ -139,7 +140,7 @@ class PracticeViewModel(
             }
 
             val targetNote = currentLine.getOrNull(currentNoteIndex) ?: return@update state
-            val targetFrequency = HarmonicaNoteMap.frequencyFor(targetNote) ?: return@update state
+            val targetFrequency = frequencyProvider.frequencyFor(targetNote) ?: return@update state
             val isCorrect = pitchValue != null &&
                 abs(centsDifference(pitchValue.toDouble(), targetFrequency)) <= toleranceCents
 
@@ -198,5 +199,9 @@ class PracticeViewModel(
 
     private fun centsDifference(detectedFrequency: Double, targetFrequency: Double): Double {
         return 1200.0 * ln(detectedFrequency / targetFrequency) / ln(2.0)
+    }
+
+    fun frequencyFor(note: TabNote): Double? {
+        return frequencyProvider.frequencyFor(note)
     }
 }

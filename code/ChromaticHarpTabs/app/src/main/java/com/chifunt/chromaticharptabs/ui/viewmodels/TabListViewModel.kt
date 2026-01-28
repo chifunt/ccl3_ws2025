@@ -1,10 +1,10 @@
 package com.chifunt.chromaticharptabs.ui.viewmodels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.Tab
+import com.chifunt.chromaticharptabs.data.model.SortOption
 import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.data.util.parseTags
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,13 +15,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
-enum class SortOption(@StringRes val labelRes: Int) {
-    Title(R.string.sort_option_title),
-    Artist(R.string.sort_option_artist),
-    Newest(R.string.sort_option_newest),
-    Oldest(R.string.sort_option_oldest)
-}
 
 data class TabListUiState(
     val tabs: List<Tab>,

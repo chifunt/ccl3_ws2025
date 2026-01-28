@@ -1,7 +1,7 @@
 package com.chifunt.chromaticharptabs.ui.components.library
 
 import androidx.compose.runtime.Composable
-import com.chifunt.chromaticharptabs.ui.viewmodels.SortOption
+import com.chifunt.chromaticharptabs.data.model.SortOption
 
 @Composable
 fun LibraryFiltersRow(

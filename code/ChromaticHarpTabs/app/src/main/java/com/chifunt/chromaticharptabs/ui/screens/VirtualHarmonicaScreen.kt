@@ -35,7 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
-import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.virtualharmonica.HarmonicaColumn
 import com.chifunt.chromaticharptabs.ui.components.virtualharmonica.HarmonicaKeyId
@@ -45,11 +46,13 @@ import com.chifunt.chromaticharptabs.ui.components.virtualharmonica.VirtualHarmo
 import com.chifunt.chromaticharptabs.ui.haptics.LocalHapticsEnabled
 import com.chifunt.chromaticharptabs.ui.theme.RosePineDawnPine
 import com.chifunt.chromaticharptabs.ui.theme.RosePinePine
+import com.chifunt.chromaticharptabs.ui.viewmodels.VirtualHarmonicaViewModel
 
 @Composable
 fun VirtualHarmonicaScreen(
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    virtualHarmonicaViewModel: VirtualHarmonicaViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val spacingSmall = dimensionResource(R.dimen.spacing_small)
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
@@ -71,7 +74,7 @@ fun VirtualHarmonicaScreen(
     LaunchedEffect(slideActive, activeKey) {
         val key = activeKey ?: return@LaunchedEffect
         val note = TabNote(hole = key.hole, isBlow = key.isBlow, isSlide = slideActive)
-        HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+        virtualHarmonicaViewModel.frequencyFor(note)?.let { tonePlayer.start(it) }
     }
 
     Column(
@@ -156,7 +159,7 @@ fun VirtualHarmonicaScreen(
                                         isBlow = nextKey.isBlow,
                                         isSlide = slideActive
                                     )
-                                    HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                                    virtualHarmonicaViewModel.frequencyFor(note)?.let { tonePlayer.start(it) }
                                 }
                             }
                         }

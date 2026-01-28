@@ -37,7 +37,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
 import com.chifunt.chromaticharptabs.data.model.TabNote
 import com.chifunt.chromaticharptabs.data.model.Tab
-import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.cards.TabCard
@@ -46,6 +45,7 @@ import com.chifunt.chromaticharptabs.ui.components.notation.TabNotationInlineDis
 import com.chifunt.chromaticharptabs.ui.components.common.HapticButton
 import com.chifunt.chromaticharptabs.ui.components.common.HapticTextButton
 import com.chifunt.chromaticharptabs.ui.viewmodels.SettingsViewModel
+import com.chifunt.chromaticharptabs.ui.viewmodels.OnboardingViewModel
 
 private data class OnboardingStep(
     val titleRes: Int,
@@ -58,6 +58,7 @@ private data class OnboardingStep(
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    onboardingViewModel: OnboardingViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onFinish: () -> Unit
 ) {
     val spacingMedium = dimensionResource(R.dimen.spacing_medium)
@@ -142,7 +143,7 @@ fun OnboardingScreen(
                             pressHighlightColor = MaterialTheme.colorScheme.primary,
                             pressHighlightScale = true,
                             onNotePress = { note ->
-                                HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
+                                onboardingViewModel.frequencyFor(note)?.let { tonePlayer.start(it) }
                             },
                             onNoteRelease = { tonePlayer.stop() }
                         )

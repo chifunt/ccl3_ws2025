@@ -41,7 +41,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.MicrophonePitchDetector
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
@@ -251,9 +250,9 @@ fun PracticeScreen(
                         pineColor = pineColor,
                         subtleColor = subtleColor,
                         loveColor = loveColor,
-                        onNotePress = { note ->
-                            HarmonicaNoteMap.frequencyFor(note)?.let { tonePlayer.start(it) }
-                        },
+                    onNotePress = { note ->
+                        practiceViewModel.frequencyFor(note)?.let { tonePlayer.start(it) }
+                    },
                         onNoteRelease = { tonePlayer.stop() }
                     )
                 }

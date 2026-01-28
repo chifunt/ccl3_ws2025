@@ -45,7 +45,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chifunt.chromaticharptabs.R
-import com.chifunt.chromaticharptabs.data.notation.HarmonicaNoteMap
 import com.chifunt.chromaticharptabs.ui.AppViewModelProvider
 import com.chifunt.chromaticharptabs.ui.audio.SineTonePlayer
 import com.chifunt.chromaticharptabs.ui.components.common.DebouncedIconButton
@@ -160,7 +159,7 @@ fun TabEditorScreen(
                 onMoveNote = tabEditorViewModel::moveNote,
                 onPreviewNote = { lineIndex, noteIndex ->
                     val note = state.lines.getOrNull(lineIndex)?.getOrNull(noteIndex)
-                    note?.let { HarmonicaNoteMap.frequencyFor(it) }?.let { tonePlayer.start(it) }
+                    note?.let { tabEditorViewModel.frequencyFor(it) }?.let { tonePlayer.start(it) }
                 },
                 onPreviewStop = { tonePlayer.stop() },
                 spacingSmall = spacingSmall,

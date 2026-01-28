@@ -8,7 +8,7 @@ data class HarmonicaNoteKey(
     val isSlide: Boolean
 )
 
-object HarmonicaNoteMap {
+object HarmonicaNoteMap : NoteFrequencyProvider {
     private val frequencies = mapOf(
         HarmonicaNoteKey(hole = 1, isBlow = true, isSlide = false) to 261.63,
         HarmonicaNoteKey(hole = 1, isBlow = false, isSlide = false) to 293.66,
@@ -60,7 +60,7 @@ object HarmonicaNoteMap {
         HarmonicaNoteKey(hole = 12, isBlow = false, isSlide = true) to 2093.00
     )
 
-    fun frequencyFor(note: TabNote): Double? {
+    override fun frequencyFor(note: TabNote): Double? {
         return frequencies[HarmonicaNoteKey(note.hole, note.isBlow, note.isSlide)]
     }
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chifunt.chromaticharptabs.data.model.Tab
+import com.chifunt.chromaticharptabs.data.model.TabNote
+import com.chifunt.chromaticharptabs.data.notation.NoteFrequencyProvider
 import com.chifunt.chromaticharptabs.data.repository.TabRepository
 import com.chifunt.chromaticharptabs.ui.navigation.NAV_ARG_TAB_ID
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +35,8 @@ data class TabDetailUiState(
 
 class TabDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: TabRepository
+    private val repository: TabRepository,
+    private val frequencyProvider: NoteFrequencyProvider
 ) : ViewModel() {
 
     private val tabId: Int = savedStateHandle[NAV_ARG_TAB_ID] ?: 0
@@ -63,5 +66,9 @@ class TabDetailViewModel(
             _uiState.update { it.copy(tab = updatedTab) }
             repository.setFavorite(tab.id, updatedTab.isFavorite, now)
         }
+    }
+
+    fun frequencyFor(note: TabNote): Double? {
+        return frequencyProvider.frequencyFor(note)
     }
 }
