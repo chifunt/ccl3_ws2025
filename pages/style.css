@@ -194,6 +194,9 @@ html, body{
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
 }
 
 .team-names{
@@ -201,6 +204,8 @@ html, body{
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
 }
 
 .header-row{
