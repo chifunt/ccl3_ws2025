@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -38,15 +39,19 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(LocalHapticsEnabled provides hapticsEnabled) {
                 ChromaticHarpTabsTheme(darkTheme = darkTheme) {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        val startRoute = if (onboardingCompleted) {
-                            Routes.Library.route
+                        if (onboardingCompleted == null) {
+                            Box(modifier = Modifier.fillMaxSize())
                         } else {
-                            Routes.Onboarding.route
+                            val startRoute = if (onboardingCompleted) {
+                                Routes.Library.route
+                            } else {
+                                Routes.Onboarding.route
+                            }
+                            ChromaticHarpTabsApp(
+                                modifier = Modifier.padding(innerPadding),
+                                startDestination = startRoute
+                            )
                         }
-                        ChromaticHarpTabsApp(
-                            modifier = Modifier.padding(innerPadding),
-                            startDestination = startRoute
-                        )
                     }
                 }
             }
