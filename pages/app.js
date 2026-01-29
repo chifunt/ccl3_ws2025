@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
               ...chartDefaults,
               plugins: { legend: { display: false } },
-              scales: { y: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } }
+              scales: { y: { min: 70, max: 100, ticks: { stepSize: 5 } } }
             }
           });
         } catch (err) {
