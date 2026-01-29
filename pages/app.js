@@ -151,7 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
           options: {
             ...chartDefaults,
             plugins: { legend: { labels: { color: chartColors.muted } } },
-            scales: { y: { beginAtZero: true, max: 100 } }
+            scales: {
+              y: {
+                min: 80,
+                max: 100,
+                ticks: { stepSize: 5 }
+              }
+            }
           }
         });
       }
@@ -175,7 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
               ...chartDefaults,
               plugins: { legend: { display: false } },
-              scales: { y: { beginAtZero: true, max: 100 } }
+              scales: {
+                y: {
+                  min: 80,
+                  max: 100,
+                  ticks: { stepSize: 5 }
+                }
+              }
             }
           });
         } catch (err) {
