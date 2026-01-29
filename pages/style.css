@@ -206,6 +206,7 @@ html, body{
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
 }
 
 .header-row{
