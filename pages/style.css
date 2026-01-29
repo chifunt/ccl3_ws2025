@@ -58,7 +58,7 @@ html, body{
   padding: 0;
   background: var(--base);
   color: var(--text);
-  font-family: "Readex Pro", "Segoe UI", system-ui, -apple-system, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
@@ -76,6 +76,44 @@ html, body{
   border-bottom: 1px solid rgba(224,222,244,0.04);
   background: radial-gradient(700px 260px at 20% 0%, rgba(156,207,216,0.15), transparent),
               radial-gradient(600px 240px at 80% 0%, rgba(196,167,231,0.12), transparent);
+}
+
+.page-nav{
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--base) 92%, transparent);
+  border-bottom: 1px solid rgba(224,222,244,0.06);
+  backdrop-filter: blur(10px);
+}
+
+.page-nav .nav-inner{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.page-nav a{
+  color: var(--subtle);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--overlay);
+  border: 1px solid rgba(224,222,244,0.08);
+  white-space: nowrap;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.page-nav a:hover{
+  color: var(--text);
+  transform: translateY(-1px);
+  background: rgba(49,116,143,0.25);
+  border-color: rgba(156,207,216,0.35);
 }
 
 .app-icon{
