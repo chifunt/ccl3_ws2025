@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
               plugins: { legend: { display: false } },
               scales: {
                 y: {
-                  min: 80,
+                  min: 90,
                   max: 100,
                   ticks: { stepSize: 5 }
                 }
